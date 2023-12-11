@@ -17,6 +17,8 @@
 		A9BCAFC52B2371C600AF13FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BCAFC32B2371C600AF13FB /* LaunchScreen.storyboard */; };
 		A9BCAFCB2B2371D500AF13FB /* MR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91ACD042B22D871003EBF43 /* MR.framework */; };
 		A9BCAFCC2B2371D500AF13FB /* MR.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A91ACD042B22D871003EBF43 /* MR.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A9C26C382B27122000387687 /* Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C26C362B27122000387687 /* Process.swift */; };
+		A9C26C392B27122000387687 /* MShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C26C372B27122000387687 /* MShader.swift */; };
 		A9C2A2572B254CDF007031F7 /* MRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2562B254CDF007031F7 /* MRender.swift */; };
 		A9C2A2592B254CFD007031F7 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2582B254CFD007031F7 /* Const.swift */; };
 		A9C2A25B2B254F92007031F7 /* MTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A25A2B254F92007031F7 /* MTexture.swift */; };
@@ -69,6 +71,8 @@
 		A9BCAFC12B2371C600AF13FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9BCAFC42B2371C600AF13FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A9BCAFC62B2371C600AF13FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A9C26C362B27122000387687 /* Process.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Process.swift; sourceTree = "<group>"; };
+		A9C26C372B27122000387687 /* MShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MShader.swift; sourceTree = "<group>"; };
 		A9C2A2562B254CDF007031F7 /* MRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRender.swift; sourceTree = "<group>"; };
 		A9C2A2582B254CFD007031F7 /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		A9C2A25A2B254F92007031F7 /* MTexture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTexture.swift; sourceTree = "<group>"; };
@@ -163,6 +167,8 @@
 		A9C2A2552B254C55007031F7 /* AL */ = {
 			isa = PBXGroup;
 			children = (
+				A9C26C372B27122000387687 /* MShader.swift */,
+				A9C26C362B27122000387687 /* Process.swift */,
 				A91ACD132B230C26003EBF43 /* Constant.h */,
 				A9C2A2562B254CDF007031F7 /* MRender.swift */,
 				A9C2A25A2B254F92007031F7 /* MTexture.swift */,
@@ -294,9 +300,11 @@
 				A9DEEE572B234AF2004F8AFB /* math.swift in Sources */,
 				A9C2A25F2B2554A2007031F7 /* MBuffer.swift in Sources */,
 				A9C2A25B2B254F92007031F7 /* MTexture.swift in Sources */,
+				A9C26C382B27122000387687 /* Process.swift in Sources */,
 				A91ACD122B22E694003EBF43 /* shader.metal in Sources */,
 				A9B77F502B2469AB00EE423C /* TextureLoader.swift in Sources */,
 				A9C2A25D2B255216007031F7 /* MHelper.swift in Sources */,
+				A9C26C392B27122000387687 /* MShader.swift in Sources */,
 				A9C2A2612B256B0F007031F7 /* RenderPass.swift in Sources */,
 				A9C2A2572B254CDF007031F7 /* MRender.swift in Sources */,
 				A9C2A2592B254CFD007031F7 /* Const.swift in Sources */,

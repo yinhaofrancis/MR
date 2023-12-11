@@ -239,27 +239,6 @@ public enum AL{
         }
     }
     
-    public struct Shader{
-        
-        public static let shared:Shader = try! Shader(render: Render.shared)
-        
-        public let lib:MTLLibrary
-        
-        public let render:Render
-        
-        public init(render:Render,url:URL) throws {
-            self.render = render
-            
-            self.lib = try render.device.makeLibrary(URL: url)
-        }
-        
-        public init(render:Render,bundle:Bundle = CurrentBundle) throws {
-            self.render = render
-            
-            self.lib = try render.device.makeDefaultLibrary(bundle: bundle)
-        }
-    }
-    
     public class Vsync:NSObject{
         public typealias VsyncCallBack = ()->Bool
         private var callback:VsyncCallBack?

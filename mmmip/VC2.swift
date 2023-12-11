@@ -51,13 +51,10 @@ class VC2: UIViewController {
             box.normal = tex
             ball.normal = tex
         }
-        
+        let r = helper.render.newColorTexture(width: 375, height: 812, usage: [.renderTarget,.shaderRead], storageMode: .private)
         timer.setCallBack {[weak layer,weak self] in
             let x:Float = Float(cos(a) * 10.0)
             let z:Float = Float(sin(a) * 10.0)
-//            scene.light.position = [x,10,z]
-//            box.model.pointee.model = simd_float4x4.rotate(m: simd_float4x4.translate(m: .identity, v: [2,1,0]), angle: Float(a), v: [0,1,0])
-//            box.loadModel()
             ball.model.pointee.model = simd_float4x4.rotate(m: simd_float4x4.translate(m: .identity, v: [-2,1,0]), angle: Float(a), v: [0,1,0])
             ball.loadModel()
             
@@ -69,15 +66,16 @@ class VC2: UIViewController {
             scene.camera.aspect = Float(layer.drawableSize.width / layer.drawableSize.height)
             scene.loadModel()
             guard let buffer = self.helper.queue.createBuffer() else {return true}
-            
-            guard let encoder = self.helper.renderPass.beginRender(buffer: buffer, layer: layer) else { return true }
+            guard let r else { return true }
+            guard let encoder = self.helper.renderPass.beginTextureRender(buffer: buffer, texture: r.texture) else { return true }
             self.helper.renderPass.setViewPort(encoder: encoder);
-            guard let drawable = self.helper.renderPass.drawable else {return true}
             scene.draw(encoder: encoder)
             encoder.endEncoding()
-            buffer.present(drawable)
+            
+            AL.Helper.shared.textureRender.render(buffer: buffer, renderPass: self.helper.renderPass, texture: r, layer: layer)
            
             buffer.commit()
+            
             buffer.waitUntilCompleted()
             return true
         }

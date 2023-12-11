@@ -18,9 +18,11 @@ class VC3:UIViewController{
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         v.samplerState = helper.render.defaultNearestSampler
+        guard let buffer = helper.queue.createBuffer() else { return }
         
+        helper.textureRender.render(buffer:buffer , renderPass: helper.renderPass, texture:v , layer: self.vc2View.mtLayer)
         
-        helper.textureRender.render(queue: helper.queue, renderPass: helper.renderPass, texture:v , layer: self.vc2View.mtLayer)
+        buffer.commit()
     }
     
     public var vc2View:VC2View{

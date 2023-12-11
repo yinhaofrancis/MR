@@ -71,7 +71,19 @@ extension AL{
             }
             return nil
         }
-        public func beginCopyRender(buffer:MTLCommandBuffer,layer:CAMetalLayer)->MTLRenderCommandEncoder?{
+        public func beginTextureRender(buffer:MTLCommandBuffer,texture:MTLTexture)->MTLRenderCommandEncoder?{
+        
+            self.colorTexture = texture
+            if(depthStencilTexture == nil){
+                depthStencilTexture = render.newDepthStencilTexture(width: texture.width, height: texture.height)
+            }
+            else{
+                self.renderPass.depthAttachment.texture = depthStencilTexture?.texture
+                self.renderPass.stencilAttachment.texture = depthStencilTexture?.texture
+            }
+            return buffer.makeRenderCommandEncoder(descriptor: self.renderPass)
+        }
+        public func beginColorRender(buffer:MTLCommandBuffer,layer:CAMetalLayer)->MTLRenderCommandEncoder?{
             layer.device = render.device
             layer.maximumDrawableCount = 3;
             layer.pixelFormat = ColorPixel
@@ -82,7 +94,6 @@ extension AL{
             self.renderPass.depthAttachment.texture = nil
             self.renderPass.stencilAttachment.texture = nil
             self.renderPass.colorAttachments[0].resolveTexture = nil
-            self.renderPass.colorAttachments[0].texture = mtlDrawable.texture
             return buffer.makeRenderCommandEncoder(descriptor: self.renderPass)
         }
         public func setViewPort(encoder:MTLRenderCommandEncoder?){

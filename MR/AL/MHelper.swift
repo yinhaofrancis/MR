@@ -12,7 +12,7 @@ import Foundation
 
 
 extension AL{
-    public struct Helper{
+    public class Helper{
         public var queue:Queue
         
         public var shader:Shader
@@ -33,38 +33,6 @@ extension AL{
         }
         
         public static let shared:Helper = Helper(queue: AL.Queue.shared, shader: AL.Shader.shared, renderPass: AL.RenderPass.shared)
-    }
-}
-
-extension AL.Shader{
-    public func createRenderDisplayPiplineState<T:Renderable>(model:inout T)throws{
-        
-        let desc = MTLRenderPipelineDescriptor()
-        desc.colorAttachments[0].pixelFormat = ColorPixel;
-        desc.colorAttachments[0].isBlendingEnabled = true;
-        desc.colorAttachments[0].sourceAlphaBlendFactor = .sourceAlpha
-        desc.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusBlendAlpha
-        desc.depthAttachmentPixelFormat = DepthStencilPixel
-        desc.stencilAttachmentPixelFormat = DepthStencilPixel
-        desc.vertexFunction = self.lib.makeFunction(name: model.vertexShader)
-        desc.fragmentFunction = self.lib.makeFunction(name: model.fragmentShader)
-        desc.vertexDescriptor = model.vertexDesciption
-        
-        let state = try self.render.device.makeRenderPipelineState(descriptor: desc)
-        model.renderPiplineState = state
-        
-        if let dep = model.depthStencilDescriotion{
-            model.depthStencilState = self.render.device.makeDepthStencilState(descriptor: dep)
-        }else{
-            model.depthStencilState = self.render.defaultDepthState
-        }
-    }
-    public func createCopyScreenPiplineState() throws ->MTLRenderPipelineState{
-        let desc = MTLRenderPipelineDescriptor()
-        desc.colorAttachments[0].pixelFormat = ColorPixel;
-        desc.vertexFunction = self.lib.makeFunction(name: "VertexScreenDisplayRender")
-        desc.fragmentFunction = self.lib.makeFunction(name: "FragmentScreenDisplayRender")
-        return try self.render.device.makeRenderPipelineState(descriptor: desc)
     }
 }
 

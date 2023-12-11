@@ -190,16 +190,23 @@ public struct TextureRender{
         self.shader = shader
         self.state = try! shader.createCopyScreenPiplineState()
     }
-    public func render(queue:AL.Queue,renderPass:AL.RenderPass,texture:AL.Texture?,layer:CAMetalLayer){
-        guard let buffer = queue.createBuffer() else { return }
-        let encoder = renderPass.beginCopyRender(buffer: buffer, layer: layer)
+    public func render(buffer:MTLCommandBuffer,renderPass:AL.RenderPass,texture:AL.Texture?,layer:CAMetalLayer){
+        self.render(buffer: buffer, renderPass: renderPass, texture: texture?.texture, sampleState: texture?.samplerState, layer: layer)
+    }
+    
+    
+    public func render(buffer:MTLCommandBuffer,
+                       renderPass:AL.RenderPass,
+                       texture:MTLTexture?,
+                       sampleState:MTLSamplerState? = nil,
+                       layer:CAMetalLayer){
+        let encoder = renderPass.beginColorRender(buffer: buffer, layer: layer)
         guard let drawable = renderPass.drawable else { return }
         encoder?.setRenderPipelineState(self.state)
-        encoder?.setFragmentTexture(texture?.texture, index: 0);
-        encoder?.setFragmentSamplerState(texture?.samplerState, index: 0)
+        encoder?.setFragmentTexture(texture, index: 0);
+        encoder?.setFragmentSamplerState(sampleState ?? self.shader.render.defaultSampler, index: 0)
         encoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
         encoder?.endEncoding()
         buffer.present(drawable)
-        buffer.commit()
     }
 }
