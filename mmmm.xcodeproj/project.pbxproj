@@ -32,6 +32,7 @@
 		A9C2A2612B256B0F007031F7 /* RenderPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2602B256B0F007031F7 /* RenderPass.swift */; };
 		A9C2A2652B25728F007031F7 /* VC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2642B25728F007031F7 /* VC2.swift */; };
 		A9C2A2672B2575F7007031F7 /* MScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2662B2575F7007031F7 /* MScene.swift */; };
+		A9E5F6062B28C83F00BC3456 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E5F6052B28C83F00BC3456 /* Material.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		A9C2A2642B25728F007031F7 /* VC2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VC2.swift; sourceTree = "<group>"; };
 		A9C2A2662B2575F7007031F7 /* MScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MScene.swift; sourceTree = "<group>"; };
 		A9DEEE562B234AF2004F8AFB /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		A9E5F6052B28C83F00BC3456 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +185,7 @@
 				A9DEEE562B234AF2004F8AFB /* Math.swift */,
 				A9C26C4A2B27327600387687 /* Renderer.swift */,
 				A90078FC2B2875AC0083381B /* Model.swift */,
+				A9E5F6052B28C83F00BC3456 /* Material.swift */,
 			);
 			path = TFRender;
 			sourceTree = "<group>";
@@ -390,6 +393,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9E5F6062B28C83F00BC3456 /* Material.swift in Sources */,
 				A9C26C4B2B27327600387687 /* Renderer.swift in Sources */,
 				A9C26C4E2B2782DE00387687 /* shader.metal in Sources */,
 				A9C26C4C2B27753100387687 /* Math.swift in Sources */,

@@ -381,9 +381,8 @@ public struct Model{
     public var indexBuffers:[IndexModel] = []
     public var vertexCount:Int = 0
     public var globalPrimitiveType:MTLPrimitiveType = .triangle
-    
     public var vertexDescription:MTLVertexDescriptor?
-    
+    public var modelObject:ModelObject = ModelObject(model: .identity, normal_model: .identity, shiness: 128)
     public init(mesh:MTKMesh){
         mapVertexBuffer[Int(model_vertex_buffer_index)] = VertexModel(buffer: mesh.vertexBuffers[0])
         mapVertexBuffer[Int(model_vertex_tan_buffer_index)] = VertexModel(buffer: mesh.vertexBuffers[1])

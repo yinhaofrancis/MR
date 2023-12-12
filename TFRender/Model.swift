@@ -28,11 +28,9 @@ public struct RenderScreen{
 }
 
 public struct RenderModel{
-    public var modelObject:ModelObject = ModelObject(model: .identity, normal_model: .identity, shiness: 128)
+    public var cullModel = MTLCullMode.front
     public var depthState:MTLDepthStencilState
-    public var diffuse:Renderer.Texture?
-    public var specular:Renderer.Texture?
-    public var normal:Renderer.Texture?
+    
     let program = RenderPipelineProgram()
     public init(vertexDescriptor:MTLVertexDescriptor?,depthState:MTLDepthStencilState)throws{
         try program.reload(vertexDescription:vertexDescriptor, vertexFunction: "vertexPlainRender", fragmentFunction: "fragmentPlainRender")
@@ -42,22 +40,25 @@ public struct RenderModel{
     public mutating func draw(
         encoder:MTLRenderCommandEncoder,
         model:Model,
+        material:Material,
         cameraModel:inout CameraObject,
         lightModel:inout LightObject) throws{
         if let state = program.state{
             encoder.setRenderPipelineState(state)
             encoder.setDepthStencilState(depthState)
+            var modelObject = model.modelObject
+            modelObject.createNormalMatrix()
             encoder.setVertexBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
             encoder.setVertexBytes(&cameraModel, length: MemoryLayout.size(ofValue: cameraModel), index: Int(camera_object_buffer_index))
             encoder.setVertexBytes(&lightModel, length: MemoryLayout.size(ofValue: lightModel), index: Int(light_object_buffer_index))
             encoder.setFragmentBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
             encoder.setFragmentBytes(&cameraModel, length: MemoryLayout.size(ofValue: cameraModel), index: Int(camera_object_buffer_index))
             encoder.setFragmentBytes(&lightModel, length: MemoryLayout.size(ofValue: lightModel), index: Int(light_object_buffer_index))
-                
-            encoder.setFragmentTexture(diffuse?.texture, index: Int(phong_diffuse_index))
-            encoder.setFragmentTexture(specular?.texture, index: Int(phong_specular_index))
-            encoder.setFragmentTexture(normal?.texture, index: Int(phong_normal_index))
-            encoder.setFragmentSamplerState(diffuse?.sampler.samplerState, index: 0)
+            encoder.setCullMode(self.cullModel)
+            encoder.setFragmentTexture(material.diffuse?.texture, index: Int(phong_diffuse_index))
+            encoder.setFragmentTexture(material.specular?.texture, index: Int(phong_specular_index))
+            encoder.setFragmentTexture(material.normal?.texture, index: Int(phong_normal_index))
+            encoder.setFragmentSamplerState(material.diffuse?.sampler.samplerState, index: 0)
             model.draw(encoder: encoder)
         }
     }
@@ -66,9 +67,8 @@ public struct RenderModel{
 public struct RenderSkyboxModel{
     let program = RenderPipelineProgram()
     public var model:Model
-    public var ambient:Renderer.Texture?
+    public var cullModel = MTLCullMode.back
     public var depthState:MTLDepthStencilState
-    public var modelObject:ModelObject = ModelObject(model: .identity, normal_model: .identity, shiness: 128)
     public init(vertexDescriptor:MTLVertexDescriptor?,
                 depth:MTLDepthStencilState,
                 model:Model)throws{
@@ -80,74 +80,22 @@ public struct RenderSkyboxModel{
     public mutating func draw(
         encoder:MTLRenderCommandEncoder,
         cameraModel:inout CameraObject,
+        material:Material,
         lightModel:inout LightObject) throws{
         if let state = program.state{
+            var modelObject = model.modelObject
+            modelObject.createNormalMatrix()
             encoder.setRenderPipelineState(state)
             encoder.setDepthStencilState(depthState)
             encoder.setVertexBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
             encoder.setVertexBytes(&cameraModel, length: MemoryLayout.size(ofValue: cameraModel), index: Int(camera_object_buffer_index))
             encoder.setVertexBytes(&lightModel, length: MemoryLayout.size(ofValue: lightModel), index: Int(light_object_buffer_index))
-            encoder.setFragmentTexture(ambient?.texture, index: Int(phong_ambient_index))
-            encoder.setFragmentSamplerState(ambient?.sampler.samplerState, index: 0)
+            encoder.setFragmentTexture(material.ambient?.texture, index: Int(phong_ambient_index))
+            encoder.setFragmentSamplerState(material.ambient?.sampler.samplerState, index: 0)
+            encoder.setCullMode(self.cullModel)
             model.draw(encoder: encoder)
         }
     }
-}
-
-extension Renderer.Texture{
-    public static var defaultTexture:Renderer.Texture = {
-        var v = try! Renderer.Texture(width: 2, height: 2, pixel: .r8Unorm,colorSwizzle: .red)
-        v.sampler = .defaultNesrestSampler
-        let value:[UInt8] = [
-            255,0,0,255
-        ]
-        v.assign(width: 2, height: 2, bytesPerRow: 2, withBytes: value)
-        return v
-    }()
-    
-    public static var defaultTextureCube:Renderer.Texture = {
-        var v = try! Renderer.Texture(width: 2, height: 2, pixel: .r8Unorm,type: .typeCube,colorSwizzle: .red)
-        v.sampler = .defaultNesrestSampler
-        let value:[UInt8] = [
-            255,0,0,255
-        ]
-        for i in 0 ..< 6{
-            v.assign(region: MTLRegion(origin: .init(x: 0, y: 0, z: 0), size: .init(width: 2, height: 2, depth: 1)), level: 0, slice: i, bytes: value, bytesPerRow: 2, bytePerImage: 4)
-        }
-        
-        return v
-    }()
-    
-    public static var defaultSpecular:Renderer.Texture = {
-        var v = try! Renderer.Texture(width: 2, height: 2, pixel: .r8Unorm,colorSwizzle: .red)
-        v.sampler = .defaultNesrestSampler
-        let value:[UInt8] = [
-           20,20,20,20
-        ]
-        v.assign(width: 2, height: 2, bytesPerRow: 2, withBytes: value)
-        return v
-    }()
-    public static var defaultAmbient:Renderer.Texture = {
-        var v = try! Renderer.Texture(width: 2, height: 2, pixel: .r8Unorm,colorSwizzle: .red)
-        v.sampler = .defaultNesrestSampler
-        let value:[UInt8] = [
-           100,100,100,100
-        ]
-        v.assign(width: 2, height: 2, bytesPerRow: 2, withBytes: value)
-        return v
-    }()
-    public static var defaultNormal:Renderer.Texture = {
-        var v = try! Renderer.Texture(width: 2, height: 2, pixel:.rgba32Float)
-        v.sampler = .defaultNesrestSampler
-        let value:[Float] = [
-            0.5,0.5,1,1,
-            0.5,0.5,1,1,
-            0.5,0.5,1,1,
-            0.5,0.5,1,1
-        ]
-        v.assign(width: 2, height: 2, bytesPerRow: 2 * 4 * 4, withBytes: value)
-        return v
-    }()
 }
 
 extension Model{
@@ -170,6 +118,13 @@ extension Model{
     
     public static func box(size:simd_float3,segments:simd_uint3,render:Renderer = .shared)->Model{
         let md = MDLMesh(boxWithExtent: size, segments: segments, inwardNormals: false, geometryType: .triangles, allocator: MTKMeshBufferAllocator(device: render.device))
+        md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
+        let mk = try! MTKMesh(mesh: md, device: render.device)
+        return Model(mesh: mk)
+    }
+    
+    public static func plant(size:simd_float3,segments:simd_uint2,render:Renderer = .shared)->Model{
+        let md = MDLMesh(planeWithExtent: size, segments: segments, geometryType: .triangles, allocator: MTKMeshBufferAllocator(device: render.device))
         md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
         let mk = try! MTKMesh(mesh: md, device: render.device)
         return Model(mesh: mk)
