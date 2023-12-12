@@ -36,31 +36,80 @@ public struct RenderModel{
         try program.reload(vertexDescription:vertexDescriptor, vertexFunction: "vertexPlainRender", fragmentFunction: "fragmentPlainRender")
         self.depthState = depthState
     }
+    public func begin(encoder:MTLRenderCommandEncoder){
+        if let state = program.state{
+            encoder.setRenderPipelineState(state)
+            encoder.setDepthStencilState(depthState)
+            encoder.setCullMode(self.cullModel)
+        }
+    }
+    public func bindScene(encoder:MTLRenderCommandEncoder,
+                        cameraModel:Camera,
+                          lightModel:Light){
+        var cameraData = cameraModel.cameraData
+        var lightObject = lightModel.lightObject
+        encoder.setVertexBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
+        encoder.setVertexBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
+        encoder.setFragmentBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
+        encoder.setFragmentBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
+    }
     
     public mutating func draw(
         encoder:MTLRenderCommandEncoder,
         model:Model,
         material:Material,
-        cameraModel:inout CameraObject,
-        lightModel:inout LightObject) throws{
-        if let state = program.state{
-            encoder.setRenderPipelineState(state)
-            encoder.setDepthStencilState(depthState)
+        shadow:Shadow) throws{
             var modelObject = model.modelObject
+
             modelObject.createNormalMatrix()
             encoder.setVertexBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
-            encoder.setVertexBytes(&cameraModel, length: MemoryLayout.size(ofValue: cameraModel), index: Int(camera_object_buffer_index))
-            encoder.setVertexBytes(&lightModel, length: MemoryLayout.size(ofValue: lightModel), index: Int(light_object_buffer_index))
+            
             encoder.setFragmentBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
-            encoder.setFragmentBytes(&cameraModel, length: MemoryLayout.size(ofValue: cameraModel), index: Int(camera_object_buffer_index))
-            encoder.setFragmentBytes(&lightModel, length: MemoryLayout.size(ofValue: lightModel), index: Int(light_object_buffer_index))
-            encoder.setCullMode(self.cullModel)
+            
             encoder.setFragmentTexture(material.diffuse?.texture, index: Int(phong_diffuse_index))
             encoder.setFragmentTexture(material.specular?.texture, index: Int(phong_specular_index))
             encoder.setFragmentTexture(material.normal?.texture, index: Int(phong_normal_index))
+            encoder.setFragmentTexture(shadow.globelShadow, index: Int(shadow_map_index))
             encoder.setFragmentSamplerState(material.diffuse?.sampler.samplerState, index: 0)
             model.draw(encoder: encoder)
+    }
+}
+
+public struct RenderShadowModel{
+    let program = RenderPipelineProgram()
+    public var cullModel = MTLCullMode.front
+    public var depthState:MTLDepthStencilState
+    public init(vertexDescriptor:MTLVertexDescriptor?,
+                depth:MTLDepthStencilState)throws{
+        try program.reloadRenderShadow(vertexDescription:vertexDescriptor, vertexFunction: "VertexShadowRender", fragmentFunction: "FragmentShadowRender")
+        self.depthState = depth
+    }
+    public func begin(encoder:MTLRenderCommandEncoder){
+        if let state = program.state{
+            encoder.setRenderPipelineState(state)
+            encoder.setDepthStencilState(depthState)
+            encoder.setCullMode(self.cullModel)
         }
+    }
+    public func bindScene(encoder:MTLRenderCommandEncoder,
+                        cameraModel:Camera,
+                          lightModel:Light){
+        var cameraData = cameraModel.cameraData
+        var lightObject = lightModel.lightObject
+        encoder.setViewport(MTLViewport(originX: 0, originY: 0, width: Double(lightModel.width), height: Double(lightModel.height), znear: 0, zfar: 1))
+        encoder.setVertexBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
+        encoder.setVertexBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
+    }
+    public mutating func draw(
+        encoder:MTLRenderCommandEncoder,
+        model:Model) throws{
+            var modelObject = model.modelObject
+            
+            modelObject.createNormalMatrix()
+            encoder.setVertexBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
+            
+            
+            model.draw(encoder: encoder)
     }
 }
 
@@ -76,25 +125,32 @@ public struct RenderSkyboxModel{
         self.depthState = depth
         self.model = model
     }
-    
-    public mutating func draw(
-        encoder:MTLRenderCommandEncoder,
-        cameraModel:inout CameraObject,
-        material:Material,
-        lightModel:inout LightObject) throws{
+    public func begin(encoder:MTLRenderCommandEncoder){
         if let state = program.state{
-            var modelObject = model.modelObject
-            modelObject.createNormalMatrix()
             encoder.setRenderPipelineState(state)
             encoder.setDepthStencilState(depthState)
+            encoder.setCullMode(self.cullModel)
+        }
+    }
+    public func bindScene(encoder:MTLRenderCommandEncoder,
+                          cameraModel:Camera,
+                          lightModel:Light){
+        var cameraData = cameraModel.cameraData
+        var lightObject = lightModel.lightObject
+        encoder.setVertexBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
+        encoder.setVertexBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
+    }
+    public mutating func draw(
+        encoder:MTLRenderCommandEncoder,
+        material:Material) throws{
+            var modelObject = model.modelObject
+            
+            modelObject.createNormalMatrix()
             encoder.setVertexBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
-            encoder.setVertexBytes(&cameraModel, length: MemoryLayout.size(ofValue: cameraModel), index: Int(camera_object_buffer_index))
-            encoder.setVertexBytes(&lightModel, length: MemoryLayout.size(ofValue: lightModel), index: Int(light_object_buffer_index))
+            
             encoder.setFragmentTexture(material.ambient?.texture, index: Int(phong_ambient_index))
             encoder.setFragmentSamplerState(material.ambient?.sampler.samplerState, index: 0)
-            encoder.setCullMode(self.cullModel)
             model.draw(encoder: encoder)
-        }
     }
 }
 
@@ -135,6 +191,122 @@ extension Model{
 extension ModelObject{
     public mutating func createNormalMatrix(){
         self.normal_model = simd_float4x4.inverseTranspose(m: self.model)
+    }
+}
+
+public struct Camera{
+    
+    public var cameraData:CameraObject = CameraObject(projection: simd_float4x4.perspective(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8])
+    
+    public init() {
+        self.updateView()
+        self.updateProjection()
+    }
+    
+    public var lookTo:simd_float3 = [0,0,0]{
+        didSet{
+            self.updateView()
+        }
+    }
+    
+    public var position:simd_float3 = [8,8,8]{
+        didSet{
+            self.updateView()
+        }
+    }
+    
+    public var up:simd_float3 = [0,1,0]{
+        didSet{
+            self.updateView()
+        }
+    }
+    
+    public var aspect:Float = 9.0 / 16.0{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    public var fovy:Float = 45{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    public var near:Float = 1{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    public var far:Float = 150{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    mutating func updateProjection(){
+        self.cameraData.projection = simd_float4x4.perspective(fovy: fovy, aspect: aspect, zNear: near, zFar: far)
+    }
+    mutating func updateView(){
+        self.cameraData.view = float4x4.lookat(eye: position, center: lookTo, up: up)
+        self.cameraData.camera_pos = position
+    
+    }
+}
+
+public struct Light{
+   
+    public var lightObject:LightObject
+    
+    public init() {
+        self.lightObject = LightObject(light_pos: [-8,8,8],
+                                       light_center: [0,0,0],
+                                       is_point_light:  0,
+                                       projection: .identity,
+                                       view: .identity)
+        self.updateView()
+        self.updateProjection()
+    }
+    
+    public var width:Float = 10{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    public var height:Float = 10{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    public var position:simd_float3 = [-8,8,8]{
+        didSet{
+            self.updateView()
+        }
+    }
+    
+    public var target:simd_float3 = [0,0,0]{
+        didSet{
+            self.updateView()
+        }
+    }
+    
+    public var up:simd_float3 = [0,1,0]{
+        didSet{
+            self.updateView()
+        }
+    }
+    
+    mutating func updateView(){
+        self.lightObject.light_pos = position
+        self.lightObject.light_center = target
+        self.lightObject.view = float4x4.lookat(eye: position, center: target, up: up)
+    }
+    mutating func updateProjection(){
+
+        self.lightObject.projection = float4x4.ortho(left: -width, right: width, bottom: -height, top: height,zNear: 1,zFar: 100)
     }
 }
 

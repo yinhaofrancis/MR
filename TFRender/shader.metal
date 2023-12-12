@@ -13,20 +13,12 @@ using namespace metal;
 
 
 
-struct VertexOutMesh{
+struct VertexOutShadow{
     float4 position [[position]];
-    float3 frag_position;
-    float3 normal;
-    float3 tangent;
-    float3 bitangent;
 };
 
-struct VertexInMesh{
+struct VertexInShadow{
     float3 position [[attribute(0)]];
-    float2 uv[[attribute(1)]];
-    float3 normal[[attribute(2)]];
-    float3 tangent[[attribute(3)]];
-    float3 bitangent[[attribute(4)]];
 };
 
 
@@ -77,25 +69,6 @@ struct SceneModelConfiguration{
     device const ModelObject* object_object [[buffer(model_object_buffer_index)]];
 };
 
-
-vertex VertexOutMesh vertexMeshRender(VertexInMesh inData[[stage_in]],
-                                      device const CameraObject* camera_object [[buffer(camera_object_buffer_index)]],
-                                      device const ModelObject* object_object [[buffer(model_object_buffer_index)]]
-                                      ){
-    return VertexOutMesh{
-        .position = float4(inData.position,1.0),
-        .frag_position = inData.position,
-        .normal = inData.normal,
-        .tangent = inData.tangent,
-        .bitangent = inData.bitangent
-    };
-}
-fragment half4 fragmentMeshRender(
-                            VertexOutMesh vertexData[[stage_in]],
-                            ModelMaterial materail
-                            ){
-    return half4(1,0,0,1);
-}
 
 
 vertex VertexOutPlain vertexPlainRender(VertexInPlain inData[[stage_in]],
@@ -184,4 +157,17 @@ fragment half4 FragmentScreenDisplayRender(VertexScreenDisplay in [[stage_in]],
     const half3 color = texture.sample(sam, in.uv).xyz;
     
     return half4(color, 1.0f);
+}
+
+
+vertex VertexOutShadow VertexShadowRender(VertexInShadow inData [[stage_in]],
+                                          SceneModelConfiguration config
+                                          ){
+    VertexOutShadow d;
+    d.position = config.light_object->projection * config.light_object->view * config.object_object->model * float4(inData.position,1);
+    return d;
+}
+
+fragment half4 FragmentShadowRender(VertexOutShadow in [[stage_in]]){
+    return half4(1.0f,1.0f,1.0f, 1.0f);
 }

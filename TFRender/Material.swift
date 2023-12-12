@@ -73,3 +73,8 @@ public class Material{
     public var ambient:Renderer.Texture? = .defaultTextureCube
     public init() {}
 }
+
+public class Shadow{
+    public var globelShadow:MTLTexture?
+    public init() {}
+}

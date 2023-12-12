@@ -190,7 +190,7 @@ extension Renderer {
             return try Texture(width: width, 
                                height: height,
                                pixel: Configuration.ColorPixelFormat,
-                               storeMode: .memoryless,
+                               storeMode: .private,
                                usage: [.renderTarget,.shaderRead],
                                render: render)
         }
@@ -199,7 +199,7 @@ extension Renderer {
             return try Texture(width: width, 
                                height: height,
                                pixel: Configuration.DepthpixelFormat, 
-                               storeMode: .memoryless,
+                               storeMode: .private,
                                usage: [.renderTarget,.shaderRead],
                                render: render)
         }
@@ -208,7 +208,7 @@ extension Renderer {
             return try Texture(width: width, 
                                height: height,
                                pixel: Configuration.DepthStencilpixelFormat,
-                               storeMode: .memoryless, 
+                               storeMode: .private, 
                                usage: [.renderTarget,.shaderRead],
                                render: render)
         }
@@ -313,7 +313,7 @@ public class RenderPass{
         if(self.depthTexture == nil){
             self.depthTexture = try Renderer.Texture.createDepthStencilTexture(width: self.width, height: self.height, render: self.render).texture
             self.stencilTexture = self.depthTexture
-        }else if(self.width == self.depthTexture?.width && self.height == self.depthTexture?.height){
+        }else if(self.width != self.depthTexture?.width && self.height != self.depthTexture?.height){
             self.depthTexture = try Renderer.Texture.createDepthStencilTexture(width: self.width, height: self.height, render: self.render).texture
             self.stencilTexture = self.depthTexture
         }
@@ -326,9 +326,18 @@ public class RenderPass{
         self.descriptor.colorAttachments[0].loadAction = .clear
         self.descriptor.colorAttachments[0].storeAction = .store
         self.texture = texture
-        if(self.width == self.depthTexture?.width && self.height == self.depthTexture?.height){
-            self.depthTexture = nil
-            self.stencilTexture = nil
+        self.depthTexture = nil
+        self.stencilTexture = nil
+        guard let encoder = buffer.makeRenderCommandEncoder(descriptor: descriptor) else { throw TRError.createObjectFail("create computer encoder")}
+        return encoder
+    }
+    
+    public func beginDepth(buffer:MTLCommandBuffer,width:Int,height:Int) throws ->MTLRenderCommandEncoder{
+        
+        if(width != self.depthTexture?.width && height != self.depthTexture?.height){
+            self.depthTexture = try Renderer.Texture.createDepthTexture(width: width, height: height, render: self.render).texture
+            self.descriptor.depthAttachment.clearDepth = 0;
+            self.descriptor.depthAttachment.loadAction = .clear
         }
         guard let encoder = buffer.makeRenderCommandEncoder(descriptor: descriptor) else { throw TRError.createObjectFail("create computer encoder")}
         return encoder
@@ -478,9 +487,20 @@ public class RenderPipelineProgram{
 
         self.state = try shader.render.device.makeRenderPipelineState(descriptor: renderDescriptor)
     }
+    public func reloadRenderShadow(vertexDescription:MTLVertexDescriptor?,
+                vertexFunction:String,
+                fragmentFunction:String) throws {
+        renderDescriptor.reset()
+        renderDescriptor.colorAttachments[0].pixelFormat = .invalid
+        renderDescriptor.vertexDescriptor = vertexDescription
+        renderDescriptor.depthAttachmentPixelFormat = Configuration.DepthpixelFormat
+        renderDescriptor.stencilAttachmentPixelFormat = .invalid
+        renderDescriptor.vertexFunction =  try shader.createFunction(functionName: vertexFunction)
+        renderDescriptor.fragmentFunction = try shader.createFunction(functionName: fragmentFunction)
+        self.state = try shader.render.device.makeRenderPipelineState(descriptor: renderDescriptor)
+    }
     public func reload(vertexFunction:String,
-                fragmentFunction:String,
-                shader:Renderer.Shader = .shared) throws {
+                fragmentFunction:String) throws {
         renderDescriptor.reset()
         renderDescriptor.colorAttachments[0].pixelFormat = Configuration.ColorPixelFormat
         renderDescriptor.vertexFunction =  try shader.createFunction(functionName: vertexFunction)
@@ -505,8 +525,7 @@ public class TileRenderPipelineProgram{
     
     
     public func reload(functionName:String,
-                       rasterSampleCount:Int,
-                       shader:Renderer.Shader = .shared) throws {
+                       rasterSampleCount:Int) throws {
         renderDescriptor.reset()
         renderDescriptor.tileFunction = try shader.createFunction(functionName: functionName)
         renderDescriptor.rasterSampleCount = rasterSampleCount

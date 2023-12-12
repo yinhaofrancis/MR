@@ -68,14 +68,15 @@ extension simd_float4x4 {
         return Result;
     }
     
-    public static func ortho(left:Float,right:Float,bottom:Float,top:Float)->simd_float4x4
+    public static func ortho(left:Float,right:Float,bottom:Float,top:Float,zNear:Float,zFar:Float)->simd_float4x4
     {
-        var Result = simd_float4x4.identity;
+        var Result = simd_float4x4.identity
         Result[0][0] = 2.0 / (right - left);
         Result[1][1] = 2.0 / (top - bottom);
-        Result[2][2] = -1.0;
+        Result[2][2] = -2.0 / (zFar - zNear);
         Result[3][0] = -(right + left) / (right - left);
         Result[3][1] = -(top + bottom) / (top - bottom);
+        Result[3][2] = -(zFar + zNear) / (zFar - zNear);
         return Result;
     }
     public static let identity:simd_float4x4 = {

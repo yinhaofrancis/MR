@@ -11,7 +11,7 @@ import TFRender
 
 class VC3:UIViewController{
 
-    let renderPass = RenderPass(render: .shared)
+    
     let programe = RenderPipelineProgram()
     let vsync = Renderer.Vsync()
     let queue = try! Renderer.RenderQueue()
@@ -22,6 +22,8 @@ class VC3:UIViewController{
         layer.pixelFormat = Configuration.ColorPixelFormat
         layer.device = queue.renderer.device
         
+        
+        //模型
         var model = Model.sphere(size: [1,1,1], segments: [20,20])
         
         model.modelObject.model = simd_float4x4.translate(m: .identity, v: [-3,1,-3])
@@ -30,19 +32,26 @@ class VC3:UIViewController{
         
         plant.modelObject.model = simd_float4x4.rotate(m: .identity, angle: .pi / -2, v: [0,0,1])
         
-        var rmodel = try! RenderModel(vertexDescriptor: model.vertexDescription, depthState: depth)
-
-        let materail = Material()
-        
         let skm = Model.skybox(scale: 10)
         
+        // 材質
+        let materail = Material()
+        
+        let shadow = Shadow()
+        
+        //渲染程序
+        var rmodel = try! RenderModel(vertexDescriptor: model.vertexDescription, depthState: depth)
+
         var sk = try! RenderSkyboxModel(vertexDescriptor: skm.vertexDescription, depth: queue.renderer.skyboxDepthState, model: skm)
         
+        var shadowPro = try! RenderShadowModel(vertexDescriptor: model.vertexDescription, depth: queue.renderer.defaultDepthState)
         
+        var c = Camera()
         
-        var c = CameraObject(projection: simd_float4x4.perspective(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8])
-        var l = LightObject(light_pos: [-8,8,8], light_center: [0,0,0], is_point_light:  0)
+        let l = Light()
         
+        let renderPass = RenderPass(render: .shared)
+        let depthRenderPass = RenderPass(render: .shared)
         
         var rol:Float = 0.01
         
@@ -59,27 +68,36 @@ class VC3:UIViewController{
                 rol += 0.01
                 let x = cos(rol) * 13
                 let z = sin(rol) * 13
-                c.view = .lookat(eye: [x,5,z], center: [0,0,0], up: [0,1,0])
-                c.camera_pos = [x,5,z]
+                c.position = [x,5,z]
+                var buffer = try self.queue.createBuffer()
+                let shadowe = try depthRenderPass.beginDepth(buffer: buffer, width: 1024, height: 1024)
+                shadowPro.begin(encoder: shadowe)
+                shadowPro.bindScene(encoder: shadowe, cameraModel: c, lightModel: l)
+                try shadowPro.draw(encoder: shadowe, model: model)
+                try shadowPro.draw(encoder: shadowe, model: plant)
+                shadowe.endEncoding()
+                shadow.globelShadow = depthRenderPass.depthTexture
+
                 
-                let buffer = try self.queue.createBuffer()
-                let encoder = try self.renderPass.beginRender(buffer: buffer, layer: layer)
+                let encoder = try renderPass.beginRender(buffer: buffer, layer: layer)
                 
-                guard let drawable = self.renderPass.drawable else {
+                guard let drawable = renderPass.drawable else {
                     encoder.endEncoding()
                     return true
                 }
-                try sk.draw(encoder: encoder, cameraModel: &c, material: materail, lightModel: &l)
-                try rmodel.draw(encoder: encoder, 
+                sk.begin(encoder: encoder)
+                sk.bindScene(encoder: encoder, cameraModel: c, lightModel: l)
+                try sk.draw(encoder: encoder,material: materail)
+                rmodel.begin(encoder: encoder)
+                rmodel.bindScene(encoder: encoder, cameraModel: c, lightModel: l)
+                try rmodel.draw(encoder: encoder,
                                 model: model,
                                 material: materail,
-                               cameraModel: &c,
-                                lightModel: &l)
+                                shadow: shadow)
                 try rmodel.draw(encoder: encoder, 
                                 model: plant,
                                 material: materail,
-                                cameraModel: &c,
-                                lightModel: &l)
+                                shadow: shadow)
                 encoder.endEncoding()
                 buffer.present(drawable)
                 buffer.commit()

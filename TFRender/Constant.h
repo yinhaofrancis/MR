@@ -22,7 +22,7 @@
 #define phong_specular_index    1
 #define phong_normal_index      2
 #define phong_ambient_index     3
-
+#define shadow_map_index        4
 
 
 #define model_object_buffer_index                   0
@@ -44,6 +44,8 @@ struct LightObject {
     simd_float3     light_pos;
     simd_float3     light_center;
     int             is_point_light;
+    simd_float4x4   projection;
+    simd_float4x4   view;
 };
 struct ModelObject{
     simd_float4x4   model;
