@@ -109,7 +109,7 @@ extension AL.Helper{
     public func makeTimer()->AL.Vsync{
         AL.Vsync()
     }
-    public func makeScene()->AL.Scene<SceneObject>{
+    public func makeScene()->AL.Scene<CameraObject>{
         return AL.Scene(render: render)
     }
 }

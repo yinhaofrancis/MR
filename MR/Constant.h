@@ -26,14 +26,14 @@
 
 
 #define model_object_buffer_index                   0
-#define scene_object_buffer_index                   1
+#define camera_object_buffer_index                   1
 #define model_vertex_buffer_index                   2
 #define model_vertex_tan_buffer_index               3
 #define model_vertex_bitan_buffer_index             4
 
 
 
-struct SceneObject{
+struct CameraObject{
     simd_float4x4   projection;
     simd_float4x4   view;
     simd_float3     camera_pos;

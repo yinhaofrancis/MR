@@ -39,7 +39,7 @@ struct VertexOutPlain{
     float3 normal;
     float3 tangent;
     float3 bitangent;
-    float4 color;
+    float3 color;
 };
 struct VertexInPlain{
     float3 position [[attribute(0)]];
@@ -65,23 +65,21 @@ struct ModelHeapMaterial{
 
 struct ModelMaterial{
     texture2d<half>     m_diffuse           [[texture(phong_diffuse_index)]];
-    sampler             m_diffuse_sampler   [[sampler(phong_diffuse_index)]];
     texture2d<half>     m_specular          [[texture(phong_specular_index)]];
-    sampler             m_specular_sampler  [[sampler(phong_specular_index)]];
     texture2d<half>     m_normal            [[texture(phong_normal_index)]];
-    sampler             m_normal_sampler    [[sampler(phong_normal_index)]];
     texturecube<half>   m_ambient           [[texture(phong_ambient_index)]];
-    sampler             m_ambient_sampler   [[sampler(phong_ambient_index)]];
+    sampler             m_sampler           [[sampler(0)]];
 };
 
 struct SceneModelConfiguration{
-    device const SceneObject* scene_object [[buffer(scene_object_buffer_index)]];
+    device const CameraObject* camera_object [[buffer(camera_object_buffer_index)]];
+    device const LightObject* light_object [[buffer(light_object_buffer_index)]];
     device const ModelObject* object_object [[buffer(model_object_buffer_index)]];
 };
 
 
 vertex VertexOutMesh vertexMeshRender(VertexInMesh inData[[stage_in]],
-                                      device const SceneObject* scene_object [[buffer(scene_object_buffer_index)]],
+                                      device const CameraObject* camera_object [[buffer(camera_object_buffer_index)]],
                                       device const ModelObject* object_object [[buffer(model_object_buffer_index)]]
                                       ){
     return VertexOutMesh{
@@ -102,9 +100,12 @@ fragment half4 fragmentMeshRender(
 
 vertex VertexOutPlain vertexPlainRender(VertexInPlain inData[[stage_in]],
                                         SceneModelConfiguration config){
+    auto frag =  config.object_object->model * float4(inData.position,1.0);
     return VertexOutPlain{
         .uv = inData.uv,
-        .position = config.scene_object->projection * config.scene_object->view * config.object_object->model * float4(inData.position,1.0),
+        .frag_postion = frag.xyz,
+        .color = inData.position,
+        .position = config.camera_object->projection * config.camera_object->view * frag,
         .normal = normalize((config.object_object->normal_model * float4(inData.normal,1)).xyz),
         .tangent = normalize((config.object_object->normal_model * float4(inData.tangent,1)).xyz),
         .bitangent = normalize((config.object_object->normal_model * float4(inData.bitangent,1)).xyz),
@@ -114,24 +115,27 @@ vertex VertexOutPlain vertexPlainRender(VertexInPlain inData[[stage_in]],
 
 fragment half4 fragmentPlainRender(VertexOutPlain vertexData[[stage_in]],ModelMaterial m,SceneModelConfiguration config){
     
-    half4 color = m.m_diffuse.sample(m.m_diffuse_sampler,vertexData.uv);
-    half4 spec = m.m_specular.sample(m.m_specular_sampler,vertexData.uv);
-    half4 ambient = m.m_ambient.sample(m.m_ambient_sampler,vertexData.frag_postion);
+    half4 color = m.m_diffuse.sample(m.m_sampler,vertexData.uv);
+    
+    half4 spec = m.m_specular.sample(m.m_sampler,vertexData.uv);
+    
     simd_float3x3 tbn(cross(vertexData.normal,vertexData.bitangent),vertexData.bitangent,vertexData.normal);
 
-    float3 norcolor = normalize(float3(m.m_normal.sample(m.m_normal_sampler,vertexData.uv).xyz) * 2.0 - 1.0);
+    float3 norcolor = normalize(float3(m.m_normal.sample(m.m_sampler,vertexData.uv).xyz) * 2.0 - 1.0);
     
     simd_float3 normal = normalize(tbn * norcolor);
+//    simd_float3 normal = vertexData.normal;
     
-    simd_float3 light_dir = normalize(config.scene_object->light_pos - config.scene_object->light_center);
-    float diffuse_factor = max(dot(light_dir,normal),0.0);
+    simd_float3 light_dir = normalize(config.light_object->light_pos - config.light_object->light_center);
+    float diffuse_factor = max(dot(light_dir,normal) + 0.01,0.01);
     
-    simd_float3 cam_dir = normalize(config.scene_object->camera_pos - vertexData.frag_postion);
+    simd_float3 cam_dir = normalize(config.camera_object->camera_pos - vertexData.frag_postion);
     simd_float3 halfVector = normalize(cam_dir + light_dir);
-    
-    spec *= pow(max(dot(halfVector, normal), 0.0), config.object_object->shiness);
-    
-    return color * diffuse_factor + spec + ambient ;
+    float specOrigin = dot(halfVector, normal);
+    float specv = pow(max(specOrigin, 0.0), config.object_object->shiness);
+    spec *= specv;
+//    return ;
+    return color * diffuse_factor + spec;
 }
 
 
@@ -139,10 +143,10 @@ fragment half4 fragmentPlainRender(VertexOutPlain vertexData[[stage_in]],ModelMa
 vertex VertexOutSkybox vertexSkyboxRender(VertexInPlain inData[[stage_in]],
                                           SceneModelConfiguration config){
     float4x4 model(1);
-    model.columns[3] = float4(config.scene_object->camera_pos,1);
+    model.columns[3] = float4(config.camera_object->camera_pos,1);
     return VertexOutSkybox{
         
-        .position = config.scene_object->projection * config.scene_object->view * model * float4(inData.position,1.0),
+        .position = config.camera_object->projection * config.camera_object->view * model * float4(inData.position,1.0),
         .uv = inData.position
     };
 }
@@ -150,7 +154,7 @@ vertex VertexOutSkybox vertexSkyboxRender(VertexInPlain inData[[stage_in]],
 
 fragment half4 fragmentSkyboxRender(VertexOutSkybox vertexData[[stage_in]],ModelMaterial m){
     
-    return m.m_ambient.sample(m.m_ambient_sampler,vertexData.uv);
+    return m.m_ambient.sample(m.m_sampler,vertexData.uv);
 }
 
 

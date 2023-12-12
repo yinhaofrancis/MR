@@ -27,8 +27,8 @@ extension AL{
         
         public func draw(encoder:MTLRenderCommandEncoder){
            
-            encoder.setVertexBuffer(self.modelBuffer, offset: 0, index: Int(scene_object_buffer_index))
-            encoder.setFragmentBuffer(self.modelBuffer, offset: 0, index: Int(scene_object_buffer_index))
+            encoder.setVertexBuffer(self.modelBuffer, offset: 0, index: Int(camera_object_buffer_index))
+            encoder.setFragmentBuffer(self.modelBuffer, offset: 0, index: Int(camera_object_buffer_index))
             for i in renderables {
                 i.draw(encoder: encoder)
             }
@@ -160,7 +160,7 @@ extension AL{
     
 }
 
-extension AL.Scene where T == SceneObject{
+extension AL.Scene where T == CameraObject{
     
     public func loadModel(){
         self.model.pointee.camera_pos = self.camera.position
