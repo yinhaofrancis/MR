@@ -128,7 +128,7 @@ extension Renderer {
             return Renderer(device: texture.device)
         }
         public var sampler:Sampler
-        public init(texture: MTLTexture,samplerState:MTLSamplerState) {
+        public init(texture: MTLTexture,samplerState:MTLSamplerState = Renderer.Sampler.defaultSampler.samplerState) {
             self.texture = texture
             sampler = Sampler(samplerState: samplerState)
         }
@@ -200,7 +200,7 @@ extension Renderer {
                                height: height,
                                pixel: Configuration.DepthpixelFormat, 
                                storeMode: .private,
-                               usage: [.renderTarget,.shaderRead],
+                               usage: [.renderTarget,.shaderRead,.shaderWrite],
                                render: render)
         }
         public static func createDepthStencilTexture(width:Int,
@@ -303,7 +303,7 @@ public class RenderPass{
     
     public func beginRender(buffer:MTLCommandBuffer,texture:MTLTexture) throws ->MTLRenderCommandEncoder{
         self.descriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 1)
-        self.descriptor.colorAttachments[0].loadAction = .load
+        self.descriptor.colorAttachments[0].loadAction = .clear
         self.descriptor.colorAttachments[0].storeAction = .store
         self.texture = texture
         self.descriptor.depthAttachment.clearDepth = 1;
@@ -337,10 +337,12 @@ public class RenderPass{
         if(width != self.depthTexture?.width && height != self.depthTexture?.height){
             self.depthTexture = try Renderer.Texture.createDepthTexture(width: width, height: height, render: self.render).texture
             self.descriptor.depthAttachment.clearDepth = 1;
-            self.descriptor.depthAttachment.loadAction = .load
+            self.descriptor.depthAttachment.slice = 0;
+            self.descriptor.depthAttachment.loadAction = .clear
             self.descriptor.depthAttachment.storeAction = .store
         }
         guard let encoder = buffer.makeRenderCommandEncoder(descriptor: descriptor) else { throw TRError.createObjectFail("create computer encoder")}
+        encoder.setDepthBias(0, slopeScale: 200, clamp: 0)
         return encoder
     }
     
@@ -492,6 +494,7 @@ public class RenderPipelineProgram{
                 vertexFunction:String) throws {
         renderDescriptor.reset()
         renderDescriptor.colorAttachments[0].pixelFormat = .invalid
+        renderDescriptor.colorAttachments[0].isBlendingEnabled = false
         renderDescriptor.vertexDescriptor = vertexDescription
         renderDescriptor.depthAttachmentPixelFormat = Configuration.DepthpixelFormat
         renderDescriptor.stencilAttachmentPixelFormat = .invalid

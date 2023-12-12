@@ -76,7 +76,7 @@ extension simd_float4x4 {
         Result[2][2] = -2.0 / (zFar - zNear);
         Result[3][0] = -(right + left) / (right - left);
         Result[3][1] = -(top + bottom) / (top - bottom);
-        Result[3][2] = -(zFar + zNear) / (zFar - zNear);
+        Result[3][2] = zNear / (zFar - zNear);
         return Result;
     }
     public static let identity:simd_float4x4 = {

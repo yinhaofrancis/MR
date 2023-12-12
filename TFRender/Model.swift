@@ -305,7 +305,7 @@ public struct Light{
     }
     mutating func updateProjection(){
 
-        self.lightObject.projection = float4x4.ortho(left: -width, right: width, bottom: -height, top: height,zNear: 0.1,zFar: 100)
+        self.lightObject.projection = float4x4.ortho(left: -width, right: width, bottom: -height, top: height,zNear: 1,zFar: 100)
     }
 }
 
