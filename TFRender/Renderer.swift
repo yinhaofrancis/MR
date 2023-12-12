@@ -303,7 +303,7 @@ public class RenderPass{
     
     public func beginRender(buffer:MTLCommandBuffer,texture:MTLTexture) throws ->MTLRenderCommandEncoder{
         self.descriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 1)
-        self.descriptor.colorAttachments[0].loadAction = .clear
+        self.descriptor.colorAttachments[0].loadAction = .load
         self.descriptor.colorAttachments[0].storeAction = .store
         self.texture = texture
         self.descriptor.depthAttachment.clearDepth = 1;
@@ -336,8 +336,9 @@ public class RenderPass{
         
         if(width != self.depthTexture?.width && height != self.depthTexture?.height){
             self.depthTexture = try Renderer.Texture.createDepthTexture(width: width, height: height, render: self.render).texture
-            self.descriptor.depthAttachment.clearDepth = 0;
-            self.descriptor.depthAttachment.loadAction = .clear
+            self.descriptor.depthAttachment.clearDepth = 1;
+            self.descriptor.depthAttachment.loadAction = .load
+            self.descriptor.depthAttachment.storeAction = .store
         }
         guard let encoder = buffer.makeRenderCommandEncoder(descriptor: descriptor) else { throw TRError.createObjectFail("create computer encoder")}
         return encoder
@@ -488,15 +489,13 @@ public class RenderPipelineProgram{
         self.state = try shader.render.device.makeRenderPipelineState(descriptor: renderDescriptor)
     }
     public func reloadRenderShadow(vertexDescription:MTLVertexDescriptor?,
-                vertexFunction:String,
-                fragmentFunction:String) throws {
+                vertexFunction:String) throws {
         renderDescriptor.reset()
         renderDescriptor.colorAttachments[0].pixelFormat = .invalid
         renderDescriptor.vertexDescriptor = vertexDescription
         renderDescriptor.depthAttachmentPixelFormat = Configuration.DepthpixelFormat
         renderDescriptor.stencilAttachmentPixelFormat = .invalid
         renderDescriptor.vertexFunction =  try shader.createFunction(functionName: vertexFunction)
-        renderDescriptor.fragmentFunction = try shader.createFunction(functionName: fragmentFunction)
         self.state = try shader.render.device.makeRenderPipelineState(descriptor: renderDescriptor)
     }
     public func reload(vertexFunction:String,

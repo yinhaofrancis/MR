@@ -81,7 +81,7 @@ public struct RenderShadowModel{
     public var depthState:MTLDepthStencilState
     public init(vertexDescriptor:MTLVertexDescriptor?,
                 depth:MTLDepthStencilState)throws{
-        try program.reloadRenderShadow(vertexDescription:vertexDescriptor, vertexFunction: "VertexShadowRender", fragmentFunction: "FragmentShadowRender")
+        try program.reloadRenderShadow(vertexDescription:vertexDescriptor, vertexFunction: "VertexShadowRender")
         self.depthState = depth
     }
     public func begin(encoder:MTLRenderCommandEncoder){
@@ -96,7 +96,6 @@ public struct RenderShadowModel{
                           lightModel:Light){
         var cameraData = cameraModel.cameraData
         var lightObject = lightModel.lightObject
-        encoder.setViewport(MTLViewport(originX: 0, originY: 0, width: Double(lightModel.width), height: Double(lightModel.height), znear: 0, zfar: 1))
         encoder.setVertexBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
         encoder.setVertexBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
     }
@@ -306,7 +305,7 @@ public struct Light{
     }
     mutating func updateProjection(){
 
-        self.lightObject.projection = float4x4.ortho(left: -width, right: width, bottom: -height, top: height,zNear: 1,zFar: 100)
+        self.lightObject.projection = float4x4.ortho(left: -width, right: width, bottom: -height, top: height,zNear: 0.1,zFar: 100)
     }
 }
 

@@ -48,7 +48,8 @@ class VC3:UIViewController{
         
         var c = Camera()
         
-        let l = Light()
+        var l = Light()
+//        l.position = [-20,20,20]
         
         let renderPass = RenderPass(render: .shared)
         let depthRenderPass = RenderPass(render: .shared)
@@ -90,11 +91,13 @@ class VC3:UIViewController{
                 try sk.draw(encoder: encoder,material: materail)
                 rmodel.begin(encoder: encoder)
                 rmodel.bindScene(encoder: encoder, cameraModel: c, lightModel: l)
+                materail.diffuse = Renderer.Texture.defaultTexture
                 try rmodel.draw(encoder: encoder,
                                 model: model,
                                 material: materail,
                                 shadow: shadow)
-                try rmodel.draw(encoder: encoder, 
+                materail.diffuse = Renderer.Texture(texture: shadow.globelShadow!, samplerState: Renderer.Sampler.defaultSampler.samplerState)
+                try rmodel.draw(encoder: encoder,
                                 model: plant,
                                 material: materail,
                                 shadow: shadow)
