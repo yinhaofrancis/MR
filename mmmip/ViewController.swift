@@ -74,7 +74,7 @@ class VC3:UIViewController{
                 model.modelObject.model = simd_float4x4.translate(m: .identity, v: [x,2 * sin(rol),z])
                 let buffer = try self.queue.createBuffer()
                 let shadowe = try depthRenderPass.beginDepth(buffer: buffer, width: 1024, height: 1024)
-                shadowe.setViewport(MTLViewport(originX: 0, originY: 0, width: 1024, height: 1024, znear: 0, zfar: 1))
+                
                 shadowPro.begin(encoder: shadowe)
                 shadowPro.bindScene(encoder: shadowe, cameraModel: c, lightModel: l)
                 try shadowPro.draw(encoder: shadowe, model: model)
@@ -84,7 +84,7 @@ class VC3:UIViewController{
 
                 
                 let encoder = try renderPass.beginRender(buffer: buffer, layer: layer)
-                encoder.setViewport(MTLViewport(originX: 0, originY: 0, width: layer.frame.width, height: layer.frame.height, znear: 0, zfar: 1))
+                renderPass.setViewPort(encoder: encoder)
                 guard let drawable = renderPass.drawable else {
                     encoder.endEncoding()
                     return true

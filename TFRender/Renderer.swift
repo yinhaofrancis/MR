@@ -351,6 +351,9 @@ public class RenderPass{
         self.depthTexture = nil
         self.stencilTexture = nil
     }
+    public func setViewPort(encoder:MTLRenderCommandEncoder){
+        encoder.setViewport(MTLViewport(originX: 0, originY: 0, width: Double(self.width), height: Double(self.height), znear: 0, zfar: 1))
+    }
 }
 
 public struct Model{
