@@ -99,7 +99,7 @@ float calcShadow(VertexOutPlain vertexData,ModelMaterial m,SceneModelConfigurati
     for(int x = -2;x <= 2;x++){
         for(int y = -2;y <= 2;y++){
             float mapdepth = m.m_shadow.sample(m.m_sampler, uv + float2(x,y) * texturesize).r;
-            float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.0);
+            float bias = max(config.camera_object->maxBias * (1.0 - dot(normal, lightDir)), 0.0);
             delta += currentdepth - bias - mapdepth > 0 ? 1.0 : 0;
         }
     }

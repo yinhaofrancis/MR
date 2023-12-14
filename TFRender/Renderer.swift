@@ -514,6 +514,7 @@ public class RenderPipelineProgram{
         self.state = try shader.render.device.makeRenderPipelineState(descriptor: renderDescriptor)
     }
 }
+@available(macCatalyst 14.0, *)
 public class TileRenderPipelineProgram{
     
     public private (set)var state:MTLRenderPipelineState?

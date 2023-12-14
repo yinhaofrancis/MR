@@ -204,7 +204,7 @@ extension ModelObject{
 
 public struct Camera{
     
-    public var cameraData:CameraObject = CameraObject(projection: simd_float4x4.perspectiveRH_ZO(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8])
+    public var cameraData:CameraObject = CameraObject(projection: simd_float4x4.perspectiveRH_ZO(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8], maxBias: 0.00001)
     
     public init() {
         self.updateView()
@@ -216,6 +216,7 @@ public struct Camera{
             self.updateView()
         }
     }
+    public var maxBias:Float = 0.001
     
     public var position:simd_float3 = [8,8,8]{
         didSet{
@@ -241,13 +242,13 @@ public struct Camera{
         }
     }
     
-    public var near:Float = 1{
+    public var near:Float = 0.1{
         didSet{
             self.updateProjection()
         }
     }
     
-    public var far:Float = 150{
+    public var far:Float = 50{
         didSet{
             self.updateProjection()
         }
@@ -255,11 +256,11 @@ public struct Camera{
     
     mutating func updateProjection(){
         self.cameraData.projection = simd_float4x4.perspectiveRH_NO(fovy: fovy, aspect: aspect, zNear: near, zFar: far)
-//        self.cameraData.projection = float4x4.orthoRH_ZO(left: -20, right: 20, bottom: -20, top: 20,zNear: 1,zFar: 60)
     }
     mutating func updateView(){
         self.cameraData.view = float4x4.lookat(eye: position, center: lookTo, up: up)
         self.cameraData.camera_pos = position
+        self.cameraData.maxBias = self.maxBias
     
     }
 }
@@ -343,12 +344,20 @@ public struct TextureLoader{
         self.render = render
         textureLoader = MTKTextureLoader(device: render.device)
     }
-    
     public func texture(name:String,callback:@escaping (Renderer.Texture?)->Void){
         textureLoader.newTexture(name: name, scaleFactor: 1, bundle: nil) { texture, e in
             if e == nil {
                 callback(Renderer.Texture(texture: texture!, samplerState: Renderer.Sampler.defaultSampler.samplerState))
             }
         }
+    }
+    public func texture(url:URL,callback:@escaping (Renderer.Texture?)->Void){
+        do{
+            let s = try textureLoader.newTexture(URL: url,options: [.origin:MTKTextureLoader.Origin.bottomLeft])
+            callback(Renderer.Texture(texture: s, samplerState: Renderer.Sampler.defaultSampler.samplerState))
+        }catch{
+            callback(nil)
+        }
+        
     }
 }

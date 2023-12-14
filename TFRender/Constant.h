@@ -38,6 +38,7 @@ struct CameraObject{
     simd_float4x4   projection;
     simd_float4x4   view;
     simd_float3     camera_pos;
+    float           maxBias;
 };
 
 struct LightObject {

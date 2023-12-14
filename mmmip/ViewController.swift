@@ -34,12 +34,12 @@ class VC3:UIViewController{
 
         var model = Model.sphere(size: [1,1,1], segments: [20,20])
         
-        model.modelObject.model = simd_float4x4.translate(m: .identity, v: [3,0,3])
+        model.modelObject.model = simd_float4x4.translate(m: .identity, v: [3,1,3])
         
         
         var model2 = Model.sphere(size: [2,2,2], segments: [20,20])
         
-        model2.modelObject.model = simd_float4x4.translate(m: .identity, v: [-3,20,-3])
+        model2.modelObject.model = simd_float4x4.translate(m: .identity, v: [5,2,-5])
         
         var plant = Model.plant(size: [20,20,20], segments: [1,1])
         
@@ -59,10 +59,13 @@ class VC3:UIViewController{
         
         var shadowPro = try! RenderShadowModel(vertexDescriptor: model.vertexDescription, depth: queue.renderer.defaultDepthState)
         
-        var c = Camera()        
+        var c = Camera()
+        c.position = [-8,8,-8]
         
         var l = Light()
 //        l.position = [-20,20,20]
+        
+        let m = Material()
         
         let renderPass = RenderPass(render: .shared)
         let depthRenderPass = RenderPass(render: .shared)
@@ -73,6 +76,17 @@ class VC3:UIViewController{
             materail.ambient = r
         }
         
+        TextureLoader.shared.texture(url: Bundle.main.url(forResource: "cyborg_diffuse", withExtension: "png")!) { tex in
+            m.diffuse = tex
+        }
+        TextureLoader.shared.texture(url: Bundle.main.url(forResource: "cyborg_normal", withExtension: "png")!) { tex in
+            m.normal = tex
+            
+        }
+        TextureLoader.shared.texture(url: Bundle.main.url(forResource: "cyborg_specular", withExtension: "png")!) { tex in
+            m.specular = tex
+        }
+        
         
         vsync.setCallBack { [weak self] in
             guard let self else {
@@ -80,9 +94,9 @@ class VC3:UIViewController{
             }
             do {
                 rol += 0.01
-                let x = cos(0.1 * rol) * 3
-                let z = sin(0.1 * rol) * 3
-//                c.position = [x * 6,20,z * 6]
+                let x = cos(rol) * 3
+                let z = sin(rol) * 3
+                l.position = [x * 3,8,z * 3]
                 l.far = 25
                 one.modelObject.model = simd_float4x4.translate(m: .identity, v: [0,0.5 * sin(rol),0])
                 let buffer = try self.queue.createBuffer()
@@ -97,7 +111,7 @@ class VC3:UIViewController{
                 shadowe.endEncoding()
                 shadow.globelShadow = depthRenderPass.depthTexture
 
-                
+                c.aspect = Float(renderPass.width) / Float(renderPass.height)
                 let encoder = try renderPass.beginRender(buffer: buffer, layer: layer)
                 renderPass.setViewPort(encoder: encoder)
                 guard let drawable = renderPass.drawable else {
@@ -126,7 +140,7 @@ class VC3:UIViewController{
                 
                 try rmodel.draw(encoder: encoder,
                                 model: one,
-                                material: materail,
+                                material: m,
                                 shadow: shadow)
                 encoder.endEncoding()
                 buffer.present(drawable)
