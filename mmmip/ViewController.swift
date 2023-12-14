@@ -60,7 +60,8 @@ class VC3:UIViewController{
         var shadowPro = try! RenderShadowModel(vertexDescriptor: model.vertexDescription, depth: queue.renderer.defaultDepthState)
         
         var c = Camera()
-        c.position = [-8,8,-8]
+        c.position = [-20,20,-20]
+        c.far = 300
         
         var l = Light()
 //        l.position = [-20,20,20]

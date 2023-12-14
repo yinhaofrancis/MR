@@ -90,16 +90,17 @@ vertex VertexOutPlain vertexPlainRender(VertexInPlain inData[[stage_in]],
 float calcShadow(VertexOutPlain vertexData,ModelMaterial m,SceneModelConfiguration config,float3 lightDir,float3 normal){
     float4 lightSpace = (config.light_object->projection * config.light_object->view * float4(vertexData.frag_postion,1));
     float3 lightpos = (lightSpace.xyz / lightSpace.w);
-    float2 uv = (lightpos.xy * 0.5 + 0.5) * float2(1,-1);
-    if (uv.x > 1 || uv.y > 1){
+    float2 uv = (lightpos.xy * 0.5 + 0.5);
+    if (uv.x > 1 || uv.y > 1 || uv.x < 0 || uv.y < 0){
         return 0;
     }
+    uv *= float2(1,-1);
     float currentdepth = lightpos.z;
     float2 texturesize = 1 / float2(m.m_shadow.get_width(),m.m_shadow.get_height());
     float delta = 0;
     for(int x = -2;x <= 2;x++){
         for(int y = -2;y <= 2;y++){
-            float mapdepth = m.m_shadow.sample(m.m_sampler, uv + float2(x,y) * texturesize).r;
+            float mapdepth = m.m_shadow.sample(m.m_shadow_sampler, uv + float2(x,y) * texturesize).r;
             float bias = max(config.camera_object->maxBias * (1.0 - dot(normal, lightDir)), 0.0);
             delta += currentdepth - bias - mapdepth > 0 ? 1.0 : 0;
         }

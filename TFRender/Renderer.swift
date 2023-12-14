@@ -125,9 +125,9 @@ extension Renderer {
             desc.magFilter = .linear
             desc.minFilter = .linear
             desc.mipFilter = .linear
-            desc.rAddressMode = .clampToZero
-            desc.sAddressMode = .clampToZero
-            desc.tAddressMode = .clampToZero
+            desc.rAddressMode = .repeat
+            desc.sAddressMode = .repeat
+            desc.tAddressMode = .repeat
             return try! Sampler(descriptor: desc)
         }()
     }
