@@ -32,6 +32,11 @@
 		A9C2A2612B256B0F007031F7 /* RenderPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2602B256B0F007031F7 /* RenderPass.swift */; };
 		A9C2A2652B25728F007031F7 /* VC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2642B25728F007031F7 /* VC2.swift */; };
 		A9C2A2672B2575F7007031F7 /* MScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2A2662B2575F7007031F7 /* MScene.swift */; };
+		A9D4FF1D2B2B485800FF6D22 /* cyborg_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A9D4FF182B2B485800FF6D22 /* cyborg_diffuse.png */; };
+		A9D4FF1E2B2B485800FF6D22 /* cyborg_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A9D4FF192B2B485800FF6D22 /* cyborg_normal.png */; };
+		A9D4FF1F2B2B485800FF6D22 /* cyborg_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A9D4FF1A2B2B485800FF6D22 /* cyborg_specular.png */; };
+		A9D4FF202B2B485800FF6D22 /* cyborg.mtl in Resources */ = {isa = PBXBuildFile; fileRef = A9D4FF1B2B2B485800FF6D22 /* cyborg.mtl */; };
+		A9D4FF212B2B485800FF6D22 /* cyborg.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9D4FF1C2B2B485800FF6D22 /* cyborg.obj */; };
 		A9E5F6062B28C83F00BC3456 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E5F6052B28C83F00BC3456 /* Material.swift */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +95,11 @@
 		A9C2A2602B256B0F007031F7 /* RenderPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderPass.swift; sourceTree = "<group>"; };
 		A9C2A2642B25728F007031F7 /* VC2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VC2.swift; sourceTree = "<group>"; };
 		A9C2A2662B2575F7007031F7 /* MScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MScene.swift; sourceTree = "<group>"; };
+		A9D4FF182B2B485800FF6D22 /* cyborg_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_diffuse.png; sourceTree = "<group>"; };
+		A9D4FF192B2B485800FF6D22 /* cyborg_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_normal.png; sourceTree = "<group>"; };
+		A9D4FF1A2B2B485800FF6D22 /* cyborg_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_specular.png; sourceTree = "<group>"; };
+		A9D4FF1B2B2B485800FF6D22 /* cyborg.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.mtl; sourceTree = "<group>"; };
+		A9D4FF1C2B2B485800FF6D22 /* cyborg.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.obj; sourceTree = "<group>"; };
 		A9DEEE562B234AF2004F8AFB /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		A9E5F6052B28C83F00BC3456 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -155,9 +165,22 @@
 			path = MR;
 			sourceTree = "<group>";
 		};
+		A9BB4F762B2B47C0009B742E /* mm */ = {
+			isa = PBXGroup;
+			children = (
+				A9D4FF182B2B485800FF6D22 /* cyborg_diffuse.png */,
+				A9D4FF192B2B485800FF6D22 /* cyborg_normal.png */,
+				A9D4FF1A2B2B485800FF6D22 /* cyborg_specular.png */,
+				A9D4FF1B2B2B485800FF6D22 /* cyborg.mtl */,
+				A9D4FF1C2B2B485800FF6D22 /* cyborg.obj */,
+			);
+			path = mm;
+			sourceTree = "<group>";
+		};
 		A9BCAFB72B2371C300AF13FB /* mmmip */ = {
 			isa = PBXGroup;
 			children = (
+				A9BB4F762B2B47C0009B742E /* mm */,
 				A9BCAFB82B2371C300AF13FB /* AppDelegate.swift */,
 				A9BCAFBA2B2371C300AF13FB /* SceneDelegate.swift */,
 				A9BCAFBC2B2371C300AF13FB /* ViewController.swift */,
@@ -343,6 +366,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9D4FF1E2B2B485800FF6D22 /* cyborg_normal.png in Resources */,
+				A9D4FF212B2B485800FF6D22 /* cyborg.obj in Resources */,
+				A9D4FF1D2B2B485800FF6D22 /* cyborg_diffuse.png in Resources */,
+				A9D4FF202B2B485800FF6D22 /* cyborg.mtl in Resources */,
+				A9D4FF1F2B2B485800FF6D22 /* cyborg_specular.png in Resources */,
 				A9BCAFC52B2371C600AF13FB /* LaunchScreen.storyboard in Resources */,
 				A9BCAFC22B2371C600AF13FB /* Assets.xcassets in Resources */,
 				A9BCAFC02B2371C300AF13FB /* Main.storyboard in Resources */,

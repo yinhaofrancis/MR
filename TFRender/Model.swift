@@ -77,7 +77,7 @@ public struct RenderModel{
 
 public struct RenderShadowModel{
     let program = RenderPipelineProgram()
-    public var cullModel = MTLCullMode.front
+    public var cullModel = MTLCullMode.back
     public var depthState:MTLDepthStencilState
     public init(vertexDescriptor:MTLVertexDescriptor?,
                 depth:MTLDepthStencilState)throws{
@@ -183,6 +183,15 @@ extension Model{
         md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
         let mk = try! MTKMesh(mesh: md, device: render.device)
         return Model(mesh: mk)
+    }
+    public static func model(url:URL,index:Int,render:Renderer = .shared) throws ->Model{
+        let ass = MDLAsset(url: url, vertexDescriptor: nil, bufferAllocator: MTKMeshBufferAllocator(device: render.device))
+//        md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
+        ass.loadTextures()
+        let a = try MTKMesh.newMeshes(asset: ass, device: render.device)
+        let md = a.modelIOMeshes[index]
+        md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
+        return Model(mesh: try! MTKMesh(mesh: md, device: render.device))
     }
     
 }

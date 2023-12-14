@@ -99,7 +99,7 @@ float calcShadow(VertexOutPlain vertexData,ModelMaterial m,SceneModelConfigurati
     for(int x = -2;x <= 2;x++){
         for(int y = -2;y <= 2;y++){
             float mapdepth = m.m_shadow.sample(m.m_sampler, uv + float2(x,y) * texturesize).r;
-            float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+            float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.0);
             delta += currentdepth - bias - mapdepth > 0 ? 1.0 : 0;
         }
     }
@@ -119,7 +119,7 @@ fragment half4 fragmentPlainRender(VertexOutPlain vertexData[[stage_in]],ModelMa
     simd_float3 normal = normalize(tbn * norcolor);
     
     simd_float3 light_dir = normalize(config.light_object->light_pos - config.light_object->light_center);
-    float diffuse_factor = max(dot(light_dir,normal) + 0.01,0.01);
+    float diffuse_factor = max(dot(light_dir,normal),0.1);
     
     simd_float3 cam_dir = normalize(config.camera_object->camera_pos - vertexData.frag_postion);
     simd_float3 halfVector = normalize(cam_dir + light_dir);
