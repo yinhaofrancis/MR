@@ -98,7 +98,7 @@ class VC3:UIViewController{
                 let z = sin(rol) * 3
                 l.position = [x * 3,8,z * 3]
                 l.far = 25
-                one.modelObject.model = simd_float4x4.translate(m: .identity, v: [0,0.5 * sin(rol),0])
+                one.modelObject.model = simd_float4x4.translate(m: .identity, v: [0,0,0])
                 let buffer = try self.queue.createBuffer()
                 let shadowe = try depthRenderPass.beginDepth(buffer: buffer, width: 1024, height: 1024)
                 
