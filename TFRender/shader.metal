@@ -56,12 +56,13 @@ struct ModelHeapMaterial{
 };
 
 struct ModelMaterial{
-    texture2d<half>     m_diffuse           [[texture(phong_diffuse_index)]];
-    texture2d<half>     m_specular          [[texture(phong_specular_index)]];
-    texture2d<half>     m_normal            [[texture(phong_normal_index)]];
-    texturecube<half>   m_ambient           [[texture(phong_ambient_index)]];
-    texture2d<float>      m_shadow           [[texture(shadow_map_index)]];
-    sampler             m_sampler           [[sampler(0)]];
+    texture2d<half>         m_diffuse           [[texture(phong_diffuse_index)]];
+    texture2d<half>         m_specular          [[texture(phong_specular_index)]];
+    texture2d<half>         m_normal            [[texture(phong_normal_index)]];
+    texturecube<half>       m_ambient           [[texture(phong_ambient_index)]];
+    texture2d<float>        m_shadow            [[texture(shadow_map_index)]];
+    sampler                 m_sampler           [[sampler(sampler_defalut)]];
+    sampler                 m_shadow_sampler    [[sampler(shadow_sampler_default)]];
 };
 
 struct SceneModelConfiguration{

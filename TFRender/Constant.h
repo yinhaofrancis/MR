@@ -15,6 +15,8 @@
 #define Materail_Buffer_Id      0
 #define Materail_id             0
 
+#define sampler_defalut             0
+#define shadow_sampler_default      1
 
 
 

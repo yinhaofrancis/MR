@@ -70,7 +70,8 @@ public struct RenderModel{
             encoder.setFragmentTexture(material.specular?.texture, index: Int(phong_specular_index))
             encoder.setFragmentTexture(material.normal?.texture, index: Int(phong_normal_index))
             encoder.setFragmentTexture(shadow.globelShadow, index: Int(shadow_map_index))
-            encoder.setFragmentSamplerState(material.diffuse?.sampler.samplerState, index: 0)
+            encoder.setFragmentSamplerState(material.diffuse?.sampler.samplerState, index: Int(sampler_defalut))
+            encoder.setFragmentSamplerState(Renderer.Sampler.defaultShadowSampler.samplerState, index: Int(shadow_sampler_default))
             model.draw(encoder: encoder)
     }
 }

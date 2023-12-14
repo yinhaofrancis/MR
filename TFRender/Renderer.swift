@@ -120,6 +120,16 @@ extension Renderer {
             desc.tAddressMode = .repeat
             return try! Sampler(descriptor: desc)
         }()
+        public static let defaultShadowSampler:Sampler = {
+            let desc = MTLSamplerDescriptor();
+            desc.magFilter = .linear
+            desc.minFilter = .linear
+            desc.mipFilter = .linear
+            desc.rAddressMode = .clampToZero
+            desc.sAddressMode = .clampToZero
+            desc.tAddressMode = .clampToZero
+            return try! Sampler(descriptor: desc)
+        }()
     }
     
     public struct Texture{

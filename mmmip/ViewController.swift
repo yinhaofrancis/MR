@@ -95,8 +95,9 @@ class VC3:UIViewController{
             do {
                 rol += 0.01
                 let x = cos(rol) * 3
+                let y = sin(0.1 * rol) * 9 + 9
                 let z = sin(rol) * 3
-                l.position = [x * 3,8,z * 3]
+                l.position = [x * 3, y ,z * 3]
                 l.far = 25
                 one.modelObject.model = simd_float4x4.translate(m: .identity, v: [0,0,0])
                 let buffer = try self.queue.createBuffer()
