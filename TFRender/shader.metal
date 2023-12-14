@@ -60,6 +60,7 @@ struct ModelMaterial{
     texture2d<half>     m_specular          [[texture(phong_specular_index)]];
     texture2d<half>     m_normal            [[texture(phong_normal_index)]];
     texturecube<half>   m_ambient           [[texture(phong_ambient_index)]];
+    texture2d<float>      m_shadow           [[texture(shadow_map_index)]];
     sampler             m_sampler           [[sampler(0)]];
 };
 
@@ -85,6 +86,25 @@ vertex VertexOutPlain vertexPlainRender(VertexInPlain inData[[stage_in]],
     };
 }
 
+float calcShadow(VertexOutPlain vertexData,ModelMaterial m,SceneModelConfiguration config,float3 lightDir,float3 normal){
+    float4 lightSpace = (config.light_object->projection * config.light_object->view * float4(vertexData.frag_postion,1));
+    float3 lightpos = (lightSpace.xyz / lightSpace.w);
+    float2 uv = (lightpos.xy * 0.5 + 0.5) * float2(1,-1);
+    if (uv.x > 1 || uv.y > 1){
+        return 0;
+    }
+    float currentdepth = lightpos.z;
+    float2 texturesize = 1 / float2(m.m_shadow.get_width(),m.m_shadow.get_height());
+    float delta = 0;
+    for(int x = -2;x <= 2;x++){
+        for(int y = -2;y <= 2;y++){
+            float mapdepth = m.m_shadow.sample(m.m_sampler, uv + float2(x,y) * texturesize).r;
+            float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+            delta += currentdepth - bias - mapdepth > 0 ? 1.0 : 0;
+        }
+    }
+    return delta / 25;
+}
 
 fragment half4 fragmentPlainRender(VertexOutPlain vertexData[[stage_in]],ModelMaterial m,SceneModelConfiguration config){
     
@@ -97,7 +117,6 @@ fragment half4 fragmentPlainRender(VertexOutPlain vertexData[[stage_in]],ModelMa
     float3 norcolor = normalize(float3(m.m_normal.sample(m.m_sampler,vertexData.uv).xyz) * 2.0 - 1.0);
     
     simd_float3 normal = normalize(tbn * norcolor);
-//    simd_float3 normal = vertexData.normal;
     
     simd_float3 light_dir = normalize(config.light_object->light_pos - config.light_object->light_center);
     float diffuse_factor = max(dot(light_dir,normal) + 0.01,0.01);
@@ -106,9 +125,11 @@ fragment half4 fragmentPlainRender(VertexOutPlain vertexData[[stage_in]],ModelMa
     simd_float3 halfVector = normalize(cam_dir + light_dir);
     float specOrigin = dot(halfVector, normal);
     float specv = pow(max(specOrigin, 0.0), config.object_object->shiness);
-    spec *= specv;
-//    return ;
-    return color * diffuse_factor + spec;
+   
+    float shadowInfo = calcShadow(vertexData, m, config,light_dir,normal);
+    float shadow = max(1 - shadowInfo,0.1);
+
+    return half4((color * diffuse_factor * shadow + spec * specv * shadow).xyz,1);
 }
 
 
@@ -166,8 +187,4 @@ vertex VertexOutShadow VertexShadowRender(VertexInShadow inData [[stage_in]],
     VertexOutShadow d;
     d.position = config.light_object->projection * config.light_object->view * config.object_object->model * float4(inData.position,1);
     return d;
-}
-
-fragment half4 FragmentShadowRender(VertexOutShadow in [[stage_in]]){
-    return half4(1.0f,1.0f,1.0f, 1.0f);
 }

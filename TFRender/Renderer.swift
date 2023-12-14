@@ -38,7 +38,7 @@ public class Renderer{
     
     public private(set) lazy var defaultDepthState:MTLDepthStencilState = {
         let desc = MTLDepthStencilDescriptor()
-        desc.depthCompareFunction = .lessEqual
+        desc.depthCompareFunction = .less
         desc.isDepthWriteEnabled = true
         return self.device.makeDepthStencilState(descriptor: desc)!
     }()
@@ -342,7 +342,7 @@ public class RenderPass{
             self.descriptor.depthAttachment.storeAction = .store
         }
         guard let encoder = buffer.makeRenderCommandEncoder(descriptor: descriptor) else { throw TRError.createObjectFail("create computer encoder")}
-        encoder.setDepthBias(0, slopeScale: 200, clamp: 0)
+        encoder.setDepthBias(0, slopeScale: 0, clamp: 0)
         return encoder
     }
     

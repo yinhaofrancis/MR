@@ -26,7 +26,7 @@ class VC3:UIViewController{
         //模型
         var model = Model.sphere(size: [1,1,1], segments: [20,20])
         
-        model.modelObject.model = simd_float4x4.translate(m: .identity, v: [-3,1,-3])
+        model.modelObject.model = simd_float4x4.translate(m: .identity, v: [3,1,3])
         
         var plant = Model.plant(size: [20,20,20], segments: [1,1])
         
@@ -66,12 +66,15 @@ class VC3:UIViewController{
                 return false
             }
             do {
-                rol += 0.01
-                let x = cos(rol) * 13
-                let z = sin(rol) * 13
-                c.position = [x,5,z]
-                var buffer = try self.queue.createBuffer()
+                rol += 0.001
+                let x = cos(rol) * 3
+                let z = sin(rol) * 3
+                c.position = [7,5, 8]
+                l.far = 25
+                model.modelObject.model = simd_float4x4.translate(m: .identity, v: [x,2 * sin(rol),z])
+                let buffer = try self.queue.createBuffer()
                 let shadowe = try depthRenderPass.beginDepth(buffer: buffer, width: 1024, height: 1024)
+                shadowe.setViewport(MTLViewport(originX: 0, originY: 0, width: 1024, height: 1024, znear: 0, zfar: 1))
                 shadowPro.begin(encoder: shadowe)
                 shadowPro.bindScene(encoder: shadowe, cameraModel: c, lightModel: l)
                 try shadowPro.draw(encoder: shadowe, model: model)
@@ -81,7 +84,7 @@ class VC3:UIViewController{
 
                 
                 let encoder = try renderPass.beginRender(buffer: buffer, layer: layer)
-                
+                encoder.setViewport(MTLViewport(originX: 0, originY: 0, width: layer.frame.width, height: layer.frame.height, znear: 0, zfar: 1))
                 guard let drawable = renderPass.drawable else {
                     encoder.endEncoding()
                     return true
@@ -91,12 +94,12 @@ class VC3:UIViewController{
                 try sk.draw(encoder: encoder,material: materail)
                 rmodel.begin(encoder: encoder)
                 rmodel.bindScene(encoder: encoder, cameraModel: c, lightModel: l)
-                materail.diffuse = Renderer.Texture.defaultTexture
+         
                 try rmodel.draw(encoder: encoder,
                                 model: model,
                                 material: materail,
                                 shadow: shadow)
-                materail.diffuse = Renderer.Texture(texture: shadow.globelShadow!, samplerState: Renderer.Sampler.defaultSampler.samplerState)
+
                 try rmodel.draw(encoder: encoder,
                                 model: plant,
                                 material: materail,

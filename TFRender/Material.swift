@@ -11,24 +11,33 @@ import simd
 import Foundation
 
 extension Renderer.Texture{
+    
+    
+    public static func randomBuffer(size:Int)->[UInt8]{
+        var buf:[UInt8] = []
+        for _ in (0 ..< (size * size)) {
+            buf.append(UInt8.random(in: 0 ..< 255))
+        }
+        return buf
+    }
+    
     public static var defaultTexture:Renderer.Texture = {
-        var v = try! Renderer.Texture(width: 2, height: 2, pixel: .r8Unorm,colorSwizzle: .red)
+        let size = Int.random(in: 2 ..< 100)
+        
+        var v = try! Renderer.Texture(width: size, height: size, pixel: .r8Unorm,colorSwizzle: .red)
         v.sampler = .defaultNesrestSampler
-        let value:[UInt8] = [
-            255,0,0,255
-        ]
-        v.assign(width: 2, height: 2, bytesPerRow: 2, withBytes: value)
+        let value:[UInt8] = randomBuffer(size: size)
+        v.assign(width: size, height: size, bytesPerRow: size, withBytes: value)
         return v
     }()
     
     public static var defaultTextureCube:Renderer.Texture = {
-        var v = try! Renderer.Texture(width: 2, height: 2, pixel: .r8Unorm,type: .typeCube,colorSwizzle: .red)
+        let size = Int.random(in: 2 ..< 200)
+        var v = try! Renderer.Texture(width: size, height: size, pixel: .r8Unorm,type: .typeCube,colorSwizzle: .red)
         v.sampler = .defaultNesrestSampler
-        let value:[UInt8] = [
-            255,0,0,255
-        ]
+        let value:[UInt8] = randomBuffer(size: size)
         for i in 0 ..< 6{
-            v.assign(region: MTLRegion(origin: .init(x: 0, y: 0, z: 0), size: .init(width: 2, height: 2, depth: 1)), level: 0, slice: i, bytes: value, bytesPerRow: 2, bytePerImage: 4)
+            v.assign(region: MTLRegion(origin: .init(x: 0, y: 0, z: 0), size: .init(width: size, height: size, depth: 1)), level: 0, slice: i, bytes: value, bytesPerRow: size, bytePerImage: size * size)
         }
         
         return v

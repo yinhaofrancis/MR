@@ -44,18 +44,7 @@ extension simd_float4x4 {
         Result[3][2] = -2.0 * zNear;
         return Result;
     }
-    public static func perspective(fovy:Float, aspect:Float, zNear:Float, zFar:Float) -> simd_float4x4
-    {
-        let  tanHalfFovy = tan(fovy / 2.0);
 
-        var Result = simd_float4x4.zero
-        Result[0][0] = 1.0 / (aspect * tanHalfFovy);
-        Result[1][1] = 1.0 / (tanHalfFovy);
-        Result[2][2] = -(zFar + zNear) / (zFar - zNear);
-        Result[2][3] = -1.0;
-        Result[3][2] = -(2.0 * zFar * zNear) / (zFar - zNear);
-        return Result;
-    }
     public static func frustum(left:Float,right:Float,top:Float,bottom:Float,nearVal:Float, farVal:Float)->simd_float4x4{
         var Result = float4x4.zero
         Result[0][0] = (2.0 * nearVal) / (right - left);
@@ -68,17 +57,106 @@ extension simd_float4x4 {
         return Result;
     }
     
-    public static func ortho(left:Float,right:Float,bottom:Float,top:Float,zNear:Float,zFar:Float)->simd_float4x4
+    public static func orthoLH_ZO(left:Float,right:Float,bottom:Float,top:Float,zNear:Float,zFar:Float)->simd_float4x4
     {
         var Result = simd_float4x4.identity
-        Result[0][0] = 2.0 / (right - left);
-        Result[1][1] = 2.0 / (top - bottom);
-        Result[2][2] = -2.0 / (zFar - zNear);
+        Result[0][0] = 2 / (right - left);
+        Result[1][1] = 2 / (top - bottom);
+        Result[2][2] = 1 / (zFar - zNear);
         Result[3][0] = -(right + left) / (right - left);
         Result[3][1] = -(top + bottom) / (top - bottom);
-        Result[3][2] = zNear / (zFar - zNear);
+        Result[3][2] = -zNear / (zFar - zNear);
         return Result;
     }
+    public static func orthoLH_NO(left:Float,right:Float,bottom:Float,top:Float,zNear:Float,zFar:Float)->simd_float4x4
+    {
+        var Result = simd_float4x4.identity
+        Result[0][0] = 2 / (right - left);
+        Result[1][1] = 2 / (top - bottom);
+        Result[2][2] = 2 / (zFar - zNear);
+        Result[3][0] = -(right + left) / (right - left);
+        Result[3][1] = -(top + bottom) / (top - bottom);
+        Result[3][2] = -(zFar + zNear) / (zFar - zNear);
+        return Result;
+    }
+    public static func orthoRH_ZO(left:Float,right:Float,bottom:Float,top:Float,zNear:Float,zFar:Float)->simd_float4x4
+    {
+        var Result = simd_float4x4.identity
+        Result[0][0] = 2 / (right - left);
+        Result[1][1] = 2 / (top - bottom);
+        Result[2][2] = -1 / (zFar - zNear);
+        Result[3][0] = -(right + left) / (right - left);
+        Result[3][1] = -(top + bottom) / (top - bottom);
+        Result[3][2] = -zNear / (zFar - zNear);
+        return Result;
+    }
+    public static func orthoRH_NO(left:Float,right:Float,bottom:Float,top:Float,zNear:Float,zFar:Float)->simd_float4x4
+    {
+        var Result = simd_float4x4.identity
+        Result[0][0] = 2 / (right - left);
+        Result[1][1] = 2 / (top - bottom);
+        Result[2][2] = -2 / (zFar - zNear);
+        Result[3][0] = -(right + left) / (right - left);
+        Result[3][1] = -(top + bottom) / (top - bottom);
+        Result[3][2] = -(zFar + zNear) / (zFar - zNear);
+        return Result;
+    }
+    
+    
+    public static func perspectiveRH_ZO(fovy:Float, aspect:Float, zNear:Float, zFar:Float)->simd_float4x4
+    {
+        let tanHalfFovy:Float = tan(fovy / 2);
+
+        var Result = simd_float4x4.zero
+        Result[0][0] = 1 / (aspect * tanHalfFovy);
+        Result[1][1] = 1 / (tanHalfFovy);
+        Result[2][2] = zFar / (zNear - zFar);
+        Result[2][3] = -1;
+        Result[3][2] = -(zFar * zNear) / (zFar - zNear);
+        return Result;
+    }
+
+    public static func perspectiveRH_NO(fovy:Float, aspect:Float, zNear:Float, zFar:Float)->simd_float4x4
+    {
+        let tanHalfFovy:Float = tan(fovy / 2);
+
+        var Result = simd_float4x4.zero
+        Result[0][0] = 1 / (aspect * tanHalfFovy);
+        Result[1][1] = 1 / (tanHalfFovy);
+        Result[2][2] = -(zFar + zNear) / (zFar - zNear);
+        Result[2][3] = -1;
+        Result[3][2] = -(2 * zFar * zNear) / (zFar - zNear);
+        return Result;
+    }
+
+    public static func perspectiveLH_ZO(fovy:Float, aspect:Float, zNear:Float, zFar:Float)->simd_float4x4
+    {
+        let tanHalfFovy:Float = tan(fovy / 2);
+
+        var Result = simd_float4x4.zero
+        Result[0][0] = 1 / (aspect * tanHalfFovy);
+        Result[1][1] = 1 / (tanHalfFovy);
+        Result[2][2] = zFar / (zFar - zNear);
+        Result[2][3] = 1;
+        Result[3][2] = -(zFar * zNear) / (zFar - zNear);
+        return Result;
+    }
+
+    public static func perspectiveLH_NO(fovy:Float, aspect:Float, zNear:Float, zFar:Float)->simd_float4x4
+    {
+
+        let tanHalfFovy:Float = tan(fovy / 2);
+
+        var Result = simd_float4x4.zero
+        Result[0][0] = 1 / (aspect * tanHalfFovy);
+        Result[1][1] = 1 / (tanHalfFovy);
+        Result[2][2] = (zFar + zNear) / (zFar - zNear);
+        Result[2][3] = 1;
+        Result[3][2] = -(2 * zFar * zNear) / (zFar - zNear);
+        return Result;
+    }
+    
+    
     public static let identity:simd_float4x4 = {
         return simd_float4x4(rows: [
             [1,0,0,0],

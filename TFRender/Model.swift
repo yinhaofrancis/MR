@@ -195,7 +195,7 @@ extension ModelObject{
 
 public struct Camera{
     
-    public var cameraData:CameraObject = CameraObject(projection: simd_float4x4.perspective(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8])
+    public var cameraData:CameraObject = CameraObject(projection: simd_float4x4.perspectiveRH_ZO(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8])
     
     public init() {
         self.updateView()
@@ -245,7 +245,8 @@ public struct Camera{
     }
     
     mutating func updateProjection(){
-        self.cameraData.projection = simd_float4x4.perspective(fovy: fovy, aspect: aspect, zNear: near, zFar: far)
+        self.cameraData.projection = simd_float4x4.perspectiveRH_NO(fovy: fovy, aspect: aspect, zNear: near, zFar: far)
+//        self.cameraData.projection = float4x4.orthoRH_ZO(left: -20, right: 20, bottom: -20, top: 20,zNear: 1,zFar: 60)
     }
     mutating func updateView(){
         self.cameraData.view = float4x4.lookat(eye: position, center: lookTo, up: up)
@@ -298,6 +299,19 @@ public struct Light{
         }
     }
     
+    public var near:Float = 1{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    public var far:Float = 150{
+        didSet{
+            self.updateProjection()
+        }
+    }
+    
+    
     mutating func updateView(){
         self.lightObject.light_pos = position
         self.lightObject.light_center = target
@@ -305,7 +319,7 @@ public struct Light{
     }
     mutating func updateProjection(){
 
-        self.lightObject.projection = float4x4.ortho(left: -width, right: width, bottom: -height, top: height,zNear: 1,zFar: 100)
+        self.lightObject.projection = float4x4.orthoRH_ZO(left: -width, right: width, bottom: -height, top: height,zNear: near,zFar: far)
     }
 }
 
