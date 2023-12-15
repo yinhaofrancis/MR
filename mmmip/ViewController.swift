@@ -99,7 +99,7 @@ class VC3:UIViewController{
                 let y = sin(0.1 * rol) * 9 + 9
                 let z = sin(rol) * 3
                 l.position = [x * 3, y ,z * 3]
-                l.far = 25
+                l.far = 200
                 one.modelObject.model = simd_float4x4.translate(m: .identity, v: [0,0,0])
                 let buffer = try self.queue.createBuffer()
                 let shadowe = try depthRenderPass.beginDepth(buffer: buffer, width: 1024, height: 1024)
@@ -114,6 +114,7 @@ class VC3:UIViewController{
                 shadow.globelShadow = depthRenderPass.depthTexture
 
                 c.aspect = Float(renderPass.width) / Float(renderPass.height)
+                
                 let encoder = try renderPass.beginRender(buffer: buffer, layer: layer)
                 renderPass.setViewPort(encoder: encoder)
                 guard let drawable = renderPass.drawable else {
@@ -147,7 +148,7 @@ class VC3:UIViewController{
                 encoder.endEncoding()
                 buffer.present(drawable)
                 buffer.commit()
-                
+//                print(c.aabb)
             } catch   {
                 print(error)
             }

@@ -46,7 +46,7 @@ public struct RenderModel{
     public func bindScene(encoder:MTLRenderCommandEncoder,
                         cameraModel:Camera,
                           lightModel:Light){
-        var cameraData = cameraModel.cameraData
+        var cameraData = cameraModel.cameraObject
         var lightObject = lightModel.lightObject
         encoder.setVertexBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
         encoder.setVertexBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
@@ -95,7 +95,7 @@ public struct RenderShadowModel{
     public func bindScene(encoder:MTLRenderCommandEncoder,
                         cameraModel:Camera,
                           lightModel:Light){
-        var cameraData = cameraModel.cameraData
+        var cameraData = cameraModel.cameraObject
         var lightObject = lightModel.lightObject
         encoder.setVertexBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
         encoder.setVertexBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
@@ -135,7 +135,7 @@ public struct RenderSkyboxModel{
     public func bindScene(encoder:MTLRenderCommandEncoder,
                           cameraModel:Camera,
                           lightModel:Light){
-        var cameraData = cameraModel.cameraData
+        var cameraData = cameraModel.cameraObject
         var lightObject = lightModel.lightObject
         encoder.setVertexBytes(&cameraData, length: MemoryLayout.size(ofValue: cameraData), index: Int(camera_object_buffer_index))
         encoder.setVertexBytes(&lightObject, length: MemoryLayout.size(ofValue: lightObject), index: Int(light_object_buffer_index))
@@ -187,8 +187,6 @@ extension Model{
     }
     public static func model(url:URL,index:Int,render:Renderer = .shared) throws ->Model{
         let ass = MDLAsset(url: url, vertexDescriptor: nil, bufferAllocator: MTKMeshBufferAllocator(device: render.device))
-//        md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
-        ass.loadTextures()
         let a = try MTKMesh.newMeshes(asset: ass, device: render.device)
         let md = a.modelIOMeshes[index]
         md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
@@ -205,7 +203,7 @@ extension ModelObject{
 
 public struct Camera{
     
-    public var cameraData:CameraObject = CameraObject(projection: simd_float4x4.perspectiveRH_ZO(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8], maxBias: 0.00001)
+    public var cameraObject:CameraObject = CameraObject(projection: simd_float4x4.perspectiveRH_ZO(fovy: 45, aspect: 9.0 / 16.0, zNear: 1, zFar: 150), view: .lookat(eye: [8,8,8], center: [0,0,0], up: [0,1,0]), camera_pos: [8,8,8], maxBias: 0.00001)
     
     public init() {
         self.updateView()
@@ -243,7 +241,7 @@ public struct Camera{
         }
     }
     
-    public var near:Float = 0.1{
+    public var near:Float = 1{
         didSet{
             self.updateProjection()
         }
@@ -256,13 +254,39 @@ public struct Camera{
     }
     
     mutating func updateProjection(){
-        self.cameraData.projection = simd_float4x4.perspectiveRH_NO(fovy: fovy, aspect: aspect, zNear: near, zFar: far)
+        self.cameraObject.projection = simd_float4x4.perspectiveRH_NO(fovy: fovy, aspect: aspect, zNear: near, zFar: far)
     }
     mutating func updateView(){
-        self.cameraData.view = float4x4.lookat(eye: position, center: lookTo, up: up)
-        self.cameraData.camera_pos = position
-        self.cameraData.maxBias = self.maxBias
+        self.cameraObject.view = float4x4.lookat(eye: position, center: lookTo, up: up)
+        self.cameraObject.camera_pos = position
+        self.cameraObject.maxBias = self.maxBias
     
+    }
+    public static var ndc:[simd_float3] = [
+        [-1,-1,-1],
+        [ 1,-1,-1],
+        [-1, 1,-1],
+        [ 1, 1,-1],
+        [-1,-1, 1],
+        [ 1,-1, 1],
+        [-1, 1, 1],
+        [ 1, 1, 1],
+    ]
+    public var frustum:[simd_float3]{
+        let inView = self.cameraObject.view.inverse
+        let inProject = self.cameraObject.projection.inverse
+        return Camera.ndc.map { vt in
+            inView * inProject * simd_float4(vt, 1)
+        }.map { t in
+            simd_float3(t.x,t.y,t.z) / t.w;
+        }
+    }
+    public var aabb:AABB{
+        var a = AABB()
+        self.frustum.forEach { s in
+            a.add(v: s)
+        }
+        return a
     }
 }
 
@@ -331,6 +355,15 @@ public struct Light{
     mutating func updateProjection(){
 
         self.lightObject.projection = float4x4.orthoRH_ZO(left: -width, right: width, bottom: -height, top: height,zNear: near,zFar: far)
+    }
+    public var frustum:[simd_float3]{
+        let inView = self.lightObject.view.inverse
+        let inProject = self.lightObject.projection.inverse
+        return Camera.ndc.map { vt in
+            inView * inProject * simd_float4(vt, 1)
+        }.map { t in
+            simd_float3(t.x,t.y,t.z) / t.w;
+        }
     }
 }
 

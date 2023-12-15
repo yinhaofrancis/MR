@@ -248,3 +248,22 @@ extension simd_float4x4 {
     }
 }
 
+public struct AABB{
+    public private(set) var minVector:simd_float3 = [Float.infinity,Float.infinity,Float.infinity]
+    public private(set) var maxVector:simd_float3 = [-Float.infinity,-Float.infinity,-Float.infinity]
+    public mutating func add(v:simd_float3){
+        minVector.x = min(v.x,minVector.x)
+        minVector.y = min(v.y,minVector.y)
+        minVector.z = min(v.z,minVector.z)
+        
+        maxVector.x = max(v.x,maxVector.x)
+        maxVector.y = max(v.y,maxVector.y)
+        maxVector.z = max(v.z,maxVector.z)
+    }
+    public var center:simd_float3{
+        (self.maxVector + self.minVector) / 2
+    }
+    public var size:simd_float3{
+        maxVector - minVector
+    }
+}

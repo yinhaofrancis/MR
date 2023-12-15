@@ -306,6 +306,10 @@ public class RenderPass{
         self.render = render
     }
     public func beginRender(buffer:MTLCommandBuffer,layer:CAMetalLayer) throws ->MTLRenderCommandEncoder{
+        let scale:CGFloat = 3
+        layer.contentsScale = scale;
+        layer.drawableSize = CGSize(width: layer.bounds.size.width * scale, height: layer.bounds.size.height * scale)
+        layer.rasterizationScale = scale;
         guard let drawable = layer.nextDrawable() else { throw TRError.createObjectFail("next drawable fail")}
         self.drawable = autoreleasepool { drawable }
         return try self.beginRender(buffer: buffer, texture: drawable.texture)
@@ -323,7 +327,7 @@ public class RenderPass{
         if(self.depthTexture == nil){
             self.depthTexture = try Renderer.Texture.createDepthStencilTexture(width: self.width, height: self.height, render: self.render).texture
             self.stencilTexture = self.depthTexture
-        }else if(self.width != self.depthTexture?.width && self.height != self.depthTexture?.height){
+        }else if(self.width != self.depthTexture?.width || self.height != self.depthTexture?.height){
             self.depthTexture = try Renderer.Texture.createDepthStencilTexture(width: self.width, height: self.height, render: self.render).texture
             self.stencilTexture = self.depthTexture
         }
