@@ -1,0 +1,15 @@
+//
+//  lib.xcconfig
+//  mmmm
+//
+//  Created by wenyang on 2023/12/17.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+
+HEADER_SEARCH_PATHS = $(SRCROOT)/extern/metal-cpp $(SRCROOT)/library/include
+
+LIBRARY_SEARCH_PATHS = $(SRCROOT)/library/libs
+

@@ -1,0 +1,184 @@
+//
+//  Renderer.hpp
+//  MRender
+//
+//  Created by wenyang on 2023/12/17.
+//
+
+#ifndef Renderer_hpp
+#define Renderer_hpp
+
+#include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#define NS_PRIVATE_IMPLEMENTATION
+#define CA_PRIVATE_IMPLEMENTATION
+#define MTL_PRIVATE_IMPLEMENTATION
+#include <Foundation/Foundation.hpp>
+#include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
+#include "MRObject.hpp"
+
+namespace MR {
+
+static MTL::PixelFormat colorTexturePixel = MTL::PixelFormatRGBA8Unorm_sRGB;
+static MTL::PixelFormat depthTexturePixel = MTL::PixelFormatDepth32Float;
+static MTL::PixelFormat depthStencialTexturePixel = MTL::PixelFormatDepth32Float_Stencil8;
+
+struct Error{
+    const char* message;
+    int code;
+};
+
+class Renderer:virtual Object{
+public:
+    Renderer();
+    ~Renderer();
+    
+    static Renderer& shared();
+    
+    friend class Buffer;
+    friend class Texture;
+    friend class Sampler;
+    friend class Queue;
+    friend class Program;
+    MTL::Device& device();
+private:
+    MTL::Device* m_device = MTL::CreateSystemDefaultDevice();
+    static Renderer *s_shared;
+    static std::mutex m_lock_shared;
+};
+
+class Buffer:virtual Object {
+public:
+    Buffer(size_t size = 0,const void *buffer = nullptr ,Renderer& render = Renderer::shared());
+    ~Buffer();
+    void assign(const void * data,size_t offset,size_t size);
+    void store(size_t size,const void * data);
+    MTL::Buffer * origin();
+private:
+    MTL::Buffer *m_buffer = nullptr;
+};
+
+class Texture:virtual Object{
+public:
+    Texture(MTL::TextureDescriptor* desciptor,
+            Renderer& render = Renderer::shared());
+    Texture(size_t width,
+            size_t height,
+            MTL::PixelFormat pixel,
+            MTL::TextureType type = MTL::TextureType2D,
+            MTL::StorageMode storage = MTL::StorageModePrivate,
+            MTL::TextureUsage usage  = MTL::TextureUsageShaderRead | MTL::TextureUsageRenderTarget,
+            MTL::TextureSwizzleChannels* swizzleChannel = nullptr,
+            Renderer& render = Renderer::shared());
+    ~Texture();
+    static MTL::TextureDescriptor* createDecription();
+    MTL::Texture* origin();
+    void assign(size_t width,
+                size_t height,
+                size_t depth,
+                size_t level,
+                size_t bytePerRow,
+                const void * buffer,
+                size_t slice,
+                size_t perImageSize);
+    
+    void assign(size_t width,
+                size_t height,
+                size_t bytePerRow,
+                const void * buffer,
+                size_t slice,
+                size_t bytePerImage);
+
+    void assign(size_t width,
+                size_t height,
+                size_t bytePerRow,
+                const void * buffer);
+    friend class RenderPass;
+private:
+    MTL::Texture *m_texture = nullptr;
+    MTL::TextureDescriptor* m_desciptor = nullptr;
+};
+
+class Sampler:virtual Object{
+public:
+    Sampler(MTL::SamplerDescriptor *,Renderer& render = Renderer::shared());
+    Sampler(MTL::SamplerMinMagFilter ,MTL::SamplerAddressMode ,Renderer& render = Renderer::shared());
+    ~Sampler();
+    MTL::SamplerState* origin();
+    static Sampler& linear();
+    static Sampler& nearest();
+private:
+    MTL::SamplerState* m_sampler = nullptr;
+    
+    static Sampler* m_linear;
+    static Sampler* m_nearest;
+    
+};
+
+class Queue:virtual Object{
+public:
+    typedef std::function<void(MTL::CommandBuffer*)> BufferCallBack;
+    typedef std::function<void(MTL::ComputeCommandEncoder*)> ComputeCallBack;
+    Queue(Renderer& render = Renderer::shared());
+    ~Queue();
+    void beginBuffer(BufferCallBack callback);
+    void beginCompute(ComputeCallBack callback);
+    static Queue& shared();
+private:
+    MTL::CommandQueue* m_queue = nullptr;
+    Renderer m_render;
+    static Queue* s_shared;
+};
+
+class Program:virtual Object{
+public:
+    Program(Renderer& render = Renderer::shared());
+    Program(const char* path,Renderer& render = Renderer::shared());
+    ~Program();
+    MTL::Function* shader(const char *name);
+    static Program& shared();
+private:
+    static Program *s_shared;
+    MTL::Library* m_lib = nullptr;
+};
+
+class RenderPass:virtual Object{
+
+public:
+    typedef std::function<void(MTL::RenderCommandEncoder*)> RenderCallback;
+    MTL::RenderPassDescriptor& renderPassDescriptor();
+    
+    
+    void beginRender(MTL::CommandBuffer* buffer,MTL::Texture* texture,RenderCallback call);
+    void beginRender(MTL::CommandBuffer* buffer,CA::MetalDrawable * drawable,RenderCallback call);
+    void beginDepth(MTL::CommandBuffer* buffer,MTL::Texture* texture,RenderCallback call);
+    void beginNoDepthRender(MTL::CommandBuffer* buffer,MTL::Texture* texture,RenderCallback call);
+    void beginNoDepthRender(MTL::CommandBuffer* buffer,CA::MetalDrawable * drawable,RenderCallback call);
+    RenderPass();
+    ~RenderPass();
+private:
+    
+    void checkInnerTexture(MTL::Texture *texture);
+    MTL::RenderPassDescriptor* m_render_pass_descriptor = nullptr;
+    Texture* m_innerDepth;
+    Texture* m_innerStencial;
+};
+
+class Vsync:virtual Object{
+public:
+    typedef std::function<bool(void)> SyncCallBack;
+    Vsync(SyncCallBack);
+    ~Vsync();    
+};
+
+};
+
+#endif /* Renderer_hpp */

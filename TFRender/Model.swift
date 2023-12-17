@@ -60,7 +60,6 @@ public struct RenderModel{
         material:Material,
         shadow:Shadow) throws{
             var modelObject = model.modelObject
-
             modelObject.createNormalMatrix()
             encoder.setVertexBytes(&modelObject, length: MemoryLayout.size(ofValue: modelObject), index: Int(model_object_buffer_index))
             
@@ -187,13 +186,55 @@ extension Model{
     }
     public static func model(url:URL,index:Int,render:Renderer = .shared) throws ->Model{
         let ass = MDLAsset(url: url, vertexDescriptor: nil, bufferAllocator: MTKMeshBufferAllocator(device: render.device))
-        let a = try MTKMesh.newMeshes(asset: ass, device: render.device)
+        return try model(asset: ass, index: index, render: render)
+    }
+    public static func model(asset:MDLAsset,index:Int,render:Renderer = .shared) throws ->Model{
+    
+        let a = try MTKMesh.newMeshes(asset: asset, device: render.device)
         let md = a.modelIOMeshes[index]
         md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
         return Model(mesh: try! MTKMesh(mesh: md, device: render.device))
     }
-    
+
 }
+
+public struct Asset{
+    let asset:MDLAsset
+    let render:Renderer
+    public init(asset: MDLAsset,render:Renderer = .shared) {
+        self.asset = asset
+        self.render = render
+    }
+    public init(url:URL,render:Renderer = .shared){
+        self.init(asset: MDLAsset(url: url, vertexDescriptor: nil, bufferAllocator: MTKMeshBufferAllocator(device: render.device)),render: render)
+    }
+    private func model(asset:MDLAsset,index:Int,render:Renderer = .shared) throws ->Model{
+        let a = try MTKMesh.newMeshes(asset: asset, device: render.device)
+        let md = a.modelIOMeshes[index]
+        md.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, tangentAttributeNamed: MDLVertexAttributeTangent, bitangentAttributeNamed: MDLVertexAttributeBitangent)
+        return Model(mesh: try! MTKMesh(mesh: md, device: render.device))
+    }
+    public func model(index:Int)throws ->Model{
+        return try self.model(asset: asset, index: index)
+    }
+
+    public var models:[MDLMesh]?{
+        return asset.childObjects(of: MDLMesh.self) as? [MDLMesh]
+    }
+    public var skeleton:[MDLSkeleton]?{
+        return asset.childObjects(of: MDLSkeleton.self) as? [MDLSkeleton]
+    }
+    public var camera:[MDLCamera]?{
+        return asset.childObjects(of: MDLCamera.self) as? [MDLCamera]
+    }
+    public var light:[MDLLight]?{
+        return asset.childObjects(of: MDLLight.self) as? [MDLLight]
+    }
+    public var animation:[MDLPackedJointAnimation]?{
+        return asset.childObjects(of: MDLPackedJointAnimation.self) as? [MDLPackedJointAnimation]
+    }
+}
+
 
 extension ModelObject{
     public mutating func createNormalMatrix(){

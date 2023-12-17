@@ -20,7 +20,11 @@ class VC3:UIViewController{
         super.viewDidLoad()
         
         guard let url = Bundle.main.url(forResource: "cyborg", withExtension: "obj") else { return }
-
+        
+        guard let url2 = Bundle.main.url(forResource: "dancing_vampire", withExtension: "dae") else { return }
+        
+        let asset = Asset(url: url)
+        let asset2 = Asset(url: url2)
         let depth = queue.renderer.defaultDepthState
         let layer = self.vc2View.mtLayer
         layer.pixelFormat = Configuration.ColorPixelFormat
@@ -29,8 +33,9 @@ class VC3:UIViewController{
         
         //模型
 
-        var one = try! Model.model(url: url, index: 0);
+        var one = try! asset.model(index: 0)
 
+//        print(asset.skeleton)
 
         var model = Model.sphere(size: [1,1,1], segments: [20,20])
         
@@ -96,7 +101,7 @@ class VC3:UIViewController{
             do {
                 rol += 0.01
                 let x = cos(rol) * 3
-                let y = sin(0.1 * rol) * 9 + 9
+                let y = sin(0.1 * rol) * 9 + 11
                 let z = sin(rol) * 3
                 l.position = [x * 3, y ,z * 3]
                 l.far = 200

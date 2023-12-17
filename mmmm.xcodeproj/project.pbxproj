@@ -10,6 +10,17 @@
 		A90078FD2B2875AC0083381B /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90078FC2B2875AC0083381B /* Model.swift */; };
 		A91ACD122B22E694003EBF43 /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A91ACD112B22E694003EBF43 /* shader.metal */; };
 		A95E0DEC2B26420A00CB17F8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCAFBC2B2371C300AF13FB /* ViewController.swift */; };
+		A977C6FD2B2DC182000C2238 /* dancing_vampire.dae in Resources */ = {isa = PBXBuildFile; fileRef = A977C6F82B2DC182000C2238 /* dancing_vampire.dae */; };
+		A977C7022B2DC548000C2238 /* Vampire_emission.png in Resources */ = {isa = PBXBuildFile; fileRef = A977C6FE2B2DC548000C2238 /* Vampire_emission.png */; };
+		A977C7032B2DC548000C2238 /* Vampire_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A977C6FF2B2DC548000C2238 /* Vampire_normal.png */; };
+		A977C7042B2DC548000C2238 /* Vampire_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A977C7002B2DC548000C2238 /* Vampire_diffuse.png */; };
+		A977C7052B2DC548000C2238 /* Vampire_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A977C7012B2DC548000C2238 /* Vampire_specular.png */; };
+		A977C71D2B2EE345000C2238 /* testcpp.mm in Sources */ = {isa = PBXBuildFile; fileRef = A977C71C2B2EE345000C2238 /* testcpp.mm */; };
+		A977C7332B2EEAE3000C2238 /* MRender.h in Headers */ = {isa = PBXBuildFile; fileRef = A977C7322B2EEAE3000C2238 /* MRender.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A977C7392B2EEB1E000C2238 /* MRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A977C7372B2EEB1E000C2238 /* MRenderer.cpp */; };
+		A977C73A2B2EEB1E000C2238 /* MRenderer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A977C7382B2EEB1E000C2238 /* MRenderer.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
+		A977C73D2B2EEC46000C2238 /* MRObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A977C73B2B2EEC46000C2238 /* MRObject.cpp */; };
+		A977C73E2B2EEC46000C2238 /* MRObject.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A977C73C2B2EEC46000C2238 /* MRObject.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		A9B77F502B2469AB00EE423C /* TextureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B77F4F2B2469AB00EE423C /* TextureLoader.swift */; };
 		A9BCAFB92B2371C300AF13FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCAFB82B2371C300AF13FB /* AppDelegate.swift */; };
 		A9BCAFBB2B2371C300AF13FB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCAFBA2B2371C300AF13FB /* SceneDelegate.swift */; };
@@ -72,6 +83,28 @@
 		A91ACD132B230C26003EBF43 /* Constant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
 		A91ACD142B232580003EBF43 /* Texture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		A91ACD162B232832003EBF43 /* Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
+		A977C6F82B2DC182000C2238 /* dancing_vampire.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = dancing_vampire.dae; sourceTree = "<group>"; };
+		A977C6FE2B2DC548000C2238 /* Vampire_emission.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_emission.png; sourceTree = "<group>"; };
+		A977C6FF2B2DC548000C2238 /* Vampire_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_normal.png; sourceTree = "<group>"; };
+		A977C7002B2DC548000C2238 /* Vampire_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_diffuse.png; sourceTree = "<group>"; };
+		A977C7012B2DC548000C2238 /* Vampire_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_specular.png; sourceTree = "<group>"; };
+		A977C71A2B2EE344000C2238 /* mmmip-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mmmip-Bridging-Header.h"; sourceTree = "<group>"; };
+		A977C71B2B2EE345000C2238 /* testcpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testcpp.h; sourceTree = "<group>"; };
+		A977C71C2B2EE345000C2238 /* testcpp.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = testcpp.mm; sourceTree = "<group>"; };
+		A977C71E2B2EE3F6000C2238 /* libstb_image.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libstb_image.a; path = library/libs/libstb_image.a; sourceTree = "<group>"; };
+		A977C71F2B2EE3F6000C2238 /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = library/libs/libassimp.a; sourceTree = "<group>"; };
+		A977C7222B2EE60B000C2238 /* lib.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = lib.xcconfig; sourceTree = "<group>"; };
+		A977C7232B2EE98E000C2238 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/iOSSupport/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		A977C7242B2EE98E000C2238 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		A977C7272B2EE997000C2238 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A977C7292B2EE99D000C2238 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A977C7302B2EEAE3000C2238 /* MRender.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MRender.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A977C7322B2EEAE3000C2238 /* MRender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRender.h; sourceTree = "<group>"; };
+		A977C7372B2EEB1E000C2238 /* MRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MRenderer.cpp; sourceTree = "<group>"; };
+		A977C7382B2EEB1E000C2238 /* MRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MRenderer.hpp; sourceTree = "<group>"; };
+		A977C73B2B2EEC46000C2238 /* MRObject.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MRObject.cpp; sourceTree = "<group>"; };
+		A977C73C2B2EEC46000C2238 /* MRObject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MRObject.hpp; sourceTree = "<group>"; };
+		A977C7402B2EECAB000C2238 /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		A9B77F4F2B2469AB00EE423C /* TextureLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureLoader.swift; sourceTree = "<group>"; };
 		A9B77F512B246DD300EE423C /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		A9BCAFB62B2371C300AF13FB /* mmmip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mmmip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,6 +146,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A977C72D2B2EEAE3000C2238 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A9BCAFB32B2371C300AF13FB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -134,9 +174,11 @@
 		A91ACCE22B22BCA9003EBF43 = {
 			isa = PBXGroup;
 			children = (
+				A977C7222B2EE60B000C2238 /* lib.xcconfig */,
 				A91ACD052B22D871003EBF43 /* MR */,
 				A9BCAFB72B2371C300AF13FB /* mmmip */,
 				A9C26C402B27323A00387687 /* TFRender */,
+				A977C7312B2EEAE3000C2238 /* MRender */,
 				A91ACCEC2B22BCA9003EBF43 /* Products */,
 				A9BCAFCA2B2371D500AF13FB /* Frameworks */,
 			);
@@ -148,6 +190,7 @@
 				A91ACD042B22D871003EBF43 /* MR.framework */,
 				A9BCAFB62B2371C300AF13FB /* mmmip.app */,
 				A9C26C3F2B27323A00387687 /* TFRender.framework */,
+				A977C7302B2EEAE3000C2238 /* MRender.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -166,9 +209,27 @@
 			path = MR;
 			sourceTree = "<group>";
 		};
+		A977C7312B2EEAE3000C2238 /* MRender */ = {
+			isa = PBXGroup;
+			children = (
+				A977C7322B2EEAE3000C2238 /* MRender.h */,
+				A977C7372B2EEB1E000C2238 /* MRenderer.cpp */,
+				A977C7382B2EEB1E000C2238 /* MRenderer.hpp */,
+				A977C73B2B2EEC46000C2238 /* MRObject.cpp */,
+				A977C73C2B2EEC46000C2238 /* MRObject.hpp */,
+				A977C7402B2EECAB000C2238 /* util.h */,
+			);
+			path = MRender;
+			sourceTree = "<group>";
+		};
 		A9BB4F762B2B47C0009B742E /* mm */ = {
 			isa = PBXGroup;
 			children = (
+				A977C7002B2DC548000C2238 /* Vampire_diffuse.png */,
+				A977C6FE2B2DC548000C2238 /* Vampire_emission.png */,
+				A977C6FF2B2DC548000C2238 /* Vampire_normal.png */,
+				A977C7012B2DC548000C2238 /* Vampire_specular.png */,
+				A977C6F82B2DC182000C2238 /* dancing_vampire.dae */,
 				A9D4FF182B2B485800FF6D22 /* cyborg_diffuse.png */,
 				A9D4FF192B2B485800FF6D22 /* cyborg_normal.png */,
 				A9D4FF1A2B2B485800FF6D22 /* cyborg_specular.png */,
@@ -191,6 +252,9 @@
 				A9BCAFC12B2371C600AF13FB /* Assets.xcassets */,
 				A9BCAFC32B2371C600AF13FB /* LaunchScreen.storyboard */,
 				A9BCAFC62B2371C600AF13FB /* Info.plist */,
+				A977C71B2B2EE345000C2238 /* testcpp.h */,
+				A977C71C2B2EE345000C2238 /* testcpp.mm */,
+				A977C71A2B2EE344000C2238 /* mmmip-Bridging-Header.h */,
 			);
 			path = mmmip;
 			sourceTree = "<group>";
@@ -198,6 +262,12 @@
 		A9BCAFCA2B2371D500AF13FB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A977C7292B2EE99D000C2238 /* Foundation.framework */,
+				A977C7272B2EE997000C2238 /* CoreGraphics.framework */,
+				A977C7242B2EE98E000C2238 /* Metal.framework */,
+				A977C7232B2EE98E000C2238 /* MetalKit.framework */,
+				A977C71F2B2EE3F6000C2238 /* libassimp.a */,
+				A977C71E2B2EE3F6000C2238 /* libstb_image.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -249,6 +319,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A977C72B2B2EEAE3000C2238 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A977C7332B2EEAE3000C2238 /* MRender.h in Headers */,
+				A977C73A2B2EEB1E000C2238 /* MRenderer.hpp in Headers */,
+				A977C73E2B2EEC46000C2238 /* MRObject.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A9C26C3A2B27323A00387687 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -275,6 +355,24 @@
 			name = MR;
 			productName = MR;
 			productReference = A91ACD042B22D871003EBF43 /* MR.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A977C72F2B2EEAE3000C2238 /* MRender */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A977C7342B2EEAE3000C2238 /* Build configuration list for PBXNativeTarget "MRender" */;
+			buildPhases = (
+				A977C72B2B2EEAE3000C2238 /* Headers */,
+				A977C72C2B2EEAE3000C2238 /* Sources */,
+				A977C72D2B2EEAE3000C2238 /* Frameworks */,
+				A977C72E2B2EEAE3000C2238 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MRender;
+			productName = MRender;
+			productReference = A977C7302B2EEAE3000C2238 /* MRender.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		A9BCAFB52B2371C300AF13FB /* mmmip */ = {
@@ -322,13 +420,17 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					A91ACD032B22D871003EBF43 = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
+					A977C72F2B2EEAE3000C2238 = {
+						CreatedOnToolsVersion = 15.1;
+					};
 					A9BCAFB52B2371C300AF13FB = {
 						CreatedOnToolsVersion = 15.0.1;
+						LastSwiftMigration = 1510;
 					};
 					A9C26C3E2B27323A00387687 = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -352,12 +454,20 @@
 				A91ACD032B22D871003EBF43 /* MR */,
 				A9BCAFB52B2371C300AF13FB /* mmmip */,
 				A9C26C3E2B27323A00387687 /* TFRender */,
+				A977C72F2B2EEAE3000C2238 /* MRender */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A91ACD022B22D871003EBF43 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A977C72E2B2EEAE3000C2238 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -371,10 +481,15 @@
 				A9D4FF1E2B2B485800FF6D22 /* cyborg_normal.png in Resources */,
 				A9D4FF212B2B485800FF6D22 /* cyborg.obj in Resources */,
 				A9D4FF1D2B2B485800FF6D22 /* cyborg_diffuse.png in Resources */,
+				A977C7042B2DC548000C2238 /* Vampire_diffuse.png in Resources */,
+				A977C7032B2DC548000C2238 /* Vampire_normal.png in Resources */,
+				A977C7022B2DC548000C2238 /* Vampire_emission.png in Resources */,
 				A9D4FF202B2B485800FF6D22 /* cyborg.mtl in Resources */,
 				A9D4FF1F2B2B485800FF6D22 /* cyborg_specular.png in Resources */,
+				A977C7052B2DC548000C2238 /* Vampire_specular.png in Resources */,
 				A9BCAFC52B2371C600AF13FB /* LaunchScreen.storyboard in Resources */,
 				A9BCAFC22B2371C600AF13FB /* Assets.xcassets in Resources */,
+				A977C6FD2B2DC182000C2238 /* dancing_vampire.dae in Resources */,
 				A9BCAFC02B2371C300AF13FB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -408,11 +523,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A977C72C2B2EEAE3000C2238 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A977C7392B2EEB1E000C2238 /* MRenderer.cpp in Sources */,
+				A977C73D2B2EEC46000C2238 /* MRObject.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A9BCAFB22B2371C300AF13FB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A9C2A2652B25728F007031F7 /* VC2.swift in Sources */,
+				A977C71D2B2EE345000C2238 /* testcpp.mm in Sources */,
 				A9BCAFB92B2371C300AF13FB /* AppDelegate.swift in Sources */,
 				A95E0DEC2B26420A00CB17F8 /* ViewController.swift in Sources */,
 				A9BCAFBB2B2371C300AF13FB /* SceneDelegate.swift in Sources */,
@@ -463,6 +588,7 @@
 /* Begin XCBuildConfiguration section */
 		A91ACCF82B22BCAD003EBF43 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -495,6 +621,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -513,6 +640,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -526,6 +654,7 @@
 		};
 		A91ACCF92B22BCAD003EBF43 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -558,6 +687,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -570,6 +700,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -581,10 +712,13 @@
 		};
 		A91ACD0D2B22D871003EBF43 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 27ZYBRBPV8;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -600,7 +734,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -621,10 +755,13 @@
 		};
 		A91ACD0E2B22D871003EBF43 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 27ZYBRBPV8;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -640,7 +777,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -659,12 +796,92 @@
 			};
 			name = Release;
 		};
+		A977C7352B2EEAE3000C2238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 27ZYBRBPV8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yh.MRender;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		A977C7362B2EEAE3000C2238 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 27ZYBRBPV8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yh.MRender;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		A9BCAFC72B2371C600AF13FB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = mmmip/mmmip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -689,6 +906,8 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "mmmip/mmmip-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -696,10 +915,12 @@
 		};
 		A9BCAFC82B2371C600AF13FB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = mmmip/mmmip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -724,6 +945,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "mmmip/mmmip-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -732,8 +954,10 @@
 		};
 		A9C26C482B27323A00387687 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -770,8 +994,10 @@
 		};
 		A9C26C492B27323A00387687 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A977C7222B2EE60B000C2238 /* lib.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -823,6 +1049,15 @@
 			buildConfigurations = (
 				A91ACD0D2B22D871003EBF43 /* Debug */,
 				A91ACD0E2B22D871003EBF43 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A977C7342B2EEAE3000C2238 /* Build configuration list for PBXNativeTarget "MRender" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A977C7352B2EEAE3000C2238 /* Debug */,
+				A977C7362B2EEAE3000C2238 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
