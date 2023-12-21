@@ -6,7 +6,7 @@
 //
 
 #include "MRRenderer.hpp"
-
+#include "Constant.h"
 
 using namespace MR;
 
@@ -26,14 +26,8 @@ Renderer& Renderer::shared(){
     return *s_shared;
 }
 
-Buffer::Buffer(size_t size,const void *buffer,Renderer& render){
-    if(size != 0){
-        if(buffer == nullptr){
-            m_buffer = render.m_device->newBuffer(size, MTL::ResourceOptionCPUCacheModeDefault);
-        }else{
-            m_buffer = render.m_device->newBuffer(buffer, size, MTL::ResourceOptionCPUCacheModeDefault);
-        }
-    }
+Buffer::Buffer(Renderer& render){
+    m_render = render;
 }
 
 Buffer::~Buffer(){
@@ -46,13 +40,10 @@ void Buffer::assign(const void * data,size_t offset,size_t size){
     memcpy(start + offset, data, size);
 }
 void Buffer::store(size_t size,const void * data){
-    if(m_buffer->length() != size){
-        auto device = m_buffer->device();
+    if (m_buffer != nullptr){
         m_buffer->release();
-        device->newBuffer(data, size, MTL::ResourceOptionCPUCacheModeDefault);
-    }else{
-        memcpy(m_buffer->contents(), data, size);
     }
+    m_buffer = m_render.device().newBuffer(data,size, MTL::ResourceOptionCPUCacheModeDefault);
 }
 
 MTL::Buffer * Buffer::origin(){
@@ -204,21 +195,6 @@ void RenderPass::checkInnerTexture(MTL::Texture *texture) {
                                    MTL::PixelFormatDepth32Float_Stencil8
                                    );
     }
-    
-    if(m_innerStencial == nullptr){
-        m_innerStencial = new Texture(
-                                      texture->width(),
-                                      texture->height(),
-                                      MTL::PixelFormatDepth32Float_Stencil8
-                                      );
-    }else if (m_innerStencial->m_texture->width() != texture->width() || m_innerStencial->m_texture->height() != texture->height()){
-        delete m_innerStencial;
-        m_innerStencial = new Texture(
-                                      texture->width(),
-                                      texture->height(),
-                                      MTL::PixelFormatDepth32Float_Stencil8
-                                      );
-    }
 }
 
 void RenderPass::beginRender(MTL::CommandBuffer* buffer,MTL::Texture* texture,RenderCallback call){
@@ -226,17 +202,17 @@ void RenderPass::beginRender(MTL::CommandBuffer* buffer,MTL::Texture* texture,Re
     m_render_pass_descriptor->colorAttachments()->object(0)->setTexture(texture);
     m_render_pass_descriptor->colorAttachments()->object(0)->setClearColor(MTL::ClearColor(0, 0, 0, 1));
     m_render_pass_descriptor->colorAttachments()->object(0)->setLoadAction(MTL::LoadActionClear);
-    m_render_pass_descriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionStore);
+    m_render_pass_descriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionDontCare);
     
     m_render_pass_descriptor->depthAttachment()->setTexture(m_innerDepth->origin());
     m_render_pass_descriptor->depthAttachment()->setClearDepth(1);
     m_render_pass_descriptor->depthAttachment()->setLoadAction(MTL::LoadActionClear);
-    m_render_pass_descriptor->depthAttachment()->setStoreAction(MTL::StoreActionStore);
+    m_render_pass_descriptor->depthAttachment()->setStoreAction(MTL::StoreActionDontCare);
     
-    m_render_pass_descriptor->stencilAttachment()->setTexture(m_innerStencial->origin());
+    m_render_pass_descriptor->stencilAttachment()->setTexture(m_innerDepth->origin());
     m_render_pass_descriptor->stencilAttachment()->setClearStencil(1);
     m_render_pass_descriptor->stencilAttachment()->setLoadAction(MTL::LoadActionClear);
-    m_render_pass_descriptor->stencilAttachment()->setStoreAction(MTL::StoreActionStore);
+    m_render_pass_descriptor->stencilAttachment()->setStoreAction(MTL::StoreActionDontCare);
     auto encoder = buffer->renderCommandEncoder(this->m_render_pass_descriptor);
     call(encoder);
     encoder->endEncoding();
@@ -246,7 +222,7 @@ void RenderPass::beginNoDepthRender(MTL::CommandBuffer* buffer,MTL::Texture* tex
     m_render_pass_descriptor->colorAttachments()->object(0)->setTexture(texture);
     m_render_pass_descriptor->colorAttachments()->object(0)->setClearColor(MTL::ClearColor(0, 0, 0, 1));
     m_render_pass_descriptor->colorAttachments()->object(0)->setLoadAction(MTL::LoadActionClear);
-    m_render_pass_descriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionStore);
+    m_render_pass_descriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionDontCare);
     m_render_pass_descriptor->depthAttachment()->setTexture(nullptr);
     m_render_pass_descriptor->stencilAttachment()->setTexture(nullptr);
     auto encoder = buffer->renderCommandEncoder(this->m_render_pass_descriptor);
@@ -341,4 +317,187 @@ Vsync::Vsync(SyncCallBack call){
 }
 Vsync::~Vsync(){
     
+}
+
+
+Mesh::Mesh(int vertexCount,int uvComponentCount,MTL::PrimitiveType primitive,Renderer& render)
+:m_uvComponent(uvComponentCount)
+,m_vertex_count(vertexCount)
+,m_pm(primitive)
+,m_postion(render)
+,m_normal(render)
+,m_textureCoords(render)
+,m_tangents(render)
+,m_bitangents(render)
+,m_color(render)
+,m_index(render){
+    m_vertexDescriptor = MTL::VertexDescriptor::alloc()->init();
+}
+Mesh::~Mesh(){
+    if (ref_count() == 1 && m_vertexDescriptor != nullptr) {
+        m_vertexDescriptor->release();
+    }
+}
+
+int Mesh::uvComponentCount(){
+    return m_uvComponent;
+}
+
+size_t Mesh::vertexCount(){
+    return m_vertex_count;
+}
+
+bool Mesh::hasBuffer(VertexComponent vertexComponent){
+    switch (vertexComponent) {
+            
+        case Position:
+            return m_postion.origin()->length() > 0;
+        case TextureCoords:
+            return m_textureCoords.origin()->length() > 0;
+        case Normal:
+            return m_normal.origin()->length() > 0;
+        case Tangent:
+            return m_tangents.origin()->length() > 0;
+        case Bitangent:
+            return m_bitangents.origin()->length() > 0;
+        case Color:
+            return m_color.origin()->length() > 0;
+        case Index:
+            return m_index.origin()->length() > 0;
+    }
+}
+Buffer& Mesh::operator[](VertexComponent vertexComponent){
+    switch (vertexComponent) {
+            
+        case Position:
+            return m_postion;
+        case TextureCoords:
+            return m_textureCoords;
+        case Normal:
+            return m_normal;
+        case Tangent:
+            return m_tangents;
+        case Bitangent:
+            return m_bitangents;
+        case Color:
+            return m_color;
+        case Index:
+            return m_index;
+    }
+}
+MTL::PrimitiveType Mesh::primitiveMode(){
+    return m_pm;
+}
+
+void Mesh::buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexComponent){
+    switch (vertexComponent) {
+        
+        case Position:
+            m_postion.store(size, buffer);
+            break;
+        case TextureCoords:
+            m_textureCoords.store(size, buffer);
+            break;
+        case Normal:
+            m_normal.store(size, buffer);
+            break;
+        case Tangent:
+            m_tangents.store(size, buffer);
+            break;
+        case Bitangent:
+            m_bitangents.store(size, buffer);
+            break;
+        case Color:
+            m_color.store(size, buffer);
+            break;
+        case Index:
+            m_index.store(size, buffer);
+            break;
+    }
+}
+MTL::VertexDescriptor* Mesh::vertexDescriptor(){
+    for (int i = 0; i < 6; i++) {
+        layoutVertexDescriptor((Mesh::VertexComponent)i);
+    }
+    return m_vertexDescriptor;
+}
+void Mesh::draw(MTL::RenderCommandEncoder* encoder){
+
+    for (int i = 0; i < 6; i++) {
+        Mesh::VertexComponent idex = (Mesh::VertexComponent)i;
+        if(hasBuffer(idex)){
+            encoder->setVertexBuffer((*this)[idex].origin(), 0, i + vertex_buffer_start);
+        }else{
+            encoder->setVertexBuffer(nullptr, 0, i + vertex_buffer_start);
+        }
+    }
+    if (hasBuffer(VertexComponent::Index)) {
+        encoder->drawIndexedPrimitives(this->m_pm, m_vertex_count, m_indexType, m_index.origin(), 0);
+    }else{
+        encoder->drawPrimitives(this->m_pm, 0, this->m_vertex_count,1,0);
+    }
+}
+void Mesh::layoutVertexDescriptor(Mesh::VertexComponent vertexComponent){
+    if (!hasBuffer(vertexComponent)){
+        return;
+    }
+    int index = vertex_buffer_start + vertexComponent;
+    switch (vertexComponent) {
+        case Position:
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat3);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
+            m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 3);
+            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
+            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            break;
+        case TextureCoords:
+            if (uvComponentCount() == 3){
+                m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat3);
+                m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 3);
+            }else{
+                m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat2);
+                m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 2);
+            }
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
+            
+            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
+            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            break;
+        case Normal:
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat3);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
+            m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 3);
+            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
+            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            break;
+        case Tangent:
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat3);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
+            m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 3);
+            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
+            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            break;
+        case Bitangent:
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat3);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
+            m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 3);
+            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
+            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            break;
+        case Color:
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat4);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
+            m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 4);
+            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
+            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            break;
+        default:
+            break;
+    }
 }

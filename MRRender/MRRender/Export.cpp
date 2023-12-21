@@ -18,7 +18,36 @@ static MR::RenderPass* m_render_pass = new MR::RenderPass();
 
 static MR::RenderScreen * renderScreen = new MR::RenderScreen();
 
+static MR::Mesh mesh(3);
 
+static MR::RenderScene* state;
+
+void beginMesh(){
+    float v[9] = {
+           0, 0.5,0,
+        -0.5,-0.5,0,
+         0.5,-0.5,0
+    };
+    float c[12] = {
+           0, 0.5,0,1,
+         0.5, 0.5,0,1,
+         0.5, 0.5,0,1
+    };
+    mesh.buffer(sizeof(v), v, MR::Mesh::VertexComponent::Position);
+    mesh.buffer(sizeof(c), c, MR::Mesh::VertexComponent::Color);
+    MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
+    
+    state = new MR::RenderScene(vt);
+}
+
+void drawMesh(void * drawable){
+    CA::MetalDrawable* current = (CA::MetalDrawable*)drawable;
+    MR::Queue::shared().beginBuffer([current](auto buffer){
+        m_render_pass->beginRender(buffer, current, [](auto encoder){
+            state->render(mesh, encoder);
+        });
+    });
+}
 void closeRender(){
     CFRelease(m_layer);
     m_layer = nullptr;

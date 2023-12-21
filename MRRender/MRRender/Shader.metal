@@ -31,7 +31,7 @@ struct VertexOutPlain{
     float3 normal;
     float3 tangent;
     float3 bitangent;
-    float3 color;
+    float4 color;
 };
 struct VertexInPlain{
     float3 position [[attribute(0)]];
@@ -39,6 +39,7 @@ struct VertexInPlain{
     float2 uv [[attribute(2)]];
     float3 tangent[[attribute(3)]];
     float3 bitangent[[attribute(4)]];
+    float4 color[[attribute(5)]];
 };
 
 struct VertexScreenDisplay{
@@ -79,7 +80,6 @@ vertex VertexOutPlain vertexPlainRender(VertexInPlain inData[[stage_in]],
     return VertexOutPlain{
         .uv = inData.uv,
         .frag_postion = frag.xyz,
-        .color = inData.position,
         .position = config.camera_object->projection * config.camera_object->view * frag,
         .normal = normalize((config.object_object->normal_model * float4(inData.normal,1)).xyz),
         .tangent = normalize((config.object_object->normal_model * float4(inData.tangent,1)).xyz),
@@ -197,4 +197,26 @@ vertex VertexOutShadow VertexShadowRender(VertexInShadow inData [[stage_in]],
     VertexOutShadow d;
     d.position = config.light_object->projection * config.light_object->view * config.object_object->model * float4(inData.position,1);
     return d;
+}
+
+
+struct VertexOutScene{
+    float4 position [[position]];
+    float4 color;
+};
+struct VertexInScene{
+    float3 position [[attribute(0)]];
+    float4 color[[attribute(5)]];
+};
+
+
+vertex VertexOutScene vertexSceneRender(VertexInScene inData[[stage_in]]){
+    return VertexOutScene{
+        .position = float4(inData.position,1),
+        .color = inData.color
+    };
+}
+
+fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]]){
+    return half4(inData.color);
 }

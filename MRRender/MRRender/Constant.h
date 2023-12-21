@@ -34,6 +34,7 @@
 #define model_vertex_tan_buffer_index               4
 #define model_vertex_bitan_buffer_index             5
 
+#define vertex_buffer_start                         3
 
 
 struct CameraObject{

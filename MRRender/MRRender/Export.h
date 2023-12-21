@@ -17,4 +17,8 @@ void renderBitmap(void * drawable,int width,int height,int bytePerRow,const void
 
 void closeRender(void);
 
+void beginMesh();
+
+void drawMesh(void * drawable);
+
 #endif /* Export_h */

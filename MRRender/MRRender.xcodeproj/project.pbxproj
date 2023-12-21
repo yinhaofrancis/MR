@@ -20,6 +20,8 @@
 		A94CA9BB2B2F6B950059571E /* MRPrensentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94CA9B92B2F6B950059571E /* MRPrensentation.cpp */; };
 		A94CA9BC2B2F6B950059571E /* MRPrensentation.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A94CA9BA2B2F6B950059571E /* MRPrensentation.hpp */; };
 		A94CA9BD2B2F86CD0059571E /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A94CA9B42B2F53BB0059571E /* Shader.metal */; };
+		A94CA9C02B2FB71A0059571E /* MRModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94CA9BE2B2FB71A0059571E /* MRModel.cpp */; };
+		A94CA9C12B2FB71A0059571E /* MRModel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A94CA9BF2B2FB71A0059571E /* MRModel.hpp */; };
 		A977C7562B2EF164000C2238 /* lib.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A977C7552B2EF164000C2238 /* lib.xcconfig */; };
 		A977C75C2B2EF1ED000C2238 /* MRObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A977C7572B2EF1ED000C2238 /* MRObject.cpp */; };
 		A977C75D2B2EF1ED000C2238 /* MRRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A977C7582B2EF1ED000C2238 /* MRRenderer.cpp */; };
@@ -48,6 +50,8 @@
 		A94CA9B62B2F53E10059571E /* Constant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
 		A94CA9B92B2F6B950059571E /* MRPrensentation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MRPrensentation.cpp; sourceTree = "<group>"; };
 		A94CA9BA2B2F6B950059571E /* MRPrensentation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MRPrensentation.hpp; sourceTree = "<group>"; };
+		A94CA9BE2B2FB71A0059571E /* MRModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MRModel.cpp; sourceTree = "<group>"; };
+		A94CA9BF2B2FB71A0059571E /* MRModel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MRModel.hpp; sourceTree = "<group>"; };
 		A977C74B2B2EF0DD000C2238 /* MRRender.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MRRender.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A977C7552B2EF164000C2238 /* lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = lib.xcconfig; sourceTree = "<group>"; };
 		A977C7572B2EF1ED000C2238 /* MRObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MRObject.cpp; sourceTree = "<group>"; };
@@ -141,6 +145,8 @@
 				A94CA9B62B2F53E10059571E /* Constant.h */,
 				A94CA9B92B2F6B950059571E /* MRPrensentation.cpp */,
 				A94CA9BA2B2F6B950059571E /* MRPrensentation.hpp */,
+				A94CA9BE2B2FB71A0059571E /* MRModel.cpp */,
+				A94CA9BF2B2FB71A0059571E /* MRModel.hpp */,
 			);
 			path = MRRender;
 			sourceTree = "<group>";
@@ -175,6 +181,7 @@
 				A977C75F2B2EF1ED000C2238 /* Util.h in Headers */,
 				A977C7602B2EF1ED000C2238 /* MRRenderer.hpp in Headers */,
 				A94CA9BC2B2F6B950059571E /* MRPrensentation.hpp in Headers */,
+				A94CA9C12B2FB71A0059571E /* MRModel.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +287,7 @@
 			files = (
 				A94CA9B52B2F53BB0059571E /* Shader.metal in Sources */,
 				A977C75D2B2EF1ED000C2238 /* MRRenderer.cpp in Sources */,
+				A94CA9C02B2FB71A0059571E /* MRModel.cpp in Sources */,
 				A94CA9B32B2F50E60059571E /* Export.cpp in Sources */,
 				A977C75C2B2EF1ED000C2238 /* MRObject.cpp in Sources */,
 				A94CA9BB2B2F6B950059571E /* MRPrensentation.cpp in Sources */,

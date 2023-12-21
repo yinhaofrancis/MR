@@ -13,7 +13,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <simd/simd.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -57,13 +57,14 @@ private:
 
 class Buffer:virtual Object {
 public:
-    Buffer(size_t size = 0,const void *buffer = nullptr ,Renderer& render = Renderer::shared());
+    Buffer(Renderer& render = Renderer::shared());
     ~Buffer();
     void assign(const void * data,size_t offset,size_t size);
     void store(size_t size,const void * data);
     MTL::Buffer * origin();
 private:
     MTL::Buffer *m_buffer = nullptr;
+    Renderer m_render;
 };
 
 class Texture:virtual Object{
@@ -169,7 +170,6 @@ private:
     void checkInnerTexture(MTL::Texture *texture);
     MTL::RenderPassDescriptor* m_render_pass_descriptor = nullptr;
     Texture* m_innerDepth;
-    Texture* m_innerStencial;
 };
 
 class Vsync:virtual Object{
@@ -177,6 +177,58 @@ public:
     typedef std::function<bool(void)> SyncCallBack;
     Vsync(SyncCallBack);
     ~Vsync();    
+};
+
+class Mesh:virtual Object{
+public:
+
+    enum VertexComponent{
+        Position,
+        TextureCoords,
+        Normal,
+        Tangent,
+        Bitangent,
+        Color,
+        Index,
+    };
+    
+    Mesh(int vertexCount,
+         int uvComponentCount = 2,
+         MTL::PrimitiveType primitive = MTL::PrimitiveTypeTriangle,
+         Renderer& render = Renderer::shared());
+    ~Mesh();
+ 
+    int uvComponentCount();
+
+    size_t vertexCount();
+
+    bool hasBuffer(VertexComponent vertexComponent);
+    
+    Buffer& operator[](VertexComponent vertexComponent);
+    
+    MTL::PrimitiveType primitiveMode();
+    
+    void buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexComponent);
+    
+    MTL::VertexDescriptor* vertexDescriptor();
+    void draw(MTL::RenderCommandEncoder *encoder);
+    
+private:
+    void layoutVertexDescriptor(Mesh::VertexComponent vertexComponent);
+    
+private:
+    Buffer m_postion;
+    Buffer m_normal;
+    Buffer m_tangents;
+    Buffer m_bitangents;
+    Buffer m_textureCoords;
+    Buffer m_color;
+    Buffer m_index;
+    int m_uvComponent           = 2;
+    size_t m_vertex_count       = 0;
+    MTL::IndexType m_indexType    = MTL::IndexTypeUInt16;
+    MTL::PrimitiveType m_pm     = MTL::PrimitiveTypeTriangle;
+    MTL::VertexDescriptor *m_vertexDescriptor;
 };
 
 };

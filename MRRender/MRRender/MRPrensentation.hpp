@@ -20,6 +20,17 @@ public:
 private:
     MTL::RenderPipelineState *m_state = nullptr;
 };
+
+class RenderScene:virtual Object{
+public:
+    RenderScene(MTL::VertexDescriptor* vertexDescriptor,Renderer& render = Renderer::shared(),Program& program = Program::shared());
+    ~RenderScene();
+    void render(MR::Mesh& mesh,MTL::RenderCommandEncoder * encoder) const;
+private:
+    MTL::RenderPipelineState *m_state = nullptr;
+    MTL::DepthStencilState *m_depth = nullptr;
+};
+
 };
 
 #endif /* MRPrensentation_hpp */
