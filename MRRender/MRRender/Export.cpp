@@ -9,6 +9,7 @@
 
 #include "MRRenderer.hpp"
 #include "MRPrensentation.hpp"
+#include "MRModel.hpp"
 #include <Metal/Metal.hpp>
 
 
@@ -18,11 +19,11 @@ static MR::RenderPass* m_render_pass = new MR::RenderPass();
 
 static MR::RenderScreen * renderScreen = new MR::RenderScreen();
 
-static MR::Mesh mesh(3);
+static MR::Mesh mesh;
 
 static MR::RenderScene* state;
 
-void beginMesh(){
+void beginMesh(const char * url){
     float v[9] = {
            0, 0.5,0,
         -0.5,-0.5,0,
@@ -33,10 +34,15 @@ void beginMesh(){
          0.5, 0.5,0,1,
          0.5, 0.5,0,1
     };
+    mesh.vertexCount() = 3;
     mesh.buffer(sizeof(v), v, MR::Mesh::VertexComponent::Position);
     mesh.buffer(sizeof(c), c, MR::Mesh::VertexComponent::Color);
-    MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     
+    std::string s = url;
+    MR::Scene sc(s);
+    auto mesh2 = sc.mesh(0);
+    mesh = mesh2;
+    MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     state = new MR::RenderScene(vt);
 }
 

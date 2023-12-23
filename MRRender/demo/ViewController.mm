@@ -16,7 +16,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.mView.mtLayer.pixelFormat = MTLPixelFormatRGBA8Unorm_sRGB;
-    beginMesh();
+    self.mView.mtLayer.contentsScale = 3;
+    
+    beginMesh([NSBundle.mainBundle URLForResource:@"ball" withExtension:@"obj"].path.UTF8String);
     // Do any additional setup after loading the view.
 }
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

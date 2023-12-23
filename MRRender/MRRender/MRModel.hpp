@@ -9,7 +9,8 @@
 #define MRModel_hpp
 
 #include <stdio.h>
-
+#include "MRRenderer.hpp"
+                                   
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -44,15 +45,25 @@ enum TextureType{
 
 
 
-class Model{
-    
-    
-    
+class Scene:virtual Object{
+
 public:
+    Scene(std::string& path);
+    ~Scene();
+    
+    
+    Mesh mesh(int index);
+    
 private:
+    
+    void loadMeshComponent(unsigned int componentSize, Mesh &m, unsigned int numVertice, Mesh::VertexComponent vc, aiVector3D *vertexBuffer);
+    void loadMeshColorComponent(unsigned int componentSize, Mesh &m, unsigned int numVertice, aiColor4D *vertexBuffer);
     Assimp::Importer m_importer;
     aiScene* m_scene;
-    std::string folderPath;
+    std::string m_folderPath;
+    std::unordered_map<int, MR::Mesh*> map_mesh;
+    std::unordered_map<std::string, MR::Texture>map_texture;
+    int coordinate_count = 0;
 };
 };
 

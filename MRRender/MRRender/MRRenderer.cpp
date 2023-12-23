@@ -267,7 +267,13 @@ Program&  Program::shared(){
     return *s_shared;
 }
 Program::Program(Renderer& render){
-    m_lib = render.m_device->newDefaultLibrary();
+    const char *buff = NS::Bundle::mainBundle()->bundlePath()->utf8String();
+    std::string path = std::string(buff) + "/Frameworks/MR.framework/default.metallib";
+    NS::Error * e;
+    m_lib = render.m_device->newLibrary(NS::String::alloc()->init(path.c_str(), NS::UTF8StringEncoding), &e);
+    if(e != nullptr){
+        throw (MR::Error){e->domain()->utf8String(),0};
+    }
 }
 Program::Program(const char* path,Renderer& render){
     NS::Error * e;
@@ -320,11 +326,8 @@ Vsync::~Vsync(){
 }
 
 
-Mesh::Mesh(int vertexCount,int uvComponentCount,MTL::PrimitiveType primitive,Renderer& render)
-:m_uvComponent(uvComponentCount)
-,m_vertex_count(vertexCount)
-,m_pm(primitive)
-,m_postion(render)
+Mesh::Mesh(Renderer& render)
+:m_postion(render)
 ,m_normal(render)
 ,m_textureCoords(render)
 ,m_tangents(render)
@@ -339,14 +342,16 @@ Mesh::~Mesh(){
     }
 }
 
-int Mesh::uvComponentCount(){
+int& Mesh::uvComponentCount(){
     return m_uvComponent;
 }
 
-size_t Mesh::vertexCount(){
+size_t& Mesh::vertexCount(){
     return m_vertex_count;
 }
-
+MTL::IndexType& Mesh::indexType(){
+    return m_indexType;
+}
 bool Mesh::hasBuffer(VertexComponent vertexComponent){
     switch (vertexComponent) {
             
@@ -385,7 +390,7 @@ Buffer& Mesh::operator[](VertexComponent vertexComponent){
             return m_index;
     }
 }
-MTL::PrimitiveType Mesh::primitiveMode(){
+MTL::PrimitiveType& Mesh::primitiveMode(){
     return m_pm;
 }
 

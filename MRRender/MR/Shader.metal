@@ -206,14 +206,13 @@ struct VertexOutScene{
 };
 struct VertexInScene{
     float3 position [[attribute(0)]];
-    float4 color[[attribute(5)]];
 };
 
 
 vertex VertexOutScene vertexSceneRender(VertexInScene inData[[stage_in]]){
     return VertexOutScene{
         .position = float4(inData.position,1),
-        .color = inData.color
+        .color = float4(1,1,0,1)
     };
 }
 

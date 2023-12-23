@@ -192,21 +192,20 @@ public:
         Index,
     };
     
-    Mesh(int vertexCount,
-         int uvComponentCount = 2,
-         MTL::PrimitiveType primitive = MTL::PrimitiveTypeTriangle,
-         Renderer& render = Renderer::shared());
+    Mesh(Renderer& render = Renderer::shared());
     ~Mesh();
  
-    int uvComponentCount();
+    int& uvComponentCount();
 
-    size_t vertexCount();
+    size_t& vertexCount();
 
     bool hasBuffer(VertexComponent vertexComponent);
     
     Buffer& operator[](VertexComponent vertexComponent);
     
-    MTL::PrimitiveType primitiveMode();
+    MTL::PrimitiveType& primitiveMode();
+    
+    MTL::IndexType& indexType();
     
     void buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexComponent);
     

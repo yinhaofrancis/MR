@@ -17,7 +17,7 @@ void renderBitmap(void * drawable,int width,int height,int bytePerRow,const void
 
 void closeRender(void);
 
-void beginMesh();
+void beginMesh(const char * url);
 
 void drawMesh(void * drawable);
 
