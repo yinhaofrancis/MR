@@ -29,6 +29,7 @@
 		A94CAA072B37401D0059571E /* MR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9F72B373EBA0059571E /* MR.framework */; };
 		A94CAA082B37401D0059571E /* MR.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9F72B373EBA0059571E /* MR.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A94CAA0C2B374C7D0059571E /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A94CA9B42B2F53BB0059571E /* Shader.metal */; };
+		A94CAA0D2B38096A0059571E /* Constant.h in Headers */ = {isa = PBXBuildFile; fileRef = A94CA9B62B2F53E10059571E /* Constant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A977C7562B2EF164000C2238 /* lib.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A977C7552B2EF164000C2238 /* lib.xcconfig */; };
 		A977C75C2B2EF1ED000C2238 /* MRObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A977C7572B2EF1ED000C2238 /* MRObject.cpp */; };
 		A977C75D2B2EF1ED000C2238 /* MRRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A977C7582B2EF1ED000C2238 /* MRRenderer.cpp */; };
@@ -42,6 +43,7 @@
 		A977C7802B2EF253000C2238 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A977C77F2B2EF253000C2238 /* Assets.xcassets */; };
 		A977C7832B2EF253000C2238 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A977C7812B2EF253000C2238 /* LaunchScreen.storyboard */; };
 		A977C7862B2EF253000C2238 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A977C7852B2EF253000C2238 /* main.m */; };
+		A9B36CD22B38A53600B922A2 /* Scene.metal in Sources */ = {isa = PBXBuildFile; fileRef = A9B36CD12B38A53600B922A2 /* Scene.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +134,7 @@
 		A977C7822B2EF253000C2238 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A977C7842B2EF253000C2238 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A977C7852B2EF253000C2238 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A9B36CD12B38A53600B922A2 /* Scene.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Scene.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +195,7 @@
 			children = (
 				A94CA9B62B2F53E10059571E /* Constant.h */,
 				A94CA9B42B2F53BB0059571E /* Shader.metal */,
+				A9B36CD12B38A53600B922A2 /* Scene.metal */,
 			);
 			path = MR;
 			sourceTree = "<group>";
@@ -262,6 +266,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A94CAA0D2B38096A0059571E /* Constant.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9B36CD22B38A53600B922A2 /* Scene.metal in Sources */,
 				A94CAA0C2B374C7D0059571E /* Shader.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

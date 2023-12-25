@@ -6,7 +6,7 @@
 //
 
 #include "MRRenderer.hpp"
-#include "Constant.h"
+#include <MR/Constant.h>
 
 using namespace MR;
 
@@ -35,7 +35,7 @@ Buffer::~Buffer(){
         m_buffer->release();
     }
 }
-void Buffer::assign(const void * data,size_t offset,size_t size){
+void Buffer::assign(const void * data,size_t offset,size_t size) const{
     uint8_t * start = reinterpret_cast<uint8_t *>(m_buffer->contents());
     memcpy(start + offset, data, size);
 }
@@ -46,7 +46,7 @@ void Buffer::store(size_t size,const void * data){
     m_buffer = m_render.device().newBuffer(data,size, MTL::ResourceOptionCPUCacheModeDefault);
 }
 
-MTL::Buffer * Buffer::origin(){
+MTL::Buffer * Buffer::origin() const{
     return m_buffer;
 }
 
@@ -87,13 +87,13 @@ void Texture::assign(size_t width,
                      size_t bytePerRow,
                      const void *buffer,
                      size_t slice,
-                     size_t bytePerImage){
+                     size_t bytePerImage) const{
     m_texture->replaceRegion(MTL::Region(0, 0,0, width, height,depth), level, slice, buffer, bytePerRow, bytePerImage);
 }
 void Texture::assign(size_t width,
                      size_t height,
                      size_t bytePerRow,
-                     const void * buffer){
+                     const void * buffer) const{
     assign(width, height, 1, 0, bytePerRow, buffer, 0, 0);
 }
 void Texture::assign(size_t width,
@@ -101,14 +101,14 @@ void Texture::assign(size_t width,
                      size_t bytePerRow,
                      const void *buffer,
                      size_t slice,
-                     size_t bytePerImage){
+                     size_t bytePerImage) const{
     m_texture->replaceRegion(MTL::Region(0, 0,0, width, height,1), 0, slice, buffer, bytePerRow, bytePerImage);
 }
 MTL::TextureDescriptor* Texture::createDecription(){
     return MTL::TextureDescriptor::alloc()->init();;
 }
 
-MTL::Texture* Texture::origin(){
+MTL::Texture* Texture::origin() const{
     return m_texture;
 }
 
@@ -265,6 +265,11 @@ Program* Program::s_shared = new Program();
 
 Program&  Program::shared(){
     return *s_shared;
+}
+MTL::ComputePipelineState* Program::compute(const char *name){
+    MTL::Function* func = m_lib->newFunction(NS::String::alloc()->init(name, NS::UTF8StringEncoding));
+    NS::Error* error;
+    return m_lib->device()->newComputePipelineState(func, &error);
 }
 Program::Program(Renderer& render){
     const char *buff = NS::Bundle::mainBundle()->bundlePath()->utf8String();

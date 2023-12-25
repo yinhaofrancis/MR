@@ -24,7 +24,8 @@
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [super touchesEnded:touches withEvent:event];
     
-    drawMesh((__bridge void *)self.mView.mtLayer.nextDrawable);
+//    drawMesh((__bridge void *)self.mView.mtLayer.nextDrawable);
+    test();
 }
 
 

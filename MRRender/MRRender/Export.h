@@ -21,4 +21,6 @@ void beginMesh(const char * url);
 
 void drawMesh(void * drawable);
 
+void test();
+
 #endif /* Export_h */

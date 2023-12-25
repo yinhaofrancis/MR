@@ -56,4 +56,77 @@ struct ModelObject{
     simd_float4x4   normal_model;
     float           shiness;
 };
+
+
+
+
+struct ModelBuffer {
+    simd_float4x4 ModelMatrix;
+};
+
+struct Camera{
+    
+    simd_float4x4 viewMatrix;
+    
+    simd_float4x4 projection;
+    
+};
+union CameraBuffer {
+    int count;
+    Camera camera;
+};
+
+enum LightType{
+    LightDirection   =   1,
+    LightPoint       =   2,
+    LightSpot        =   3,
+    LightAmbient     =   4,
+    LightArea        =   5
+};
+struct Light{
+
+    LightType mType;
+    
+    simd_float3 mPosition;
+
+    simd_float3 mDirection;
+
+    simd_float3 mUp;
+
+   /** Constant light attenuation factor.
+    *
+    *  The intensity of the light source at a given distance 'd' from
+    *  the light's position is
+    *  @code
+    *  Atten = 1/( att0 + att1 * d + att2 * d*d)
+    *  @endcode
+    *  This member corresponds to the att0 variable in the equation.
+    *  Naturally undefined for directional lights.
+    */
+    float mAttenuationConstant;
+
+    float mAttenuationLinear;
+
+    float mAttenuationQuadratic;
+
+
+    simd_float3 mColorDiffuse;
+
+    simd_float3 mColorSpecular;
+
+    simd_float3 mColorAmbient;
+
+    float mAngleInnerCone;
+    
+    float mAngleOuterCone;
+
+    simd_float2 mSize;
+
+};
+
+union LightBuffer {
+    int count;
+    Light light;
+};
+
 #endif /* Constant_h */

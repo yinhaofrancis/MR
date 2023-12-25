@@ -59,9 +59,9 @@ class Buffer:virtual Object {
 public:
     Buffer(Renderer& render = Renderer::shared());
     ~Buffer();
-    void assign(const void * data,size_t offset,size_t size);
+    void assign(const void * data,size_t offset,size_t size) const;
     void store(size_t size,const void * data);
-    MTL::Buffer * origin();
+    MTL::Buffer * origin() const;
 private:
     MTL::Buffer *m_buffer = nullptr;
     Renderer m_render;
@@ -81,7 +81,7 @@ public:
             Renderer& render = Renderer::shared());
     ~Texture();
     static MTL::TextureDescriptor* createDecription();
-    MTL::Texture* origin();
+    MTL::Texture* origin() const;
     void assign(size_t width,
                 size_t height,
                 size_t depth,
@@ -89,19 +89,19 @@ public:
                 size_t bytePerRow,
                 const void * buffer,
                 size_t slice,
-                size_t perImageSize);
+                size_t perImageSize) const;
     
     void assign(size_t width,
                 size_t height,
                 size_t bytePerRow,
                 const void * buffer,
                 size_t slice,
-                size_t bytePerImage);
-
+                size_t bytePerImage) const;
+    
     void assign(size_t width,
                 size_t height,
                 size_t bytePerRow,
-                const void * buffer);
+                const void * buffer) const;
     friend class RenderPass;
 private:
     MTL::Texture *m_texture = nullptr;
@@ -145,6 +145,7 @@ public:
     Program(const char* path,Renderer& render = Renderer::shared());
     ~Program();
     MTL::Function* shader(const char *name);
+    MTL::ComputePipelineState* compute(const char *name);
     static Program& shared();
 private:
     static Program *s_shared;
@@ -152,7 +153,7 @@ private:
 };
 
 class RenderPass:virtual Object{
-
+    
 public:
     typedef std::function<void(MTL::RenderCommandEncoder*)> RenderCallback;
     MTL::RenderPassDescriptor& renderPassDescriptor();
@@ -176,12 +177,12 @@ class Vsync:virtual Object{
 public:
     typedef std::function<bool(void)> SyncCallBack;
     Vsync(SyncCallBack);
-    ~Vsync();    
+    ~Vsync();
 };
 
 class Mesh:virtual Object{
 public:
-
+    
     enum VertexComponent{
         Position,
         TextureCoords,
@@ -194,11 +195,11 @@ public:
     
     Mesh(Renderer& render = Renderer::shared());
     ~Mesh();
- 
+    
     int& uvComponentCount();
-
+    
     size_t& vertexCount();
-
+    
     bool hasBuffer(VertexComponent vertexComponent);
     
     Buffer& operator[](VertexComponent vertexComponent);
@@ -229,7 +230,7 @@ private:
     MTL::PrimitiveType m_pm     = MTL::PrimitiveTypeTriangle;
     MTL::VertexDescriptor *m_vertexDescriptor;
 };
-
 };
+
 
 #endif /* Renderer_hpp */

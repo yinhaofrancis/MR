@@ -54,6 +54,8 @@ public:
     
     Mesh mesh(int index);
     
+    
+    
 private:
     
     void loadMeshComponent(unsigned int componentSize, Mesh &m, unsigned int numVertice, Mesh::VertexComponent vc, aiVector3D *vertexBuffer);

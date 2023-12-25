@@ -11,6 +11,7 @@
 #include "MRPrensentation.hpp"
 #include "MRModel.hpp"
 #include <Metal/Metal.hpp>
+#include <MR/Constant.h>
 
 
 static CA::MetalLayer* m_layer;
@@ -22,6 +23,8 @@ static MR::RenderScreen * renderScreen = new MR::RenderScreen();
 static MR::Mesh mesh;
 
 static MR::RenderScene* state;
+
+static MR::Program pro = MR::Program::shared();
 
 void beginMesh(const char * url){
     float v[9] = {
@@ -83,4 +86,18 @@ void renderBitmap(void * drawable,int width,int height,int bytePerRow,const void
     
     
     
+}
+void test(){
+    Camera* m = new Camera();
+    memset(m, 0, sizeof(Camera));
+    MR::Buffer b;
+    b.store(10 * sizeof(Camera), m);
+    auto compute = pro.compute("track");
+    MR::Queue::shared().beginCompute([b, compute](MTL::ComputeCommandEncoder* encoder){
+        encoder->setComputePipelineState(compute);
+        encoder->setBuffer(b.origin(), 0, 0);
+        MTL::Size s(9, 1, 1);
+        MTL::Size m(1, 1, 1);
+        encoder->dispatchThreadgroups(s, m);
+    });
 }

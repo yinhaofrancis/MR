@@ -200,22 +200,8 @@ vertex VertexOutShadow VertexShadowRender(VertexInShadow inData [[stage_in]],
 }
 
 
-struct VertexOutScene{
-    float4 position [[position]];
-    float4 color;
-};
-struct VertexInScene{
-    float3 position [[attribute(0)]];
-};
 
 
-vertex VertexOutScene vertexSceneRender(VertexInScene inData[[stage_in]]){
-    return VertexOutScene{
-        .position = float4(inData.position,1),
-        .color = float4(1,1,0,1)
-    };
-}
-
-fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]]){
-    return half4(inData.color);
+kernel void track(device Camera* c [[buffer(0)]],thread uint tid [[thread_position_in_grid]]){
+    c[tid + 1].projection[1] = 2;
 }
