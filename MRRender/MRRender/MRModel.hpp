@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "MRRenderer.hpp"
                                    
+#include <MR/Constant.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -46,15 +47,13 @@ enum TextureType{
 
 
 class Scene:virtual Object{
-
+    
 public:
     Scene(std::string& path);
     ~Scene();
     
     
     Mesh mesh(int index);
-    
-    
     
 private:
     
@@ -67,6 +66,7 @@ private:
     std::unordered_map<std::string, MR::Texture>map_texture;
     int coordinate_count = 0;
 };
+
 };
 
 #endif /* MRModel_hpp */

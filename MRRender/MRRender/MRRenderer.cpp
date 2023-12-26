@@ -6,7 +6,8 @@
 //
 
 #include "MRRenderer.hpp"
-#include <MR/Constant.h>
+
+#include <simd/simd.h>
 
 using namespace MR;
 
@@ -75,11 +76,18 @@ Texture::Texture(size_t width,
     m_texture = render.m_device->newTexture(desciptor);
     desciptor->release();
 }
+Texture::Texture(simd_float4 color):Texture(2,2,MTL::PixelFormatRGBA32Float){
+    simd_float4 flat[4] = {
+        color,color,color,color
+    };
+    assign(2, 2, 4 * 4 * 2,(const void *)flat);
+}
 Texture::~Texture(){
     if(ref_count() == 1 && m_texture != nullptr){
         m_texture->release();
     }
 }
+
 void Texture::assign(size_t width,
                      size_t height,
                      size_t depth,
@@ -185,14 +193,18 @@ void RenderPass::checkInnerTexture(MTL::Texture *texture) {
         m_innerDepth = new Texture(
                                    texture->width(),
                                    texture->height(),
-                                   MTL::PixelFormatDepth32Float_Stencil8
+                                   MTL::PixelFormatDepth32Float_Stencil8,
+                                   MTL::TextureType2D,
+                                   MTL::StorageModePrivate
                                    );
     }else if (m_innerDepth->m_texture->width() != texture->width() || m_innerDepth->m_texture->height() != texture->height()){
         delete m_innerDepth;
         m_innerDepth = new Texture(
                                    texture->width(),
                                    texture->height(),
-                                   MTL::PixelFormatDepth32Float_Stencil8
+                                   MTL::PixelFormatDepth32Float_Stencil8,
+                                   MTL::TextureType2D,
+                                   MTL::StorageModePrivate
                                    );
     }
 }
@@ -510,4 +522,57 @@ void Mesh::layoutVertexDescriptor(Mesh::VertexComponent vertexComponent){
         default:
             break;
     }
+}
+
+Materal::Materal(Texture diffuse,Texture specular,Texture normal)
+:m_diffuse(diffuse),
+m_specular(specular),
+m_sampler(Sampler::linear()),
+m_normal(normal){
+    
+}
+void Materal::load(MTL::RenderCommandEncoder *encoder){
+    encoder->setFragmentTexture(m_diffuse.origin(), phong_diffuse_index);
+    encoder->setFragmentTexture(m_specular.origin(), phong_specular_index);
+    encoder->setFragmentTexture(m_normal.origin(), phong_normal_index);
+    encoder->setFragmentSamplerState(m_sampler.origin(), sampler_default);
+}
+
+Materal Materal::defaultMateral(){
+    Texture d (simd_make_float4(0.5, 0.5, 0.5, 1));
+    Texture s (simd_make_float4(1, 1, 1, 1));
+    Texture n (simd_make_float4(0.5, 0.5, 1, 1));
+    return Materal(d, s, n);
+}
+
+
+SceneObject::SceneObject(){
+    
+}
+void SceneObject::setCamera(Camera &camera){
+    m_camera = camera;
+}
+void SceneObject::add(Light light){
+    LightBuffer b;
+    b.light = light;
+    lights.push_back(b);
+}
+void SceneObject::setModel(ModelBuffer& model){
+    m_model = model;
+}
+void SceneObject::load(MTL::RenderCommandEncoder *encoder) const{
+    encoder->setVertexBytes(&m_model, sizeof(m_model), model_object_buffer_index);
+    encoder->setFragmentBytes(&m_model, sizeof(m_model), model_object_buffer_index);
+    
+    encoder->setVertexBytes(&m_camera, sizeof(m_camera), camera_object_buffer_index);
+    encoder->setFragmentBytes(&m_camera, sizeof(m_camera), camera_object_buffer_index);
+    LightBuffer * buffer = new LightBuffer[lights.size() + 1];
+    for (int i = 1; i <= lights.size(); i++) {
+        buffer[i] = lights[i];
+    }
+    buffer[0].count = (int)lights.size();
+    encoder->setVertexBytes(buffer, sizeof(LightBuffer) * (lights.size() + 1), light_object_buffer_index);
+    encoder->setFragmentBytes(buffer, sizeof(LightBuffer) * (lights.size() + 1), light_object_buffer_index);
+    
+    
 }

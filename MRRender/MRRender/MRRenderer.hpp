@@ -24,6 +24,7 @@
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 #include "MRObject.hpp"
+#include <MR/Constant.h>
 
 namespace MR {
 
@@ -71,14 +72,17 @@ class Texture:virtual Object{
 public:
     Texture(MTL::TextureDescriptor* desciptor,
             Renderer& render = Renderer::shared());
+    
     Texture(size_t width,
             size_t height,
             MTL::PixelFormat pixel,
             MTL::TextureType type = MTL::TextureType2D,
-            MTL::StorageMode storage = MTL::StorageModePrivate,
+            MTL::StorageMode storage = MTL::StorageModeShared,
             MTL::TextureUsage usage  = MTL::TextureUsageShaderRead | MTL::TextureUsageRenderTarget,
             MTL::TextureSwizzleChannels* swizzleChannel = nullptr,
             Renderer& render = Renderer::shared());
+    
+    Texture(simd_float4 color);
     ~Texture();
     static MTL::TextureDescriptor* createDecription();
     MTL::Texture* origin() const;
@@ -230,7 +234,37 @@ private:
     MTL::PrimitiveType m_pm     = MTL::PrimitiveTypeTriangle;
     MTL::VertexDescriptor *m_vertexDescriptor;
 };
+
+class Materal:virtual Object{
+public:
+    Materal(Texture diffuse,Texture specular,Texture normal);
+    void load(MTL::RenderCommandEncoder *encoder);
+    static Materal defaultMateral();
+private:
+    Texture m_diffuse;
+    Texture m_specular;
+    Texture m_normal;
+    Sampler m_sampler;
 };
+
+
+
+class SceneObject{
+public:
+    SceneObject();
+    void load(MTL::RenderCommandEncoder *encoder) const;
+    void add(Light light);
+    void setCamera(Camera& camera);
+    void setModel(ModelBuffer& model);
+private:
+    Camera m_camera;
+    ModelBuffer m_model;
+    std::vector<LightBuffer> lights;
+};
+
+
+};
+
 
 
 #endif /* Renderer_hpp */

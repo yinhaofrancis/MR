@@ -9,6 +9,7 @@
 #include <MRRender/Export.h>
 @interface ViewController ()
 
+@property(nonatomic,strong) CADisplayLink* displaylink;
 @end
 
 @implementation ViewController
@@ -17,15 +18,16 @@
     [super viewDidLoad];
     self.mView.mtLayer.pixelFormat = MTLPixelFormatRGBA8Unorm_sRGB;
     self.mView.mtLayer.contentsScale = 3;
-    
+    _displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(run)];
+    [_displaylink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
     beginMesh([NSBundle.mainBundle URLForResource:@"ball" withExtension:@"obj"].path.UTF8String);
+    
     // Do any additional setup after loading the view.
 }
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [super touchesEnded:touches withEvent:event];
-    
-//    drawMesh((__bridge void *)self.mView.mtLayer.nextDrawable);
-    test();
+
+
+-(void)run{
+    drawMesh((__bridge void *)self.mView.mtLayer.nextDrawable);
 }
 
 

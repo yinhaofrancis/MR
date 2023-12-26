@@ -76,5 +76,6 @@ RenderScene::~RenderScene(){
 void RenderScene::render(MR::Mesh& mesh,MTL::RenderCommandEncoder * encoder) const{
     encoder->setRenderPipelineState(m_state);
     encoder->setDepthStencilState(m_depth);
+    
     mesh.draw(encoder);
 }

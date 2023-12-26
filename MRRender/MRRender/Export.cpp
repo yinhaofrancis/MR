@@ -24,6 +24,8 @@ static MR::Mesh mesh;
 
 static MR::RenderScene* state;
 
+static MR::Materal m = MR::Materal::defaultMateral();
+
 static MR::Program pro = MR::Program::shared();
 
 void beginMesh(const char * url){
@@ -48,11 +50,49 @@ void beginMesh(const char * url){
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     state = new MR::RenderScene(vt);
 }
-
+static float v = 0;
 void drawMesh(void * drawable){
     CA::MetalDrawable* current = (CA::MetalDrawable*)drawable;
-    MR::Queue::shared().beginBuffer([current](auto buffer){
-        m_render_pass->beginRender(buffer, current, [](auto encoder){
+    Camera cam;
+    cam.mPosition = simd_make_float3(3, 3, 3);
+
+    memcpy(&cam.viewMatrix, glm::value_ptr(glm::lookAt(glm::vec3(3), glm::vec3(0), glm::vec3(0,1,0))), sizeof(cam.viewMatrix));
+    
+    float asp = 1;
+    if(current->texture()->height() > 0 && current->texture()->width() > 0){
+        asp = (float)current->texture()->width() / (float)current->texture()->height();
+    }
+    glm::mat4 mat = glm::perspective(45.0f, asp, 1.0f, 150.0f);
+    memcpy(&cam.projectionMatrix, glm::value_ptr(mat), sizeof(cam.projectionMatrix));
+    
+    Light aLight;
+    aLight.mType = LightAmbient;
+    aLight.mColorAmbient = simd_make_float3(0.1, 0.1, 0.1);
+    
+    Light dLight;
+    dLight.mType = LightDirection;
+    dLight.mDirection = simd_make_float3(cos(v), sin(v), -1);
+    v += 0.01;
+    dLight.mColorDiffuse = simd_make_float3(1, 1, 1);
+    dLight.mColorSpecular = simd_make_float3(1, 1, 1);
+    
+    ModelBuffer mb;
+    
+    
+    memcpy(&mb.modelMatrix, glm::value_ptr(glm::mat4(1)), sizeof(mb.modelMatrix));
+    memcpy(&mb.normalMatrix, glm::value_ptr(glm::mat4(1)), sizeof(mb.normalMatrix));
+    MR::SceneObject so;
+    so.setModel(mb);
+    so.setCamera(cam);
+    so.add(aLight);
+    so.add(dLight);
+    
+
+    
+    MR::Queue::shared().beginBuffer([current,mb, so](auto buffer){
+        m_render_pass->beginRender(buffer, current, [&so](auto encoder){
+            m.load(encoder);
+            so.load(encoder);
             state->render(mesh, encoder);
         });
     });

@@ -15,7 +15,7 @@
 #define Materail_Buffer_Id      0
 #define Materail_id             0
 
-#define sampler_defalut             0
+#define sampler_default             0
 #define shadow_sampler_default      1
 
 
@@ -61,14 +61,16 @@ struct ModelObject{
 
 
 struct ModelBuffer {
-    simd_float4x4 ModelMatrix;
+    simd_float4x4 modelMatrix;
+    simd_float4x4 normalMatrix;
 };
 
 struct Camera{
+    simd_float3 mPosition;
     
     simd_float4x4 viewMatrix;
     
-    simd_float4x4 projection;
+    simd_float4x4 projectionMatrix;
     
 };
 union CameraBuffer {

@@ -62,7 +62,7 @@ struct ModelMaterial{
     texture2d<half>         m_normal            [[texture(phong_normal_index)]];
     texturecube<half>       m_ambient           [[texture(phong_ambient_index)]];
     texture2d<float>        m_shadow            [[texture(shadow_map_index)]];
-    sampler                 m_sampler           [[sampler(sampler_defalut)]];
+    sampler                 m_sampler           [[sampler(sampler_default)]];
     sampler                 m_shadow_sampler    [[sampler(shadow_sampler_default)]];
 };
 
@@ -203,5 +203,5 @@ vertex VertexOutShadow VertexShadowRender(VertexInShadow inData [[stage_in]],
 
 
 kernel void track(device Camera* c [[buffer(0)]],thread uint tid [[thread_position_in_grid]]){
-    c[tid + 1].projection[1] = 2;
+    c[tid + 1].projectionMatrix[1] = 2;
 }
