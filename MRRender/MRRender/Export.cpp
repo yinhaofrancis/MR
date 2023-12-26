@@ -71,7 +71,7 @@ void drawMesh(void * drawable){
     
     Light dLight;
     dLight.mType = LightDirection;
-    dLight.mDirection = simd_make_float3(cos(v), sin(v), -1);
+    dLight.mDirection = simd_make_float3(2 * cos(v), 2 * sin(v), -1);
     v += 0.01;
     dLight.mColorDiffuse = simd_make_float3(1, 1, 1);
     dLight.mColorSpecular = simd_make_float3(1, 1, 1);

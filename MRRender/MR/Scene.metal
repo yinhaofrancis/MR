@@ -88,9 +88,9 @@ simd_float3x3 createTbn(VertexOutScene vertexData){
 }
 
 
-float fragmentSceneSpecular(float3 camera_dir,float3 light_dir,float3 normal){
+float fragmentSceneSpecular(float3 camera_dir,float3 light_dir,float3 normal,float shiness){
     float3 mid = normalize(camera_dir + light_dir);
-    return max(dot(mid, normal),0.0);
+    return  pow(max(dot(mid, normal),0.0), shiness);
 }
 static float lightAtteuation(const VertexOutScene inData, const Light light) {
     
@@ -120,20 +120,20 @@ half4 fragmentSceneDiffuseDirection(VertexOutScene inData,float3 normal,Light li
 }
 //高光
 half4 fragmentSceneSpecularDirection(VertexOutScene inData,float3 normal,Light light,Camera camera){
-    float3 camera_dir = camera.mPosition - inData.frag_postion;
+    float3 camera_dir = normalize(camera.mPosition - inData.frag_postion);
     
-    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal);
+    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal,128);
 
     return half4(half3(light.mColorDiffuse) * factor ,1);
 }
 
 half4 fragmentSceneSpecularPoint(VertexOutScene inData,float3 normal,Light light,Camera camera){
     float3 direction = normalize(light.mPosition - inData.frag_postion);
-    float3 camera_dir = camera.mPosition - inData.frag_postion;
+    float3 camera_dir = normalize(camera.mPosition - inData.frag_postion);
 
     float attenuation = lightAtteuation(inData,light);
     //光照值
-    float factor = fragmentSceneSpecular(camera_dir, direction, normal) * attenuation;
+    float factor = fragmentSceneSpecular(camera_dir, direction, normal,128) * attenuation;
     return half4(half3(light.mColorDiffuse) * factor ,1);
 }
 
@@ -160,11 +160,11 @@ half4 fragmentSceneDiffuseSpot(VertexOutScene inData,float3 normal,Light light){
 }
 half4 fragmentSceneSpecularSpot(VertexOutScene inData,float3 normal,Light light,Camera camera){
     float3 direction = normalize(light.mPosition - inData.frag_postion);
-    float3 camera_dir = camera.mPosition - inData.frag_postion;
+    float3 camera_dir = normalize(camera.mPosition - inData.frag_postion);
     //光线距离衰退
     float attenuation = lightAtteuation(inData,light);
     //光照值
-    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal) * attenuation;
+    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal,128) * attenuation;
     
     float intensity = spotlightEdge(attenuation,factor, direction, light);
     return half4(half3(light.mColorDiffuse) * intensity ,1);
@@ -227,6 +227,7 @@ fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]],Scene scene
     simd_float3x3 tbn = createTbn(inData);
     half4 ambient = fragmentSceneAmbient(scene);
     float3 normal = material.normalVector(inData.textureCoords, tbn);
+//    float3 normal = normalize(inData.normal);
     half4 diffuse = material.diffuseColor(inData.textureCoords);
     half4 diffuseFactor = fragmentSceneDiffuse(inData,  normal, scene, diffuse);
     half4 specular = material.specularColor(inData.textureCoords);
