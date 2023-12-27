@@ -31,6 +31,12 @@ private:
     MTL::DepthStencilState *m_depth = nullptr;
 };
 
+void lookAt(Camera& camera,glm::vec3 eye,glm::vec3 center,glm::vec3 up);
+
+void perspective(Camera& camera,float fovy,float aspect,float near,float far);
+
+void modelTransform(ModelTransform& transform,glm::mat4 matrix);
+
 };
 
 #endif /* MRPrensentation_hpp */

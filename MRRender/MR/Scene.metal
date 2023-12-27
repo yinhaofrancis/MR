@@ -44,7 +44,7 @@ struct Scene{
     
     device const LightBuffer    * lights [[buffer(light_object_buffer_index)]];
     
-    device const ModelBuffer    * model [[buffer(model_object_buffer_index)]];
+    device const ModelTransform    * model [[buffer(model_object_buffer_index)]];
 };
 
 struct Material{
@@ -228,7 +228,6 @@ fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]],Scene scene
     simd_float3x3 tbn = createTbn(inData);
     half4 ambient = fragmentSceneAmbient(scene);
     float3 normal = material.normalVector(inData.textureCoords, tbn);
-//    float3 normal = normalize(inData.normal);
     half4 diffuse = material.diffuseColor(inData.textureCoords);
     half4 diffuseFactor = fragmentSceneDiffuse(inData,  normal, scene, diffuse);
     half4 specular = material.specularColor(inData.textureCoords);

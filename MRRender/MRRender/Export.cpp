@@ -44,16 +44,12 @@ static float v = 0;
 
 static void rederCall(CA::MetalDrawable *current) {
     Camera cam;
-    cam.mPosition = simd_make_float3(3, 3, 3);
-    
-    memcpy(&cam.viewMatrix, glm::value_ptr(glm::lookAt(glm::vec3(3), glm::vec3(0,2,0), glm::vec3(0,1,0))), sizeof(cam.viewMatrix));
-    
     float asp = 1;
     if(current->texture()->height() > 0 && current->texture()->width() > 0){
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
-    glm::mat4 mat = glm::perspective(45.0f, asp, 1.0f, 1500.0f);
-    memcpy(&cam.projectionMatrix, glm::value_ptr(mat), sizeof(cam.projectionMatrix));
+    MR::lookAt(cam, glm::vec3(4,3,4), glm::vec3(0,2,0), glm::vec3(0,1,0));
+    MR::perspective(cam, 45.0f, asp, 1.0f, 150.f);
     
     Light aLight;
     aLight.mType = LightAmbient;
@@ -61,24 +57,22 @@ static void rederCall(CA::MetalDrawable *current) {
     
     Light dLight;
     dLight.mType = LightDirection;
-    dLight.mDirection = simd_make_float3(cos(v), -1,sin(v));
+    dLight.mDirection = simd_make_float3(1, -1,-1);
     v += 0.01;
     dLight.mColorDiffuse = simd_make_float3(1, 1, 1);
     dLight.mColorSpecular = simd_make_float3(1, 1, 1);
     
-    ModelBuffer mb;
+    ModelTransform mb;
     
-    
-    memcpy(&mb.modelMatrix, glm::value_ptr(glm::mat4(1)), sizeof(mb.modelMatrix));
-    memcpy(&mb.normalMatrix, glm::value_ptr(glm::mat4(1)), sizeof(mb.normalMatrix));
+    MR::modelTransform(mb, glm::rotate(glm::mat4(1), v, glm::vec3(0,1,0)));
+
     MR::SceneObject so;
     so.setModel(mb);
     so.setCamera(cam);
     so.add(aLight);
     so.add(dLight);
     
-    
-    
+
     MR::Queue::shared().beginBuffer([current,mb, so](auto buffer){
         m_render_pass->beginRender(buffer, current, [&so](auto encoder){
             m.load(encoder);

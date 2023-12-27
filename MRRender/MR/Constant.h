@@ -60,7 +60,7 @@ struct ModelObject{
 
 
 
-struct ModelBuffer {
+struct ModelTransform {
     simd_float4x4 modelMatrix;
     simd_float4x4 normalMatrix;
 };
@@ -71,7 +71,6 @@ struct Camera{
     simd_float4x4 viewMatrix;
     
     simd_float4x4 projectionMatrix;
-    
 };
 union CameraBuffer {
     int count;

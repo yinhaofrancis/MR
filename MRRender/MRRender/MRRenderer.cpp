@@ -527,7 +527,7 @@ void SceneObject::add(Light light){
     b.light = light;
     lights.push_back(b);
 }
-void SceneObject::setModel(ModelBuffer& model){
+void SceneObject::setModel(ModelTransform& model){
     m_model = model;
 }
 void SceneObject::load(MTL::RenderCommandEncoder *encoder) const{

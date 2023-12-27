@@ -249,10 +249,10 @@ public:
     void load(MTL::RenderCommandEncoder *encoder) const;
     void add(Light light);
     void setCamera(Camera& camera);
-    void setModel(ModelBuffer& model);
+    void setModel(ModelTransform& model);
 private:
     Camera m_camera;
-    ModelBuffer m_model;
+    ModelTransform m_model;
     std::vector<LightBuffer> lights;
 };
 

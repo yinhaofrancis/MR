@@ -79,3 +79,20 @@ void RenderScene::render(MR::Mesh& mesh,MTL::RenderCommandEncoder * encoder) con
     
     mesh.draw(encoder);
 }
+
+
+void MR::lookAt(Camera& camera,glm::vec3 eye,glm::vec3 center,glm::vec3 up){
+
+    camera.mPosition = simd_make_float3(eye.x, eye.y, eye.z);
+    
+    memcpy(&camera.viewMatrix, glm::value_ptr(glm::lookAt(eye, center, up)), sizeof(camera.viewMatrix));
+}
+void MR::perspective(Camera& camera,float fovy,float aspect,float near,float far){
+    glm::mat4 mat = glm::perspective(fovy, aspect, near, far);
+    memcpy(&camera.projectionMatrix, glm::value_ptr(mat), sizeof(camera.projectionMatrix));
+}
+
+void MR::modelTransform(ModelTransform& transform,glm::mat4 matrix){
+    memcpy(&transform.modelMatrix, glm::value_ptr(matrix), sizeof(transform.modelMatrix));
+    memcpy(&transform.normalMatrix, glm::value_ptr(glm::inverseTranspose(matrix)), sizeof(transform.normalMatrix));
+}
