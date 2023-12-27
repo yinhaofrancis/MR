@@ -20,7 +20,7 @@
     self.mView.mtLayer.contentsScale = 3;
     _displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(run)];
     [_displaylink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    beginMesh([NSBundle.mainBundle URLForResource:@"ball" withExtension:@"obj"].path.UTF8String);
+    beginMesh([NSBundle.mainBundle URLForResource:@"cyborg" withExtension:@"obj"].path.UTF8String);
     
     // Do any additional setup after loading the view.
 }

@@ -13,6 +13,8 @@
 #include <Metal/Metal.hpp>
 #include <MR/Constant.h>
 
+#include "MRVsync.h"
+
 
 static CA::MetalLayer* m_layer;
 
@@ -29,40 +31,28 @@ static MR::Materal m = MR::Materal::defaultMateral();
 static MR::Program pro = MR::Program::shared();
 
 void beginMesh(const char * url){
-    float v[9] = {
-           0, 0.5,0,
-        -0.5,-0.5,0,
-         0.5,-0.5,0
-    };
-    float c[12] = {
-           0, 0.5,0,1,
-         0.5, 0.5,0,1,
-         0.5, 0.5,0,1
-    };
-    mesh.vertexCount() = 3;
-    mesh.buffer(sizeof(v), v, MR::Mesh::VertexComponent::Position);
-    mesh.buffer(sizeof(c), c, MR::Mesh::VertexComponent::Color);
-    
+
     std::string s = url;
     MR::Scene sc(s);
-    auto mesh2 = sc.mesh(0);
-    mesh = mesh2;
+    m = sc.phone(0, 0);
+    mesh = sc.mesh(0);
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     state = new MR::RenderScene(vt);
+   
 }
 static float v = 0;
-void drawMesh(void * drawable){
-    CA::MetalDrawable* current = (CA::MetalDrawable*)drawable;
+
+static void rederCall(CA::MetalDrawable *current) {
     Camera cam;
     cam.mPosition = simd_make_float3(3, 3, 3);
-
-    memcpy(&cam.viewMatrix, glm::value_ptr(glm::lookAt(glm::vec3(3), glm::vec3(0), glm::vec3(0,1,0))), sizeof(cam.viewMatrix));
+    
+    memcpy(&cam.viewMatrix, glm::value_ptr(glm::lookAt(glm::vec3(3), glm::vec3(0,2,0), glm::vec3(0,1,0))), sizeof(cam.viewMatrix));
     
     float asp = 1;
     if(current->texture()->height() > 0 && current->texture()->width() > 0){
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
-    glm::mat4 mat = glm::perspective(45.0f, asp, 1.0f, 150.0f);
+    glm::mat4 mat = glm::perspective(45.0f, asp, 1.0f, 1500.0f);
     memcpy(&cam.projectionMatrix, glm::value_ptr(mat), sizeof(cam.projectionMatrix));
     
     Light aLight;
@@ -71,7 +61,7 @@ void drawMesh(void * drawable){
     
     Light dLight;
     dLight.mType = LightDirection;
-    dLight.mDirection = simd_make_float3(2 * cos(v), 2 * sin(v), -1);
+    dLight.mDirection = simd_make_float3(cos(v), -1,sin(v));
     v += 0.01;
     dLight.mColorDiffuse = simd_make_float3(1, 1, 1);
     dLight.mColorSpecular = simd_make_float3(1, 1, 1);
@@ -87,7 +77,7 @@ void drawMesh(void * drawable){
     so.add(aLight);
     so.add(dLight);
     
-
+    
     
     MR::Queue::shared().beginBuffer([current,mb, so](auto buffer){
         m_render_pass->beginRender(buffer, current, [&so](auto encoder){
@@ -96,6 +86,10 @@ void drawMesh(void * drawable){
             state->render(mesh, encoder);
         });
     });
+}
+
+void drawMesh(void *o){
+    rederCall((CA::MetalDrawable *)o);
 }
 void closeRender(){
     CFRelease(m_layer);

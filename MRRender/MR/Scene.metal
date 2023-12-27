@@ -10,6 +10,7 @@
 #include "Constant.h"
 using namespace metal;
 
+#define shiness 128
 
 struct VertexOutScene{
     float4 position [[position]];
@@ -24,8 +25,8 @@ struct VertexOutScene{
 
 struct VertexInScene{
     float3 position         [[attribute(0)]];
-    float3 normal           [[attribute(1)]];
-    float2 textureCoords    [[attribute(2)]];
+    float2 textureCoords    [[attribute(1)]];
+    float3 normal           [[attribute(2)]];
     float3 tangent          [[attribute(3)]];
     float3 bitangent        [[attribute(4)]];
 };
@@ -88,11 +89,11 @@ simd_float3x3 createTbn(VertexOutScene vertexData){
 }
 
 
-float fragmentSceneSpecular(float3 camera_dir,float3 light_dir,float3 normal,float shiness){
+float fragmentSceneSpecular(float3 camera_dir,float3 light_dir,float3 normal,float shinessv){
     float3 mid = normalize(camera_dir + light_dir);
-    return  pow(max(dot(mid, normal),0.0), shiness);
+    return  pow(max(dot(mid, normal),0.0), shinessv);
 }
-static float lightAtteuation(const VertexOutScene inData, const Light light) {
+float lightAtteuation(const VertexOutScene inData, const Light light) {
     
     //光线距离衰退
     float distance    = length(light.mPosition - inData.frag_postion);
@@ -101,7 +102,7 @@ static float lightAtteuation(const VertexOutScene inData, const Light light) {
     return attenuation;
 }
 
-static float spotlightEdge(float attenuation,float factor, float3 direction, const Light light) {
+float spotlightEdge(float attenuation,float factor, float3 direction, const Light light) {
     //内角cos
     float cutoff = fabs(cos(light.mAngleInnerCone / 2));
     //外角cos
@@ -122,7 +123,7 @@ half4 fragmentSceneDiffuseDirection(VertexOutScene inData,float3 normal,Light li
 half4 fragmentSceneSpecularDirection(VertexOutScene inData,float3 normal,Light light,Camera camera){
     float3 camera_dir = normalize(camera.mPosition - inData.frag_postion);
     
-    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal,128);
+    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal,shiness);
 
     return half4(half3(light.mColorDiffuse) * factor ,1);
 }
@@ -133,7 +134,7 @@ half4 fragmentSceneSpecularPoint(VertexOutScene inData,float3 normal,Light light
 
     float attenuation = lightAtteuation(inData,light);
     //光照值
-    float factor = fragmentSceneSpecular(camera_dir, direction, normal,128) * attenuation;
+    float factor = fragmentSceneSpecular(camera_dir, direction, normal,shiness) * attenuation;
     return half4(half3(light.mColorDiffuse) * factor ,1);
 }
 
@@ -164,7 +165,7 @@ half4 fragmentSceneSpecularSpot(VertexOutScene inData,float3 normal,Light light,
     //光线距离衰退
     float attenuation = lightAtteuation(inData,light);
     //光照值
-    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal,128) * attenuation;
+    float factor = fragmentSceneSpecular(camera_dir, -light.mDirection, normal,shiness) * attenuation;
     
     float intensity = spotlightEdge(attenuation,factor, direction, light);
     return half4(half3(light.mColorDiffuse) * intensity ,1);
@@ -176,7 +177,7 @@ half4 fragmentSceneAmbient(thread Scene& scene){
             return half4(half3(scene.lights[i].light.mColorAmbient),1);
         }
     }
-    return half4(0);
+    return half4(0,0,0,0);
 }
 
 half4 fragmentSceneDiffuse(VertexOutScene inData,
@@ -232,7 +233,7 @@ fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]],Scene scene
     half4 diffuseFactor = fragmentSceneDiffuse(inData,  normal, scene, diffuse);
     half4 specular = material.specularColor(inData.textureCoords);
     half4 specularFactor = fragmentSceneSpecular(inData, normal, scene,specular);
-    return ambient + diffuse * diffuseFactor + specular * specularFactor;
+    return diffuse * ambient + diffuse * diffuseFactor + specular * specularFactor;
 }
 
 

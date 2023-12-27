@@ -177,13 +177,6 @@ private:
     Texture* m_innerDepth;
 };
 
-class Vsync:virtual Object{
-public:
-    typedef std::function<bool(void)> SyncCallBack;
-    Vsync(SyncCallBack);
-    ~Vsync();
-};
-
 class Mesh:virtual Object{
 public:
     
@@ -235,16 +228,17 @@ private:
     MTL::VertexDescriptor *m_vertexDescriptor;
 };
 
-class Materal:virtual Object{
-public:
+struct Materal{
+
     Materal(Texture diffuse,Texture specular,Texture normal);
     void load(MTL::RenderCommandEncoder *encoder);
     static Materal defaultMateral();
-private:
+
     Texture m_diffuse;
     Texture m_specular;
     Texture m_normal;
     Sampler m_sampler;
+    
 };
 
 

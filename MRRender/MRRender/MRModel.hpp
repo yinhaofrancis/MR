@@ -54,6 +54,11 @@ public:
     
     
     Mesh mesh(int index);
+
+    
+    Texture loadTexture(aiTextureType textureType, aiMaterial *p_material, int textureIdex);
+    
+    Materal phone(int index,int textureIdex);
     
 private:
     
@@ -65,6 +70,7 @@ private:
     std::unordered_map<int, MR::Mesh*> map_mesh;
     std::unordered_map<std::string, MR::Texture>map_texture;
     int coordinate_count = 0;
+    
 };
 
 };

@@ -310,37 +310,7 @@ MTL::Function* Program::shader(const char *name){
 }
 
 
-const uint64_t s_time = 1000000 / 60;
-void vsyncCall(Vsync::SyncCallBack call){
-    bool a = true;
-    uint64_t lasttimestamp = 0;
-    while(a){
-        auto now = std::chrono::system_clock::now();
-        auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
-        lasttimestamp = timestamp + s_time;
-        a = call();
-        now = std::chrono::system_clock::now();
-        timestamp = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
-        if(lasttimestamp > timestamp){
-            auto delay  = lasttimestamp - timestamp;
-            std::this_thread::sleep_for(std::chrono::microseconds(delay));
-        }else{
-            auto delay = s_time - ((timestamp - lasttimestamp) % s_time);
-            std::this_thread::sleep_for(std::chrono::microseconds(delay));
-        }
-        
-    }
-    
-}
 
-
-Vsync::Vsync(SyncCallBack call){
-    std::thread k(vsyncCall,call);
-    k.detach();
-}
-Vsync::~Vsync(){
-    
-}
 
 
 Mesh::Mesh(Renderer& render)
@@ -568,11 +538,11 @@ void SceneObject::load(MTL::RenderCommandEncoder *encoder) const{
     encoder->setFragmentBytes(&m_camera, sizeof(m_camera), camera_object_buffer_index);
     LightBuffer * buffer = new LightBuffer[lights.size() + 1];
     for (int i = 1; i <= lights.size(); i++) {
-        buffer[i] = lights[i];
+        buffer[i] = lights[i - 1];
     }
     buffer[0].count = (int)lights.size();
     encoder->setVertexBytes(buffer, sizeof(LightBuffer) * (lights.size() + 1), light_object_buffer_index);
     encoder->setFragmentBytes(buffer, sizeof(LightBuffer) * (lights.size() + 1), light_object_buffer_index);
-    
+    delete [] buffer;
     
 }

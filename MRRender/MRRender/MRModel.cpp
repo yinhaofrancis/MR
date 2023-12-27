@@ -8,6 +8,9 @@
 #include "MRModel.hpp"
 #include "MRRenderer.hpp"
 #include "Util.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
 using namespace MR;
 
 Scene::Scene(std::string& url){
@@ -139,7 +142,46 @@ MR::Mesh Scene::mesh(int index){
     }
     return m;
 }
+Texture Scene::loadTexture(aiTextureType textureType, aiMaterial *p_material, int textureIdex) {
+    aiTextureMapping mapping;
+    unsigned int uvindex;
+    aiString path;
+    aiTextureMapMode mmod;
+    if (aiReturn_SUCCESS == p_material->GetTexture(textureType, textureIdex, &path,&mapping,&uvindex,nullptr,nullptr,&mmod)){
+        int x = 0;
+        int y = 0;
+        int c = 0;
+        std::string abpth = m_folderPath + "/" + path.C_Str();
+        stbi_convert_iphone_png_to_rgb(true);
+        auto data = stbi_load(abpth.c_str(),&x, &y, &c, 0);
+        if(data == nullptr){
+            std::cout << stbi_failure_reason() << std::endl;
+        }
+        Texture t(x, y, MTL::PixelFormatRGBA8Unorm);
+        t.assign(x, y, c * x, data);
+        return t;
+    }
+    throw (MR::Error){"create texture fail",0};
+}
 
+Materal Scene::phone(int index,int textureIdex){
+    auto amesh = m_scene->mMeshes[index];
+    auto p_material = m_scene->mMaterials[amesh->mMaterialIndex];
+    Materal m = Materal::defaultMateral();
+    m.m_diffuse = loadTexture(aiTextureType_DIFFUSE, p_material, textureIdex);
+    m.m_specular = loadTexture(aiTextureType_SPECULAR, p_material, textureIdex);
+    try {
+        m.m_normal = loadTexture(aiTextureType_NORMALS, p_material, textureIdex);
+    } catch (MR::Error e) {
+        try {
+            m.m_normal = loadTexture(aiTextureType_HEIGHT, p_material, textureIdex);
+        } catch (MR::Error e) {
+            
+        }
+        
+    }
+    return m;
+}
 Scene::~Scene(){
     if(ref_count() == 1){
         m_importer.FreeScene();
