@@ -214,17 +214,17 @@ void RenderPass::beginRender(MTL::CommandBuffer* buffer,MTL::Texture* texture,Re
     m_render_pass_descriptor->colorAttachments()->object(0)->setTexture(texture);
     m_render_pass_descriptor->colorAttachments()->object(0)->setClearColor(MTL::ClearColor(0, 0, 0, 1));
     m_render_pass_descriptor->colorAttachments()->object(0)->setLoadAction(MTL::LoadActionClear);
-    m_render_pass_descriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionDontCare);
+    m_render_pass_descriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionStore);
     
     m_render_pass_descriptor->depthAttachment()->setTexture(m_innerDepth->origin());
     m_render_pass_descriptor->depthAttachment()->setClearDepth(1);
     m_render_pass_descriptor->depthAttachment()->setLoadAction(MTL::LoadActionClear);
-    m_render_pass_descriptor->depthAttachment()->setStoreAction(MTL::StoreActionDontCare);
+    m_render_pass_descriptor->depthAttachment()->setStoreAction(MTL::StoreActionStore);
     
     m_render_pass_descriptor->stencilAttachment()->setTexture(m_innerDepth->origin());
     m_render_pass_descriptor->stencilAttachment()->setClearStencil(1);
     m_render_pass_descriptor->stencilAttachment()->setLoadAction(MTL::LoadActionClear);
-    m_render_pass_descriptor->stencilAttachment()->setStoreAction(MTL::StoreActionDontCare);
+    m_render_pass_descriptor->stencilAttachment()->setStoreAction(MTL::StoreActionStore);
     auto encoder = buffer->renderCommandEncoder(this->m_render_pass_descriptor);
     call(encoder);
     encoder->endEncoding();

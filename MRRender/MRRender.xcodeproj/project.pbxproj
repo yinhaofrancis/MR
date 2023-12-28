@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A9007AB72B3DC25E003E8213 /* cyborg.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB22B3DC25E003E8213 /* cyborg.obj */; };
+		A9007AB82B3DC25E003E8213 /* cyborg_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB32B3DC25E003E8213 /* cyborg_normal.png */; };
+		A9007AB92B3DC25E003E8213 /* cyborg_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB42B3DC25E003E8213 /* cyborg_diffuse.png */; };
+		A9007ABA2B3DC25E003E8213 /* cyborg_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB52B3DC25E003E8213 /* cyborg_specular.png */; };
+		A9007ABB2B3DC25E003E8213 /* cyborg.mtl in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB62B3DC25E003E8213 /* cyborg.mtl */; };
 		A94CA9A32B2EFC430059571E /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A12B2EFC430059571E /* MetalKit.framework */; };
 		A94CA9A42B2EFC430059571E /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A22B2EFC430059571E /* Metal.framework */; };
 		A94CA9A62B2EFC5B0059571E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A52B2EFC5B0059571E /* CoreGraphics.framework */; };
@@ -19,7 +24,6 @@
 		A94CA9BC2B2F6B950059571E /* MRPrensentation.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A94CA9BA2B2F6B950059571E /* MRPrensentation.hpp */; };
 		A94CA9C02B2FB71A0059571E /* MRModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94CA9BE2B2FB71A0059571E /* MRModel.cpp */; };
 		A94CA9C12B2FB71A0059571E /* MRModel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A94CA9BF2B2FB71A0059571E /* MRModel.hpp */; };
-		A94CA9C32B35DF4F0059571E /* ball.obj in Resources */ = {isa = PBXBuildFile; fileRef = A94CA9C22B35DF4F0059571E /* ball.obj */; };
 		A94CA9C62B35F09F0059571E /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9C42B35F09F0059571E /* libassimp.a */; };
 		A94CA9C72B35F09F0059571E /* libstb_image.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9C52B35F09F0059571E /* libstb_image.a */; };
 		A94CA9C92B35F0D80059571E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9C82B35F0D80059571E /* libz.tbd */; };
@@ -30,7 +34,6 @@
 		A94CAA082B37401D0059571E /* MR.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9F72B373EBA0059571E /* MR.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A94CAA0C2B374C7D0059571E /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A94CA9B42B2F53BB0059571E /* Shader.metal */; };
 		A94CAA0D2B38096A0059571E /* Constant.h in Headers */ = {isa = PBXBuildFile; fileRef = A94CA9B62B2F53E10059571E /* Constant.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A95988F12B3C041C00DB261C /* dm.obj in Resources */ = {isa = PBXBuildFile; fileRef = A95988F02B3C041C00DB261C /* dm.obj */; };
 		A95988F32B3C21E000DB261C /* MRThread.mm in Sources */ = {isa = PBXBuildFile; fileRef = A95988F22B3C21E000DB261C /* MRThread.mm */; };
 		A977C7562B2EF164000C2238 /* lib.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A977C7552B2EF164000C2238 /* lib.xcconfig */; };
 		A977C75C2B2EF1ED000C2238 /* MRObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A977C7572B2EF1ED000C2238 /* MRObject.cpp */; };
@@ -45,15 +48,6 @@
 		A977C7802B2EF253000C2238 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A977C77F2B2EF253000C2238 /* Assets.xcassets */; };
 		A977C7832B2EF253000C2238 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A977C7812B2EF253000C2238 /* LaunchScreen.storyboard */; };
 		A977C7862B2EF253000C2238 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A977C7852B2EF253000C2238 /* main.m */; };
-		A9966B4F2B3C29DD0075BEA1 /* cyborg.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9966B4A2B3C29DD0075BEA1 /* cyborg.obj */; };
-		A9966B502B3C29DD0075BEA1 /* cyborg_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A9966B4B2B3C29DD0075BEA1 /* cyborg_specular.png */; };
-		A9966B512B3C29DD0075BEA1 /* cyborg_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A9966B4C2B3C29DD0075BEA1 /* cyborg_normal.png */; };
-		A9966B522B3C29DD0075BEA1 /* cyborg.mtl in Resources */ = {isa = PBXBuildFile; fileRef = A9966B4D2B3C29DD0075BEA1 /* cyborg.mtl */; };
-		A9966B532B3C29DD0075BEA1 /* cyborg_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A9966B4E2B3C29DD0075BEA1 /* cyborg_diffuse.png */; };
-		A9A07FDF2B3BF07500B4E4A8 /* kk.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9A07FDE2B3BF07500B4E4A8 /* kk.obj */; };
-		A9A07FE12B3BF53200B4E4A8 /* hh.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9A07FE02B3BF53200B4E4A8 /* hh.obj */; };
-		A9A07FE32B3BF5E900B4E4A8 /* mk.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9A07FE22B3BF5E900B4E4A8 /* mk.obj */; };
-		A9A07FE52B3BF6DC00B4E4A8 /* hball.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9A07FE42B3BF6DC00B4E4A8 /* hball.obj */; };
 		A9B36CD22B38A53600B922A2 /* Scene.metal in Sources */ = {isa = PBXBuildFile; fileRef = A9B36CD12B38A53600B922A2 /* Scene.metal */; };
 /* End PBXBuildFile section */
 
@@ -107,6 +101,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A9007AB22B3DC25E003E8213 /* cyborg.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.obj; sourceTree = "<group>"; };
+		A9007AB32B3DC25E003E8213 /* cyborg_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_normal.png; sourceTree = "<group>"; };
+		A9007AB42B3DC25E003E8213 /* cyborg_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_diffuse.png; sourceTree = "<group>"; };
+		A9007AB52B3DC25E003E8213 /* cyborg_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_specular.png; sourceTree = "<group>"; };
+		A9007AB62B3DC25E003E8213 /* cyborg.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.mtl; sourceTree = "<group>"; };
 		A94CA9A12B2EFC430059571E /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/iOSSupport/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
 		A94CA9A22B2EFC430059571E /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		A94CA9A52B2EFC5B0059571E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -121,12 +120,10 @@
 		A94CA9BA2B2F6B950059571E /* MRPrensentation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MRPrensentation.hpp; sourceTree = "<group>"; };
 		A94CA9BE2B2FB71A0059571E /* MRModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MRModel.cpp; sourceTree = "<group>"; };
 		A94CA9BF2B2FB71A0059571E /* MRModel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MRModel.hpp; sourceTree = "<group>"; };
-		A94CA9C22B35DF4F0059571E /* ball.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ball.obj; path = ../../../../../shader/ball.obj; sourceTree = "<group>"; };
 		A94CA9C42B35F09F0059571E /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = library/libs/libassimp.a; sourceTree = "<group>"; };
 		A94CA9C52B35F09F0059571E /* libstb_image.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libstb_image.a; path = library/libs/libstb_image.a; sourceTree = "<group>"; };
 		A94CA9C82B35F0D80059571E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		A94CA9F72B373EBA0059571E /* MR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A95988F02B3C041C00DB261C /* dm.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dm.obj; path = ../../../../../shader/dm.obj; sourceTree = "<group>"; };
 		A95988F22B3C21E000DB261C /* MRThread.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MRThread.mm; sourceTree = "<group>"; };
 		A977C74B2B2EF0DD000C2238 /* MRRender.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MRRender.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A977C7552B2EF164000C2238 /* lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = lib.xcconfig; sourceTree = "<group>"; };
@@ -149,15 +146,6 @@
 		A977C7852B2EF253000C2238 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A9966B472B3C23E00075BEA1 /* MRThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRThread.h; sourceTree = "<group>"; };
 		A9966B482B3C27590075BEA1 /* MRVsync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRVsync.h; sourceTree = "<group>"; };
-		A9966B4A2B3C29DD0075BEA1 /* cyborg.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cyborg.obj; path = ../../../mmmip/mm/cyborg.obj; sourceTree = "<group>"; };
-		A9966B4B2B3C29DD0075BEA1 /* cyborg_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cyborg_specular.png; path = ../../../mmmip/mm/cyborg_specular.png; sourceTree = "<group>"; };
-		A9966B4C2B3C29DD0075BEA1 /* cyborg_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cyborg_normal.png; path = ../../../mmmip/mm/cyborg_normal.png; sourceTree = "<group>"; };
-		A9966B4D2B3C29DD0075BEA1 /* cyborg.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cyborg.mtl; path = ../../../mmmip/mm/cyborg.mtl; sourceTree = "<group>"; };
-		A9966B4E2B3C29DD0075BEA1 /* cyborg_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cyborg_diffuse.png; path = ../../../mmmip/mm/cyborg_diffuse.png; sourceTree = "<group>"; };
-		A9A07FDE2B3BF07500B4E4A8 /* kk.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = kk.obj; path = ../../../../../shader/kk.obj; sourceTree = "<group>"; };
-		A9A07FE02B3BF53200B4E4A8 /* hh.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hh.obj; path = ../../../../../shader/hh.obj; sourceTree = "<group>"; };
-		A9A07FE22B3BF5E900B4E4A8 /* mk.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = mk.obj; path = ../../../../../shader/mk.obj; sourceTree = "<group>"; };
-		A9A07FE42B3BF6DC00B4E4A8 /* hball.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hball.obj; path = ../../../../../shader/hball.obj; sourceTree = "<group>"; };
 		A9B36CD12B38A53600B922A2 /* Scene.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Scene.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -198,6 +186,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A9007AB12B3DC25E003E8213 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A9007AB22B3DC25E003E8213 /* cyborg.obj */,
+				A9007AB32B3DC25E003E8213 /* cyborg_normal.png */,
+				A9007AB42B3DC25E003E8213 /* cyborg_diffuse.png */,
+				A9007AB52B3DC25E003E8213 /* cyborg_specular.png */,
+				A9007AB62B3DC25E003E8213 /* cyborg.mtl */,
+			);
+			name = Model;
+			path = ../../../../Model;
+			sourceTree = "<group>";
+		};
 		A94CA99F2B2EF5EE0059571E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -270,13 +271,7 @@
 		A977C7722B2EF251000C2238 /* demo */ = {
 			isa = PBXGroup;
 			children = (
-				A9966B492B3C29D00075BEA1 /* model */,
-				A95988F02B3C041C00DB261C /* dm.obj */,
-				A9A07FE22B3BF5E900B4E4A8 /* mk.obj */,
-				A9A07FE02B3BF53200B4E4A8 /* hh.obj */,
-				A9A07FDE2B3BF07500B4E4A8 /* kk.obj */,
-				A9A07FE42B3BF6DC00B4E4A8 /* hball.obj */,
-				A94CA9C22B35DF4F0059571E /* ball.obj */,
+				A9007AB12B3DC25E003E8213 /* Model */,
 				A977C7732B2EF251000C2238 /* AppDelegate.h */,
 				A977C7742B2EF251000C2238 /* AppDelegate.m */,
 				A977C7762B2EF251000C2238 /* SceneDelegate.h */,
@@ -290,18 +285,6 @@
 				A977C7852B2EF253000C2238 /* main.m */,
 			);
 			path = demo;
-			sourceTree = "<group>";
-		};
-		A9966B492B3C29D00075BEA1 /* model */ = {
-			isa = PBXGroup;
-			children = (
-				A9966B4E2B3C29DD0075BEA1 /* cyborg_diffuse.png */,
-				A9966B4C2B3C29DD0075BEA1 /* cyborg_normal.png */,
-				A9966B4B2B3C29DD0075BEA1 /* cyborg_specular.png */,
-				A9966B4D2B3C29DD0075BEA1 /* cyborg.mtl */,
-				A9966B4A2B3C29DD0075BEA1 /* cyborg.obj */,
-			);
-			path = model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -449,20 +432,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9A07FDF2B3BF07500B4E4A8 /* kk.obj in Resources */,
-				A9966B522B3C29DD0075BEA1 /* cyborg.mtl in Resources */,
-				A94CA9C32B35DF4F0059571E /* ball.obj in Resources */,
-				A9966B512B3C29DD0075BEA1 /* cyborg_normal.png in Resources */,
-				A95988F12B3C041C00DB261C /* dm.obj in Resources */,
+				A9007AB92B3DC25E003E8213 /* cyborg_diffuse.png in Resources */,
+				A9007AB82B3DC25E003E8213 /* cyborg_normal.png in Resources */,
 				A977C7832B2EF253000C2238 /* LaunchScreen.storyboard in Resources */,
-				A9966B532B3C29DD0075BEA1 /* cyborg_diffuse.png in Resources */,
-				A9966B502B3C29DD0075BEA1 /* cyborg_specular.png in Resources */,
+				A9007ABB2B3DC25E003E8213 /* cyborg.mtl in Resources */,
+				A9007AB72B3DC25E003E8213 /* cyborg.obj in Resources */,
 				A977C7802B2EF253000C2238 /* Assets.xcassets in Resources */,
 				A977C77E2B2EF251000C2238 /* Main.storyboard in Resources */,
-				A9A07FE52B3BF6DC00B4E4A8 /* hball.obj in Resources */,
-				A9966B4F2B3C29DD0075BEA1 /* cyborg.obj in Resources */,
-				A9A07FE12B3BF53200B4E4A8 /* hh.obj in Resources */,
-				A9A07FE32B3BF5E900B4E4A8 /* mk.obj in Resources */,
+				A9007ABA2B3DC25E003E8213 /* cyborg_specular.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -812,6 +789,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -821,7 +799,7 @@
 					"$(PROJECT_DIR)/library/libs",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yh.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yh.dema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -844,6 +822,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -853,7 +832,7 @@
 					"$(PROJECT_DIR)/library/libs",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yh.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yh.dema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
