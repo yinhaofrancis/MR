@@ -494,9 +494,10 @@ void Mesh::layoutVertexDescriptor(Mesh::VertexComponent vertexComponent){
     }
 }
 
-Materal::Materal(Texture diffuse,Texture specular,Texture normal)
+Materal::Materal(Texture diffuse,Texture specular,Texture normal,Texture emission)
 :m_diffuse(diffuse),
 m_specular(specular),
+m_emission(emission),
 m_sampler(Sampler::linear()),
 m_normal(normal){
     
@@ -505,6 +506,7 @@ void Materal::load(MTL::RenderCommandEncoder *encoder){
     encoder->setFragmentTexture(m_diffuse.origin(), phong_diffuse_index);
     encoder->setFragmentTexture(m_specular.origin(), phong_specular_index);
     encoder->setFragmentTexture(m_normal.origin(), phong_normal_index);
+    encoder->setFragmentTexture(m_emission.origin(), phong_emssion_index);
     encoder->setFragmentSamplerState(m_sampler.origin(), sampler_default);
 }
 
@@ -512,7 +514,8 @@ Materal Materal::defaultMateral(){
     Texture d (simd_make_float4(0.5, 0.5, 0.5, 1));
     Texture s (simd_make_float4(1, 1, 1, 1));
     Texture n (simd_make_float4(0.5, 0.5, 1, 1));
-    return Materal(d, s, n);
+    Texture e (simd_make_float4(0.0, 0.0, 0, 0));
+    return Materal(d, s, n,e);
 }
 
 

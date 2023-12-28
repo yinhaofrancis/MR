@@ -142,6 +142,10 @@ MR::Mesh Scene::mesh(int index){
     }
     return m;
 }
+bool Scene::hasTexture(aiTextureType textureType, aiMaterial *p_material, int textureIdex){
+    aiString path;
+    return aiReturn_SUCCESS == p_material->GetTexture(textureType, textureIdex, &path);
+}
 Texture Scene::loadTexture(aiTextureType textureType, aiMaterial *p_material, int textureIdex) {
     aiTextureMapping mapping;
     unsigned int uvindex;
@@ -168,17 +172,17 @@ Materal Scene::phone(int index,int textureIdex){
     auto amesh = m_scene->mMeshes[index];
     auto p_material = m_scene->mMaterials[amesh->mMaterialIndex];
     Materal m = Materal::defaultMateral();
-    m.m_diffuse = loadTexture(aiTextureType_DIFFUSE, p_material, textureIdex);
-    m.m_specular = loadTexture(aiTextureType_SPECULAR, p_material, textureIdex);
-    try {
+    if (hasTexture(aiTextureType_DIFFUSE, p_material, textureIdex)){
+        m.m_diffuse = loadTexture(aiTextureType_DIFFUSE, p_material, textureIdex);
+    }
+    if (hasTexture(aiTextureType_SPECULAR, p_material, textureIdex)){
+        m.m_specular = loadTexture(aiTextureType_SPECULAR, p_material, textureIdex);
+    }
+    if(hasTexture(aiTextureType_NORMALS,p_material, textureIdex)){
         m.m_normal = loadTexture(aiTextureType_NORMALS, p_material, textureIdex);
-    } catch (MR::Error e) {
-        try {
-            m.m_normal = loadTexture(aiTextureType_HEIGHT, p_material, textureIdex);
-        } catch (MR::Error e) {
-            
-        }
-        
+    }
+    if(hasTexture(aiTextureType_HEIGHT, p_material, textureIdex)){
+        m.m_normal = loadTexture(aiTextureType_HEIGHT, p_material, textureIdex);
     }
     return m;
 }

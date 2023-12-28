@@ -55,6 +55,7 @@ public:
     
     Mesh mesh(int index);
 
+    bool hasTexture(aiTextureType textureType, aiMaterial *p_material, int textureIdex);
     
     Texture loadTexture(aiTextureType textureType, aiMaterial *p_material, int textureIdex);
     

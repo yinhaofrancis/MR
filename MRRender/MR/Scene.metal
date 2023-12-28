@@ -53,6 +53,8 @@ struct Material{
     
     texture2d<half> normal [[texture(phong_normal_index)]];
     
+    texture2d<half> emssion  [[texture(phong_emssion_index)]];
+    
     sampler sample [[sampler(sampler_default)]];
     
     half4 diffuseColor(float2 textureCoords){
@@ -60,6 +62,9 @@ struct Material{
     }
     half4 specularColor(float2 textureCoords){
         return specular.sample(sample, textureCoords);
+    }
+    half4 emssionColor(float2 textureCoords){
+        return emssion.sample(sample, textureCoords);
     }
     float3 normalVector(float2 textureCoords,simd_float3x3 tbn){
         
@@ -231,7 +236,8 @@ fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]],Scene scene
     half4 diffuseFactor = fragmentSceneDiffuse(inData,  normal, scene, diffuse);
     half4 specular = material.specularColor(inData.textureCoords);
     half4 specularFactor = fragmentSceneSpecular(inData, normal, scene,specular);
-    return diffuse * ambient + diffuse * diffuseFactor + specular * specularFactor;
+    half4 emissive = material.emssionColor(inData.textureCoords);
+    return diffuse * ambient + diffuse * diffuseFactor + specular * specularFactor + emissive;
 }
 
 

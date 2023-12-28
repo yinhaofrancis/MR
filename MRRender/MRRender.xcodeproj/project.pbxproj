@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A9007AB72B3DC25E003E8213 /* cyborg.obj in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB22B3DC25E003E8213 /* cyborg.obj */; };
-		A9007AB82B3DC25E003E8213 /* cyborg_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB32B3DC25E003E8213 /* cyborg_normal.png */; };
-		A9007AB92B3DC25E003E8213 /* cyborg_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB42B3DC25E003E8213 /* cyborg_diffuse.png */; };
-		A9007ABA2B3DC25E003E8213 /* cyborg_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB52B3DC25E003E8213 /* cyborg_specular.png */; };
-		A9007ABB2B3DC25E003E8213 /* cyborg.mtl in Resources */ = {isa = PBXBuildFile; fileRef = A9007AB62B3DC25E003E8213 /* cyborg.mtl */; };
 		A94CA9A32B2EFC430059571E /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A12B2EFC430059571E /* MetalKit.framework */; };
 		A94CA9A42B2EFC430059571E /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A22B2EFC430059571E /* Metal.framework */; };
 		A94CA9A62B2EFC5B0059571E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A52B2EFC5B0059571E /* CoreGraphics.framework */; };
@@ -48,6 +43,16 @@
 		A977C7802B2EF253000C2238 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A977C77F2B2EF253000C2238 /* Assets.xcassets */; };
 		A977C7832B2EF253000C2238 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A977C7812B2EF253000C2238 /* LaunchScreen.storyboard */; };
 		A977C7862B2EF253000C2238 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A977C7852B2EF253000C2238 /* main.m */; };
+		A99E82FC2B3DD477001962DA /* cyborg.obj in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F22B3DD477001962DA /* cyborg.obj */; };
+		A99E82FD2B3DD477001962DA /* Vampire_emission.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F32B3DD477001962DA /* Vampire_emission.png */; };
+		A99E82FE2B3DD477001962DA /* Vampire_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F42B3DD477001962DA /* Vampire_diffuse.png */; };
+		A99E82FF2B3DD477001962DA /* Vampire_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F52B3DD477001962DA /* Vampire_normal.png */; };
+		A99E83002B3DD477001962DA /* cyborg_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F62B3DD477001962DA /* cyborg_normal.png */; };
+		A99E83012B3DD477001962DA /* cyborg_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F72B3DD477001962DA /* cyborg_diffuse.png */; };
+		A99E83022B3DD477001962DA /* Vampire_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F82B3DD477001962DA /* Vampire_specular.png */; };
+		A99E83032B3DD477001962DA /* dancing_vampire.dae in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F92B3DD477001962DA /* dancing_vampire.dae */; settings = {ATTRIBUTES = ("--decompress", ); }; };
+		A99E83042B3DD477001962DA /* cyborg_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82FA2B3DD477001962DA /* cyborg_specular.png */; };
+		A99E83052B3DD477001962DA /* cyborg.mtl in Resources */ = {isa = PBXBuildFile; fileRef = A99E82FB2B3DD477001962DA /* cyborg.mtl */; };
 		A9B36CD22B38A53600B922A2 /* Scene.metal in Sources */ = {isa = PBXBuildFile; fileRef = A9B36CD12B38A53600B922A2 /* Scene.metal */; };
 /* End PBXBuildFile section */
 
@@ -101,11 +106,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A9007AB22B3DC25E003E8213 /* cyborg.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.obj; sourceTree = "<group>"; };
-		A9007AB32B3DC25E003E8213 /* cyborg_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_normal.png; sourceTree = "<group>"; };
-		A9007AB42B3DC25E003E8213 /* cyborg_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_diffuse.png; sourceTree = "<group>"; };
-		A9007AB52B3DC25E003E8213 /* cyborg_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_specular.png; sourceTree = "<group>"; };
-		A9007AB62B3DC25E003E8213 /* cyborg.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.mtl; sourceTree = "<group>"; };
 		A94CA9A12B2EFC430059571E /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/iOSSupport/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
 		A94CA9A22B2EFC430059571E /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		A94CA9A52B2EFC5B0059571E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -146,6 +146,16 @@
 		A977C7852B2EF253000C2238 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A9966B472B3C23E00075BEA1 /* MRThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRThread.h; sourceTree = "<group>"; };
 		A9966B482B3C27590075BEA1 /* MRVsync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRVsync.h; sourceTree = "<group>"; };
+		A99E82F22B3DD477001962DA /* cyborg.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.obj; sourceTree = "<group>"; };
+		A99E82F32B3DD477001962DA /* Vampire_emission.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_emission.png; sourceTree = "<group>"; };
+		A99E82F42B3DD477001962DA /* Vampire_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_diffuse.png; sourceTree = "<group>"; };
+		A99E82F52B3DD477001962DA /* Vampire_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_normal.png; sourceTree = "<group>"; };
+		A99E82F62B3DD477001962DA /* cyborg_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_normal.png; sourceTree = "<group>"; };
+		A99E82F72B3DD477001962DA /* cyborg_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_diffuse.png; sourceTree = "<group>"; };
+		A99E82F82B3DD477001962DA /* Vampire_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Vampire_specular.png; sourceTree = "<group>"; };
+		A99E82F92B3DD477001962DA /* dancing_vampire.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = dancing_vampire.dae; sourceTree = "<group>"; };
+		A99E82FA2B3DD477001962DA /* cyborg_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_specular.png; sourceTree = "<group>"; };
+		A99E82FB2B3DD477001962DA /* cyborg.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.mtl; sourceTree = "<group>"; };
 		A9B36CD12B38A53600B922A2 /* Scene.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Scene.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -186,19 +196,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A9007AB12B3DC25E003E8213 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				A9007AB22B3DC25E003E8213 /* cyborg.obj */,
-				A9007AB32B3DC25E003E8213 /* cyborg_normal.png */,
-				A9007AB42B3DC25E003E8213 /* cyborg_diffuse.png */,
-				A9007AB52B3DC25E003E8213 /* cyborg_specular.png */,
-				A9007AB62B3DC25E003E8213 /* cyborg.mtl */,
-			);
-			name = Model;
-			path = ../../../../Model;
-			sourceTree = "<group>";
-		};
 		A94CA99F2B2EF5EE0059571E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -271,7 +268,7 @@
 		A977C7722B2EF251000C2238 /* demo */ = {
 			isa = PBXGroup;
 			children = (
-				A9007AB12B3DC25E003E8213 /* Model */,
+				A99E82F12B3DD477001962DA /* Model */,
 				A977C7732B2EF251000C2238 /* AppDelegate.h */,
 				A977C7742B2EF251000C2238 /* AppDelegate.m */,
 				A977C7762B2EF251000C2238 /* SceneDelegate.h */,
@@ -285,6 +282,24 @@
 				A977C7852B2EF253000C2238 /* main.m */,
 			);
 			path = demo;
+			sourceTree = "<group>";
+		};
+		A99E82F12B3DD477001962DA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A99E82F22B3DD477001962DA /* cyborg.obj */,
+				A99E82F32B3DD477001962DA /* Vampire_emission.png */,
+				A99E82F42B3DD477001962DA /* Vampire_diffuse.png */,
+				A99E82F52B3DD477001962DA /* Vampire_normal.png */,
+				A99E82F62B3DD477001962DA /* cyborg_normal.png */,
+				A99E82F72B3DD477001962DA /* cyborg_diffuse.png */,
+				A99E82F82B3DD477001962DA /* Vampire_specular.png */,
+				A99E82F92B3DD477001962DA /* dancing_vampire.dae */,
+				A99E82FA2B3DD477001962DA /* cyborg_specular.png */,
+				A99E82FB2B3DD477001962DA /* cyborg.mtl */,
+			);
+			name = Model;
+			path = ../../../../Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -432,14 +447,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9007AB92B3DC25E003E8213 /* cyborg_diffuse.png in Resources */,
-				A9007AB82B3DC25E003E8213 /* cyborg_normal.png in Resources */,
 				A977C7832B2EF253000C2238 /* LaunchScreen.storyboard in Resources */,
-				A9007ABB2B3DC25E003E8213 /* cyborg.mtl in Resources */,
-				A9007AB72B3DC25E003E8213 /* cyborg.obj in Resources */,
+				A99E83052B3DD477001962DA /* cyborg.mtl in Resources */,
+				A99E82FC2B3DD477001962DA /* cyborg.obj in Resources */,
+				A99E83042B3DD477001962DA /* cyborg_specular.png in Resources */,
+				A99E83002B3DD477001962DA /* cyborg_normal.png in Resources */,
 				A977C7802B2EF253000C2238 /* Assets.xcassets in Resources */,
+				A99E82FF2B3DD477001962DA /* Vampire_normal.png in Resources */,
+				A99E83022B3DD477001962DA /* Vampire_specular.png in Resources */,
+				A99E83032B3DD477001962DA /* dancing_vampire.dae in Resources */,
+				A99E82FE2B3DD477001962DA /* Vampire_diffuse.png in Resources */,
+				A99E83012B3DD477001962DA /* cyborg_diffuse.png in Resources */,
+				A99E82FD2B3DD477001962DA /* Vampire_emission.png in Resources */,
 				A977C77E2B2EF251000C2238 /* Main.storyboard in Resources */,
-				A9007ABA2B3DC25E003E8213 /* cyborg_specular.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

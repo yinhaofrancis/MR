@@ -48,8 +48,8 @@ static void rederCall(CA::MetalDrawable *current) {
     if(current->texture()->height() > 0 && current->texture()->width() > 0){
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
-    MR::lookAt(cam, glm::vec3(4,3,4), glm::vec3(0,2,0), glm::vec3(0,1,0));
-    MR::perspective(cam, 45.0f, asp, 1.0f, 150.f);
+    MR::lookAt(cam, glm::vec3(200,150,200), glm::vec3(0,100,0), glm::vec3(0,1,0));
+    MR::perspective(cam, 45.0f, asp, 1.0f, 15000.f);
     
     Light aLight;
     aLight.mType = LightAmbient;

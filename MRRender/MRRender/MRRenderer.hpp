@@ -230,13 +230,14 @@ private:
 
 struct Materal{
 
-    Materal(Texture diffuse,Texture specular,Texture normal);
+    Materal(Texture diffuse,Texture specular,Texture normal,Texture emission);
     void load(MTL::RenderCommandEncoder *encoder);
     static Materal defaultMateral();
 
     Texture m_diffuse;
     Texture m_specular;
     Texture m_normal;
+    Texture m_emission;
     Sampler m_sampler;
     
 };

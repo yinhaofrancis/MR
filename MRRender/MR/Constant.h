@@ -24,7 +24,8 @@
 #define phong_specular_index    1
 #define phong_normal_index      2
 #define phong_ambient_index     3
-#define shadow_map_index        4
+#define phong_emssion_index     4
+#define shadow_map_index        5
 
 
 #define model_object_buffer_index                   0
