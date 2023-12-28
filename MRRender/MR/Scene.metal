@@ -22,7 +22,6 @@ struct VertexOutScene{
     float4 color;
 };
 
-
 struct VertexInScene{
     float3 position         [[attribute(0)]];
     float2 textureCoords    [[attribute(1)]];

@@ -57,7 +57,7 @@ static void rederCall(CA::MetalDrawable *current) {
     
     Light dLight;
     dLight.mType = LightDirection;
-    dLight.mDirection = simd_make_float3(1, -1,-1);
+    dLight.mDirection = simd_make_float3(-1, -1,-1);
     v += 0.01;
     dLight.mColorDiffuse = simd_make_float3(1, 1, 1);
     dLight.mColorSpecular = simd_make_float3(1, 1, 1);

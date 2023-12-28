@@ -14,7 +14,7 @@
 using namespace MR;
 
 Scene::Scene(std::string& url){
-    unsigned int flags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace;
+    unsigned int flags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices;
     const aiScene * scene = m_importer.ReadFile(url, flags);
     std::filesystem::path filePath(url);
     std::filesystem::path folderPath = filePath.parent_path();
