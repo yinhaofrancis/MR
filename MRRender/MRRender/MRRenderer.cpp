@@ -527,7 +527,7 @@ void SceneObject::setCamera(Camera &camera){
 }
 void SceneObject::add(Light light){
     LightBuffer b;
-    b.light = light;
+    b.content = light;
     lights.push_back(b);
 }
 void SceneObject::setModel(ModelTransform& model){

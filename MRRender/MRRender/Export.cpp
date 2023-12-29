@@ -36,6 +36,7 @@ void beginMesh(const char * url){
     MR::Scene sc(s);
     m = sc.phone(0, 0);
     mesh = sc.mesh(0);
+    sc.meshBone(0);
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     state = new MR::RenderScene(vt);
    
@@ -49,6 +50,7 @@ static void rederCall(CA::MetalDrawable *current) {
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
     MR::lookAt(cam, glm::vec3(200,150,200), glm::vec3(0,100,0), glm::vec3(0,1,0));
+//    MR::lookAt(cam, glm::vec3(5,4,5), glm::vec3(0,3,0), glm::vec3(0,1,0));
     MR::perspective(cam, 45.0f, asp, 1.0f, 15000.f);
     
     Light aLight;

@@ -31,11 +31,18 @@
 #define model_object_buffer_index                   0
 #define light_object_buffer_index                   1
 #define camera_object_buffer_index                  2
-#define model_vertex_buffer_index                   3
-#define model_vertex_tan_buffer_index               4
-#define model_vertex_bitan_buffer_index             5
+#define bone_object_buffer_index                    3
+#define model_vertex_buffer_index                   4
+#define model_vertex_tan_buffer_index               5
+#define model_vertex_bitan_buffer_index             6
 
 #define vertex_buffer_start                         3
+
+template <typename T>
+union ContentBuffer {
+    int count;
+    T content;
+};
 
 
 struct CameraObject{
@@ -73,10 +80,7 @@ struct Camera{
     
     simd_float4x4 projectionMatrix;
 };
-union CameraBuffer {
-    int count;
-    Camera camera;
-};
+typedef ContentBuffer<Camera> CameraBuffer;
 
 enum LightType{
     LightDirection   =   1,
@@ -125,10 +129,21 @@ struct Light{
     simd_float2 mSize;
 
 };
+typedef ContentBuffer<Light> LightBuffer;
 
-union LightBuffer {
-    int count;
-    Light light;
+
+
+struct Bone{
+    simd_float4x4 offsetMatrix;
+    simd_float4x4 matrix;
 };
+
+struct VertexBone{
+    ContentBuffer<int> boundID;
+};
+
+typedef ContentBuffer<VertexBone> VertexBoneBuffer;
+
+typedef ContentBuffer<Bone> BoneBuffer;
 
 #endif /* Constant_h */

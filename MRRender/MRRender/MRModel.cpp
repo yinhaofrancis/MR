@@ -186,6 +186,59 @@ Materal Scene::phone(int index,int textureIdex){
     }
     return m;
 }
+
+
+void readVertexBone(VertexBoneBuffer* buffer,aiBone **bone,aiNode* node,int count,int boneCout){
+    std::vector<TempVertexBone> vector;
+    TempVertexBone temp;
+    vector.resize(count, temp);
+    for (int i = 0; i < boneCout; i ++) {
+        for (int j = 0; j < bone[i]->mNumWeights; j++) {
+            auto idex = bone[i]->mWeights[j].mVertexId;
+            vector[idex].weight = bone[i]->mWeights[j].mWeight;
+            vector[idex].boundId.push_back(i);
+        }
+    }
+    int max = 0;
+    for (int i = 0 ; i < vector.size(); i++) {
+        if (max < vector[i].boundId.size()){
+            max = vector[i].boundId.size();
+        }
+    }
+    std::cout << max;
+}
+VertexBoneBuffer* Scene::meshBone(int index){
+    auto count = m_scene->mMeshes[index]->mNumVertices;
+    auto boneCount = m_scene->mMeshes[index]->mNumBones;
+    VertexBoneBuffer* buffer = new VertexBoneBuffer[count + 1];
+    buffer->count = count;
+    readVertexBone(buffer + 1, m_scene->mMeshes[index]->mBones, m_scene->mRootNode, count, boneCount);
+    return buffer;
+}
+
+void readBone(BoneBuffer* buffer,aiBone **bone,aiNode* node,int count){
+    for (int i = 0; i < count ; i++) {
+        std::string key(bone[i]->mName.C_Str());
+        std::string name(node->mName.C_Str());
+        if(name == key){
+            memcpy(&buffer[i].content.offsetMatrix ,&bone[i]->mOffsetMatrix , sizeof(buffer[i].content.offsetMatrix));
+            memcpy(&buffer[i].content.matrix ,&node->mTransformation , sizeof(buffer[i].content.matrix));
+            break;
+        }
+    }
+    for (int i = 0; i < node->mNumChildren; i++) {
+        readBone(buffer,bone,node->mChildren[i],count);
+    }
+    
+}
+BoneBuffer* Scene::bone(int index){
+    auto bone = m_scene->mMeshes[index]->mBones;
+    auto cout = m_scene->mMeshes[index]->mNumBones;
+    BoneBuffer* buffer = new BoneBuffer[cout + 1];
+    buffer->count = cout;
+    readBone(buffer + 1,bone,m_scene->mRootNode,cout);
+    return buffer;
+}
 Scene::~Scene(){
     if(ref_count() == 1){
         m_importer.FreeScene();

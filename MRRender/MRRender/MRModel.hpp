@@ -61,6 +61,10 @@ public:
     
     Materal phone(int index,int textureIdex);
     
+    VertexBoneBuffer* meshBone(int index);
+    
+    BoneBuffer* bone(int index);
+    
 private:
     
     void loadMeshComponent(unsigned int componentSize, Mesh &m, unsigned int numVertice, Mesh::VertexComponent vc, aiVector3D *vertexBuffer);
@@ -74,6 +78,12 @@ private:
     
 };
 
+};
+
+
+struct TempVertexBone {
+    float weight;
+    std::vector<int> boundId;
 };
 
 #endif /* MRModel_hpp */

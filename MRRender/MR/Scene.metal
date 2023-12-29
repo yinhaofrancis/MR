@@ -29,6 +29,16 @@ struct VertexInScene{
     float3 tangent          [[attribute(3)]];
     float3 bitangent        [[attribute(4)]];
 };
+
+struct VertexBoneInScene{
+    float3 position         [[attribute(0)]];
+    float2 textureCoords    [[attribute(1)]];
+    float3 normal           [[attribute(2)]];
+    float3 tangent          [[attribute(3)]];
+    float3 bitangent        [[attribute(4)]];
+    float weight            [[attribute(5)]];
+};
+
 struct VertexOutSkybox{
     float4 position [[position]];
     float3 textureCoords;
@@ -45,6 +55,13 @@ struct Scene{
     
     device const ModelTransform    * model [[buffer(model_object_buffer_index)]];
 };
+
+
+
+struct BoneAnimation {
+    device const BoneBuffer* bone [[buffer(bone_object_buffer_index)]];
+};
+
 
 struct Material{
     texture2d<half> diffuse [[texture(phong_diffuse_index)]];
@@ -75,17 +92,7 @@ struct Material{
 };
 
 
-vertex VertexOutScene vertexSceneRender(VertexInScene inData[[stage_in]],Scene scene){
-    return VertexOutScene{
-        .position = scene.camera->projectionMatrix * scene.camera->viewMatrix * scene.model->modelMatrix * float4(inData.position,1),
-        .frag_postion =  (scene.model->modelMatrix * float4(inData.position,1)).xyz,
-        .textureCoords = inData.textureCoords,
-        .normal = normalize((scene.model->normalMatrix * float4(inData.normal,1)).xyz),
-        .tangent = normalize((scene.model->normalMatrix * float4(inData.tangent,1)).xyz),
-        .bitangent = normalize((scene.model->normalMatrix * float4(inData.bitangent,1)).xyz),
-        .color = float4(1,1,0,1)
-    };
-}
+
 
 simd_float3x3 createTbn(VertexOutScene vertexData){
     simd_float3x3 tbn(vertexData.tangent,vertexData.bitangent,vertexData.normal);
@@ -177,8 +184,8 @@ half4 fragmentSceneSpecularSpot(VertexOutScene inData,float3 normal,Light light,
 
 half4 fragmentSceneAmbient(thread Scene& scene){
     for(int i = 1; i <= scene.lights->count; i++){
-        if(scene.lights[i].light.mType == LightAmbient){
-            return half4(half3(scene.lights[i].light.mColorAmbient),1);
+        if(scene.lights[i].content.mType == LightAmbient){
+            return half4(half3(scene.lights[i].content.mColorAmbient),1);
         }
     }
     return half4(0,0,0,0);
@@ -190,16 +197,16 @@ half4 fragmentSceneDiffuse(VertexOutScene inData,
                            half4 diffuseColor){
     half4 diffuseLightColor = half4(0);
     for(int i = 1; i <= scene.lights->count; i++){
-        if(scene.lights[i].light.mType == LightDirection){
-            Light light = scene.lights[i].light;
+        if(scene.lights[i].content.mType == LightDirection){
+            Light light = scene.lights[i].content;
             diffuseLightColor += fragmentSceneDiffuseDirection(inData, normal, light);
         }
-        if(scene.lights[i].light.mType == LightPoint){
-            Light light = scene.lights[i].light;
+        if(scene.lights[i].content.mType == LightPoint){
+            Light light = scene.lights[i].content;
             diffuseLightColor += fragmentSceneDiffusePoint(inData, normal, light);
         }
-        if(scene.lights[i].light.mType == LightSpot){
-            Light light = scene.lights[i].light;
+        if(scene.lights[i].content.mType == LightSpot){
+            Light light = scene.lights[i].content;
             diffuseLightColor += fragmentSceneDiffuseSpot(inData, normal, light);
         }
     }
@@ -212,16 +219,16 @@ half4 fragmentSceneSpecular(VertexOutScene inData,
 
     half4 specularLightColor = half4(0);
     for(int i = 1; i <= scene.lights->count; i++){
-        if(scene.lights[i].light.mType == LightDirection){
-            Light light = scene.lights[i].light;
+        if(scene.lights[i].content.mType == LightDirection){
+            Light light = scene.lights[i].content;
             specularLightColor += fragmentSceneSpecularDirection(inData, normal, light,*scene.camera);
         }
-        if(scene.lights[i].light.mType == LightPoint){
-            Light light = scene.lights[i].light;
+        if(scene.lights[i].content.mType == LightPoint){
+            Light light = scene.lights[i].content;
             specularLightColor += fragmentSceneSpecularPoint(inData, normal, light,*scene.camera);
         }
-        if(scene.lights[i].light.mType == LightSpot){
-            Light light = scene.lights[i].light;
+        if(scene.lights[i].content.mType == LightSpot){
+            Light light = scene.lights[i].content;
             specularLightColor += fragmentSceneSpecularSpot(inData, normal, light,*scene.camera);
         }
     }
@@ -240,4 +247,33 @@ fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]],Scene scene
     return diffuse * ambient + diffuse * diffuseFactor + specular * specularFactor + emissive;
 }
 
+
+
+vertex VertexOutScene vertexSceneRender(VertexInScene inData[[stage_in]],Scene scene){
+    return VertexOutScene{
+        .position = scene.camera->projectionMatrix * scene.camera->viewMatrix * scene.model->modelMatrix * float4(inData.position,1),
+        .frag_postion =  (scene.model->modelMatrix * float4(inData.position,1)).xyz,
+        .textureCoords = inData.textureCoords,
+        .normal = normalize((scene.model->normalMatrix * float4(inData.normal,1)).xyz),
+        .tangent = normalize((scene.model->normalMatrix * float4(inData.tangent,1)).xyz),
+        .bitangent = normalize((scene.model->normalMatrix * float4(inData.bitangent,1)).xyz),
+        .color = float4(1,1,0,1)
+    };
+}
+
+
+vertex VertexOutScene vertexBoneSceneRender(VertexInScene inData[[stage_in]],
+                                            unsigned int vertexId [[vertex_id]],
+                                            BoneAnimation boneAnimation,
+                                            Scene scene){
+    return VertexOutScene{
+        .position = scene.camera->projectionMatrix * scene.camera->viewMatrix * scene.model->modelMatrix * float4(inData.position,1),
+        .frag_postion =  (scene.model->modelMatrix * float4(inData.position,1)).xyz,
+        .textureCoords = inData.textureCoords,
+        .normal = normalize((scene.model->normalMatrix * float4(inData.normal,1)).xyz),
+        .tangent = normalize((scene.model->normalMatrix * float4(inData.tangent,1)).xyz),
+        .bitangent = normalize((scene.model->normalMatrix * float4(inData.bitangent,1)).xyz),
+        .color = float4(1,1,0,1)
+    };
+}
 
