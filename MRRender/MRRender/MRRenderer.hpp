@@ -186,6 +186,9 @@ public:
         Normal,
         Tangent,
         Bitangent,
+        Weight,
+        BoneMap,
+        Bone,
         Color,
         Index,
     };
@@ -220,6 +223,9 @@ private:
     Buffer m_bitangents;
     Buffer m_textureCoords;
     Buffer m_color;
+    Buffer m_weight;
+    Buffer m_bone_map;
+    Buffer m_bone;
     Buffer m_index;
     int m_uvComponent           = 2;
     size_t m_vertex_count       = 0;

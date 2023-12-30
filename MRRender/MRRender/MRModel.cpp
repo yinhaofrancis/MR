@@ -118,6 +118,14 @@ MR::Mesh Scene::mesh(int index){
 
         loadMeshColorComponent(componentSize, m, numVertice, vertexBuffer);
     }
+    if (amesh->HasBones()){
+        auto count = m_scene->mMeshes[index]->mNumVertices;
+        auto boneCount = m_scene->mMeshes[index]->mNumBones;
+        readVertexBone(m, m_scene->mMeshes[index]->mBones, m_scene->mRootNode, count, boneCount);
+        auto bonebuf = bone(index);
+        m.buffer((boneCount + 1) * sizeof(BoneBuffer) , bonebuf, Mesh::Bone);
+        delete [] bonebuf;
+    }
     if (amesh->HasFaces()){
         
         unsigned int count = 0;
@@ -188,33 +196,29 @@ Materal Scene::phone(int index,int textureIdex){
 }
 
 
-void readVertexBone(VertexBoneBuffer* buffer,aiBone **bone,aiNode* node,int count,int boneCout){
-    std::vector<TempVertexBone> vector;
-    TempVertexBone temp;
-    vector.resize(count, temp);
+void  Scene::readVertexBone(Mesh& mesh,aiBone **bone,aiNode* node,int count,int boneCout){
+    std::vector<float> vector;
+    std::vector<std::vector<int32_t>> map;
+    vector.resize(count, 0);
+    map.resize(count);
     for (int i = 0; i < boneCout; i ++) {
         for (int j = 0; j < bone[i]->mNumWeights; j++) {
             auto idex = bone[i]->mWeights[j].mVertexId;
-            vector[idex].weight = bone[i]->mWeights[j].mWeight;
-            vector[idex].boundId.push_back(i);
+            vector[idex] = bone[i]->mWeights[j].mWeight;
+            map[idex].push_back(i);
         }
     }
-    int max = 0;
-    for (int i = 0 ; i < vector.size(); i++) {
-        if (max < vector[i].boundId.size()){
-            max = vector[i].boundId.size();
-        }
+    VertexBoneBuffer* m = new VertexBoneBuffer[count + 1];
+    m->count = count;
+    for (int i = 1; i <= count; i++) {
+        memcpy(m[i].content.boundID, map[i - 1].data(), sizeof(int32_t) * fmin(map[i - 1].size(),vertex_boneId_buffer_size));
     }
-    std::cout << max;
+    
+    mesh.buffer(sizeof(float) * count, vector.data(), Mesh::Weight);
+    mesh.buffer(sizeof(VertexBoneBuffer) * (count + 1), m, Mesh::BoneMap);
+    delete [] m;
 }
-VertexBoneBuffer* Scene::meshBone(int index){
-    auto count = m_scene->mMeshes[index]->mNumVertices;
-    auto boneCount = m_scene->mMeshes[index]->mNumBones;
-    VertexBoneBuffer* buffer = new VertexBoneBuffer[count + 1];
-    buffer->count = count;
-    readVertexBone(buffer + 1, m_scene->mMeshes[index]->mBones, m_scene->mRootNode, count, boneCount);
-    return buffer;
-}
+
 
 void readBone(BoneBuffer* buffer,aiBone **bone,aiNode* node,int count){
     for (int i = 0; i < count ; i++) {

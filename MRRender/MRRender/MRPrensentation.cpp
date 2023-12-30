@@ -37,8 +37,12 @@ RenderScreen::~RenderScreen(){
     }
 }
 
-
-RenderScene::RenderScene(MTL::VertexDescriptor* vertexDescriptor,Renderer& render,Program& program){
+void RenderScene::loadState(std::string vertex,
+                            std::string fragment,
+                            MTL::RenderPipelineState ** state,
+                            Program &program,
+                            Renderer &render,
+                            MTL::VertexDescriptor *vertexDescriptor) {
     auto desc = MTL::RenderPipelineDescriptor::alloc()->init();
     desc->colorAttachments()->object(0)->setPixelFormat(MR::colorTexturePixel);
     desc->setDepthAttachmentPixelFormat(MR::depthStencialTexturePixel);
@@ -47,23 +51,28 @@ RenderScene::RenderScene(MTL::VertexDescriptor* vertexDescriptor,Renderer& rende
     desc->colorAttachments()->object(0)->setBlendingEnabled(true);
     desc->colorAttachments()->object(0)->setSourceAlphaBlendFactor(MTL::BlendFactorSourceAlpha);
     desc->colorAttachments()->object(0)->setDestinationAlphaBlendFactor(MTL::BlendFactorOneMinusBlendAlpha);
-    auto v = program.shader("fragmentSceneRender");
-    auto f = program.shader("vertexSceneRender");
-    desc->setFragmentFunction(v);
-    desc->setVertexFunction(f);
+    auto f = program.shader(fragment.c_str());
+    auto v = program.shader(vertex.c_str());
+    desc->setFragmentFunction(f);
+    desc->setVertexFunction(v);
     
     NS::Error * e;
-    m_state = render.device().newRenderPipelineState(desc, &e);
+    *state = render.device().newRenderPipelineState(desc, &e);
+    if(e != nullptr){
+        throw (MR::Error) {e->domain()->utf8String(),1};
+    }
     desc->release();
     v->release();
     f->release();
+}
+
+RenderScene::RenderScene(MTL::VertexDescriptor* vertexDescriptor,Renderer& render,Program& program){
+    loadState("vertexSceneRender","fragmentSceneRender",&m_state,program, render, vertexDescriptor);
+    loadState("vertexBoneSceneRender","fragmentSceneRender",&m_bone_state,program, render, vertexDescriptor);
     MTL::DepthStencilDescriptor* dep = MTL::DepthStencilDescriptor::alloc()->init();
     dep->setDepthWriteEnabled(true);
     dep->setDepthCompareFunction(MTL::CompareFunctionLess);
     m_depth = render.device().newDepthStencilState(dep);
-    if(e != nullptr){
-        throw (MR::Error) {e->domain()->utf8String(),1};
-    }
 }
 RenderScene::~RenderScene(){
     if(m_state != nullptr && ref_count() == 1){
@@ -74,7 +83,11 @@ RenderScene::~RenderScene(){
     }
 }
 void RenderScene::render(MR::Mesh& mesh,MTL::RenderCommandEncoder * encoder) const{
-    encoder->setRenderPipelineState(m_state);
+    if (mesh.hasBuffer(Mesh::BoneMap)) {
+        encoder->setRenderPipelineState(m_bone_state);
+    }else{
+        encoder->setRenderPipelineState(m_state);
+    }
     encoder->setDepthStencilState(m_depth);
     
     mesh.draw(encoder);

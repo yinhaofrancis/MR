@@ -61,14 +61,14 @@ public:
     
     Materal phone(int index,int textureIdex);
     
-    VertexBoneBuffer* meshBone(int index);
-    
     BoneBuffer* bone(int index);
     
 private:
     
     void loadMeshComponent(unsigned int componentSize, Mesh &m, unsigned int numVertice, Mesh::VertexComponent vc, aiVector3D *vertexBuffer);
     void loadMeshColorComponent(unsigned int componentSize, Mesh &m, unsigned int numVertice, aiColor4D *vertexBuffer);
+    void readVertexBone(Mesh& mesh,aiBone **bone,aiNode* node,int count,int boneCout);
+private:
     Assimp::Importer m_importer;
     aiScene* m_scene;
     std::string m_folderPath;

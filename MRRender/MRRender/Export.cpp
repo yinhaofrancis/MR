@@ -36,7 +36,6 @@ void beginMesh(const char * url){
     MR::Scene sc(s);
     m = sc.phone(0, 0);
     mesh = sc.mesh(0);
-    sc.meshBone(0);
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     state = new MR::RenderScene(vt);
    

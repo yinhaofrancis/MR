@@ -28,15 +28,21 @@
 #define shadow_map_index        5
 
 
-#define model_object_buffer_index                   0
-#define light_object_buffer_index                   1
-#define camera_object_buffer_index                  2
-#define bone_object_buffer_index                    3
+
 #define model_vertex_buffer_index                   4
 #define model_vertex_tan_buffer_index               5
 #define model_vertex_bitan_buffer_index             6
 
+#define bone_object_buffer_start                    6
 #define vertex_buffer_start                         3
+
+#define model_object_buffer_index                   0
+#define light_object_buffer_index                   1
+#define camera_object_buffer_index                  2
+
+#define bone_object_buffer_index                    vertex_buffer_start + bone_object_buffer_start + 1
+#define bone_map_object_buffer_index                vertex_buffer_start + bone_object_buffer_start
+#define vertex_boneId_buffer_size                   4
 
 template <typename T>
 union ContentBuffer {
@@ -139,7 +145,7 @@ struct Bone{
 };
 
 struct VertexBone{
-    ContentBuffer<int> boundID;
+    int boundID[vertex_boneId_buffer_size];
 };
 
 typedef ContentBuffer<VertexBone> VertexBoneBuffer;

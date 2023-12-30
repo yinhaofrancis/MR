@@ -11,6 +11,8 @@
 
 using namespace MR;
 
+static const int max_vertex_attribute = 8;
+
 Renderer::Renderer(){}
 
 Renderer::~Renderer(){
@@ -354,8 +356,14 @@ bool Mesh::hasBuffer(VertexComponent vertexComponent){
             return m_bitangents.origin()->length() > 0;
         case Color:
             return m_color.origin()->length() > 0;
+        case Weight:
+            return m_weight.origin()->length() > 0;
         case Index:
             return m_index.origin()->length() > 0;
+        case BoneMap:
+            return m_bone_map.origin()->length() > 0;
+        case Bone:
+            return m_bone.origin()->length() > 0;
     }
 }
 Buffer& Mesh::operator[](VertexComponent vertexComponent){
@@ -373,8 +381,14 @@ Buffer& Mesh::operator[](VertexComponent vertexComponent){
             return m_bitangents;
         case Color:
             return m_color;
+        case Weight:
+            return m_weight;
         case Index:
             return m_index;
+        case BoneMap:
+            return m_bone_map;
+        case Bone:
+            return m_bone;
     }
 }
 MTL::PrimitiveType& Mesh::primitiveMode(){
@@ -402,20 +416,29 @@ void Mesh::buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexCom
         case Color:
             m_color.store(size, buffer);
             break;
+        case Weight:
+            m_weight.store(size, buffer);
+            break;
         case Index:
             m_index.store(size, buffer);
+            break;
+        case BoneMap:
+            m_bone_map.store(size, buffer);
+            break;
+        case Bone:
+            m_bone.store(size, buffer);
             break;
     }
 }
 MTL::VertexDescriptor* Mesh::vertexDescriptor(){
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < max_vertex_attribute; i++) {
         layoutVertexDescriptor((Mesh::VertexComponent)i);
     }
     return m_vertexDescriptor;
 }
 void Mesh::draw(MTL::RenderCommandEncoder* encoder){
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < max_vertex_attribute; i++) {
         Mesh::VertexComponent idex = (Mesh::VertexComponent)i;
         if(hasBuffer(idex)){
             encoder->setVertexBuffer((*this)[idex].origin(), 0, i + vertex_buffer_start);
@@ -423,6 +446,7 @@ void Mesh::draw(MTL::RenderCommandEncoder* encoder){
             encoder->setVertexBuffer(nullptr, 0, i + vertex_buffer_start);
         }
     }
+    
     if (hasBuffer(VertexComponent::Index)) {
         encoder->drawIndexedPrimitives(this->m_pm, m_vertex_count, m_indexType, m_index.origin(), 0);
     }else{
@@ -478,6 +502,14 @@ void Mesh::layoutVertexDescriptor(Mesh::VertexComponent vertexComponent){
             m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
             m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
             m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 3);
+            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
+            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+            break;
+        case Weight:
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
+            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
+            m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float));
             m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
             m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
             break;

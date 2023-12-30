@@ -21,6 +21,8 @@
     _displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(run)];
     [_displaylink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
     beginMesh([NSBundle.mainBundle URLForResource:@"dancing_vampire" withExtension:@"dae"].path.UTF8String);
+//
+//    beginMesh([NSBundle.mainBundle URLForResource:@"cyborg" withExtension:@"obj"].path.UTF8String);
     
     // Do any additional setup after loading the view.
 }
