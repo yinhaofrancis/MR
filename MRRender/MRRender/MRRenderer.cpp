@@ -58,12 +58,7 @@ void Buffer::assign(const void * data,size_t offset,size_t size) const{
     uint8_t * start = reinterpret_cast<uint8_t *>(m_buffer->contents());
     memcpy(start + offset, data, size);
 }
-void Buffer::store(MTL::Buffer *m_buffer){
-    if (m_buffer != nullptr){
-        m_buffer->release();
-    }
-    this->m_buffer = m_buffer;
-}
+
 void Buffer::store(size_t size,const void * data){
     if (m_buffer != nullptr){
         m_buffer->release();
@@ -174,7 +169,7 @@ Sampler& Sampler::linear(){
 Sampler& Sampler::nearest(){
     return *m_nearest;
 }
-MTL::SamplerState* Sampler::origin(){
+MTL::SamplerState* Sampler::origin() const{
     return m_sampler;
 }
 Sampler::~Sampler(){
@@ -423,38 +418,7 @@ const Buffer& Mesh::operator[](VertexComponent vertexComponent) const{
 MTL::PrimitiveType& Mesh::primitiveMode(){
     return m_pm;
 }
-void Mesh::buffer(MR::Buffer buffer,Mesh::VertexComponent vertexComponent){
-    switch (vertexComponent) {
-        
-        case Position:
-            m_postion = buffer;
-            break;
-        case TextureCoords:
-            m_textureCoords = buffer;
-            break;
-        case Normal:
-            m_normal = buffer;;
-            break;
-        case Tangent:
-            m_tangents = buffer;
-            break;
-        case Bitangent:
-            m_bitangents = buffer;
-            break;
-        case Color:
-            m_color = buffer;
-            break;
-        case Index:
-            m_index = buffer;
-            break;
-        case BoneMap:
-            m_bone_map = buffer;
-            break;
-        case Bone:
-            m_bone = buffer;
-            break;
-    }
-}
+
 void Mesh::buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexComponent){
     switch (vertexComponent) {
         
@@ -599,6 +563,22 @@ Materal Materal::defaultMateral(){
     Texture n (simd_make_float4(0.5, 0.5, 1, 1));
     Texture e (simd_make_float4(0.0, 0.0, 0, 0));
     return Materal(d, s, n,e);
+}
+Texture Materal::defaultSkyboxMateral(){
+    Texture tex(2, 2, MTL::PixelFormatRGBA8Unorm_sRGB,MTL::TextureTypeCube);
+    uint8_t buff[] = {
+        255,0,0,255,
+        0,255,0,255,
+        0,0,255,255,
+        255,0,255,255
+    };
+    tex.assign(2, 2, 8,buff , 0, 16);
+    tex.assign(2, 2, 8,buff , 1, 16);
+    tex.assign(2, 2, 8,buff , 2, 16);
+    tex.assign(2, 2, 8,buff , 3, 16);
+    tex.assign(2, 2, 8,buff , 4, 16);
+    tex.assign(2, 2, 8,buff , 5, 16);
+    return tex;
 }
 
 

@@ -59,8 +59,8 @@ private:
                    Renderer &render,MTL::VertexDescriptor *vertexDescriptor);
 private:
     MR::Mesh mesh;
+    MR::Sampler m_sampler = MR::Sampler::nearest();
     MTL::RenderPipelineState *m_state = nullptr;
-    MTL::DepthStencilState *m_depth = nullptr;
 };
 
 

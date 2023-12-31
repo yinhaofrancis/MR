@@ -16,8 +16,8 @@ void   freeObject(const void *textureloader);
 
 void * loadTexture(const char * name,const void * textureloader);
 
-void sphereSkybox(float size,void *vmesh,const void *renderer);
+void sphereSkybox(float size,void *vmesh);
 
-void sphereMesh(simd_float3 size,simd_uint2 segment,void *vmesh,const void *renderer);
+void sphereMesh(simd_float3 size,simd_uint2 segment,bool hasTangent,void *vmesh);
 
 #endif

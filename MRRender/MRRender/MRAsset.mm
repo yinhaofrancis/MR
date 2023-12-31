@@ -63,32 +63,41 @@ void * loadTexture(const char * name,const void * textureloader){
 }
 
 
-void sphereMesh(simd_float3 size,simd_uint2 segment,void *vmesh,const void *renderer){
-    id<MTLDevice> device = deviceTransform(renderer);
-    MTKMeshBufferAllocator* a = [[MTKMeshBufferAllocator alloc] initWithDevice:device];
-    MDLMesh* mesh = [[MDLMesh alloc] initSphereWithExtent:size segments:segment inwardNormals:false geometryType:MDLGeometryTypeTriangles allocator:a];
-    [mesh addTangentBasisForTextureCoordinateAttributeNamed:MDLVertexAttributeTextureCoordinate tangentAttributeNamed:MDLVertexAttributeTangent bitangentAttributeNamed:MDLVertexAttributeBitangent];
-    [mesh makeVerticesUniqueAndReturnError:nil];
+void sphereMesh(simd_float3 size,simd_uint2 segment,bool hasTangent,void *vmesh){
+    MDLMesh* mesh = [[MDLMesh alloc] initSphereWithExtent:size segments:segment inwardNormals:false geometryType:MDLGeometryTypeTriangles allocator:nil];
+    if(hasTangent){
+        [mesh addTangentBasisForTextureCoordinateAttributeNamed:MDLVertexAttributeTextureCoordinate tangentAttributeNamed:MDLVertexAttributeTangent bitangentAttributeNamed:MDLVertexAttributeBitangent];
+        [mesh makeVerticesUniqueAndReturnError:nil];
+    }
     MR::Mesh* mmesh = (MR::Mesh*)vmesh;
     MTLVertexDescriptor *descriptor = (__bridge MTLVertexDescriptor *)mmesh->vertexDescriptor();
     positionNorTexDescription(descriptor, vertex_buffer_start, 0);
-    float3Description(descriptor, vertex_buffer_start + 1, 3);
-    float3Description(descriptor, vertex_buffer_start + 2, 4);
-    MTKMesh *mkmesh = [[MTKMesh alloc] initWithMesh:mesh device:device error:nil];
-    MR::Buffer buffer1;
-    buffer1.store((MTL::Buffer*)CFBridgingRetain(mkmesh.vertexBuffers[0].buffer));
-    mmesh->buffer(buffer1, MR::Mesh::Position);
+    if(hasTangent){
+        float3Description(descriptor, vertex_buffer_start + 1, 3);
+        float3Description(descriptor, vertex_buffer_start + 2, 4);
+    }
+    MDLMeshBufferData* data0 = mesh.vertexBuffers[0];
+    mmesh->buffer(data0.length, data0.data.bytes, MR::Mesh::Position);
+    if (hasTangent){
+        MDLMeshBufferData* data1 = mesh.vertexBuffers[1];
+        mmesh->buffer(data1.length, data1.data.bytes, MR::Mesh::Tangent);
+        MDLMeshBufferData* data2 = mesh.vertexBuffers[2];
+        mmesh->buffer(data2.length, data2.data.bytes, MR::Mesh::Bitangent);
+    }
+    NSMutableData * idexbuff = [[NSMutableData alloc] init];
+    unsigned int count = 0;
+    for (int i = 0; i < mesh.submeshes.count; i++) {
+        count += mesh.submeshes[i].indexCount;
+        [idexbuff appendData:((MDLMeshBufferData*)mesh.submeshes[i].indexBuffer).data];
+    }
     
-    MR::Buffer buffer2;
-    buffer2.store((MTL::Buffer*)CFBridgingRetain(mkmesh.vertexBuffers[1].buffer));
-    mmesh->buffer(buffer2, MR::Mesh::Tangent);
+    mmesh->vertexCount() = count;
+    mmesh->buffer(idexbuff.length, idexbuff.bytes, MR::Mesh::Index);
+    mmesh->indexType() = MTL::IndexTypeUInt16;
     
-    MR::Buffer buffer3;
-    buffer3.store((MTL::Buffer*)CFBridgingRetain(mkmesh.vertexBuffers[2].buffer));
-    mmesh->buffer(buffer3, MR::Mesh::Bitangent);    
 }
 
 
-void sphereSkybox(float size,void *vmesh,const void *renderer){
-    sphereMesh(simd_make_float3(size, size, size), simd_make_uint2(20, 20),vmesh, renderer);
+void sphereSkybox(float size,void *vmesh){
+    sphereMesh(simd_make_float3(size, size, size), simd_make_uint2(20, 20),false,vmesh);
 }

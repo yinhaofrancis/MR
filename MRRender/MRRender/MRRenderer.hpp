@@ -121,7 +121,7 @@ public:
     Sampler(MTL::SamplerDescriptor *,Renderer& render = Renderer::shared());
     Sampler(MTL::SamplerMinMagFilter ,MTL::SamplerAddressMode ,Renderer& render = Renderer::shared());
     ~Sampler();
-    MTL::SamplerState* origin();
+    MTL::SamplerState* origin() const;
     static Sampler& linear();
     static Sampler& nearest();
 private:
@@ -213,9 +213,7 @@ public:
     MTL::IndexType& indexType();
     
     void buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexComponent);
-    
-    void buffer(MR::Buffer buffer,Mesh::VertexComponent vertexComponent);
-    
+        
     MTL::VertexDescriptor* vertexDescriptor() const;
     
     void buildVertexDescriptor();
@@ -251,7 +249,7 @@ struct Materal{
     Materal(Texture diffuse,Texture specular,Texture normal,Texture emission);
     void load(MTL::RenderCommandEncoder *encoder);
     static Materal defaultMateral();
-
+    static Texture defaultSkyboxMateral();
     Texture m_diffuse;
     Texture m_specular;
     Texture m_normal;

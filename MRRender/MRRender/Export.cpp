@@ -33,7 +33,7 @@ static MR::Materal m = MR::Materal::defaultMateral();
 
 static MR::Program pro = MR::Program::shared();
 
-static MTL::Texture* sky;
+static MR::Texture sky = MR::Materal::defaultSkyboxMateral();
 
 void beginMesh(const char * url){
 
@@ -48,7 +48,6 @@ void beginMesh(const char * url){
     skybox = new MR::RenderSkyboxScene();
 //    sky = m.m_diffuse.origin();
     
-    sky = (MTL::Texture *)loadTexture("sky", MR::Renderer::shared().textureLoader());
 
 //    sky->retain();
     
@@ -63,9 +62,11 @@ static void rederCall(CA::MetalDrawable *current) {
     if(current->texture()->height() > 0 && current->texture()->width() > 0){
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
-    MR::lookAt(cam, glm::vec3(200,150,200), glm::vec3(0,100,0), glm::vec3(0,1,0));
+    float x = 300 * sin(v);
+    float z = 300 * cos(v);
+    MR::lookAt(cam, glm::vec3(x,150,z), glm::vec3(0,100,0), glm::vec3(0,1,0));
 //    MR::lookAt(cam, glm::vec3(5,4,5), glm::vec3(0,3,0), glm::vec3(0,1,0));
-    MR::perspective(cam, 45.0f, asp, 1.0f, 15000.f);
+    MR::perspective(cam, 45.0f, asp, 1.0f, 1500.f);
     
     Light aLight;
     aLight.mType = LightAmbient;
@@ -80,7 +81,7 @@ static void rederCall(CA::MetalDrawable *current) {
     
     ModelTransform mb;
     
-    MR::modelTransform(mb, glm::rotate(glm::mat4(1), v, glm::vec3(0,1,0)));
+    MR::modelTransform(mb, glm::mat4(1));
 
     MR::SceneObject so;
     so.setModel(mb);
@@ -91,9 +92,10 @@ static void rederCall(CA::MetalDrawable *current) {
 
     MR::Queue::shared().beginBuffer([current,mb, so](auto buffer){
         m_render_pass->beginRender(buffer, current, [&so](auto encoder){
-            skybox->render(sky, encoder);
-            m.load(encoder);
             so.load(encoder);
+            skybox->render(sky.origin(), encoder);
+            m.load(encoder);
+            
             state->render(mesh, encoder);
         });
     });

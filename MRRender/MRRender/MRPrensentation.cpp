@@ -94,32 +94,25 @@ void RenderScene::render(MR::Mesh& mesh,MTL::RenderCommandEncoder * encoder) con
         encoder->setRenderPipelineState(m_state);
     }
     encoder->setDepthStencilState(m_depth);
-    
+    encoder->setCullMode(MTL::CullModeNone);
     mesh.draw(encoder);
 }
 
 RenderSkyboxScene::RenderSkyboxScene(Renderer& render,Program& program){
-    sphereSkybox(20,(void *)&mesh,&render);
+    sphereSkybox(10,(void *)&mesh);
     loadState("vertexSkyboxSceneRender","fragmentSkyboxSceneRender",&m_state,program, render,mesh.vertexDescriptor());
-    MTL::DepthStencilDescriptor* dep = MTL::DepthStencilDescriptor::alloc()->init();
-    dep->setDepthWriteEnabled(true);
-    dep->setDepthCompareFunction(MTL::CompareFunctionLess);
-    m_depth = render.device().newDepthStencilState(dep);
-    
 }
 RenderSkyboxScene::~RenderSkyboxScene(){
     if(m_state != nullptr && ref_count() == 1){
         m_state->release();
     }
-    if(m_depth != nullptr && ref_count() == 1){
-        m_depth->release();
-    }
 }
 void RenderSkyboxScene::render(MTL::Texture *texture,MTL::RenderCommandEncoder * encoder) const{
     
     encoder->setRenderPipelineState(m_state);
-    encoder->setDepthStencilState(m_depth);
     encoder->setFragmentTexture(texture, skybox_diffuse_index);
+    encoder->setFragmentSamplerState(m_sampler.origin(), sampler_default);
+    encoder->setCullMode(MTL::CullModeBack);
     mesh.draw(encoder);
 }
 void RenderSkyboxScene::loadState(std::string vertex,
