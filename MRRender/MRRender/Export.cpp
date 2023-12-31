@@ -14,6 +14,7 @@
 #include <MR/Constant.h>
 
 #include "MRVsync.h"
+#include "MRAsset.h"
 
 
 static CA::MetalLayer* m_layer;
@@ -26,9 +27,13 @@ static MR::Mesh mesh;
 
 static MR::RenderScene* state;
 
+static MR::RenderSkyboxScene* skybox;
+
 static MR::Materal m = MR::Materal::defaultMateral();
 
 static MR::Program pro = MR::Program::shared();
+
+static MTL::Texture* sky;
 
 void beginMesh(const char * url){
 
@@ -36,8 +41,18 @@ void beginMesh(const char * url){
     MR::Scene sc(s);
     m = sc.phone(0, 0);
     mesh = sc.mesh(0);
+    mesh.buildVertexDescriptor();
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
+    
     state = new MR::RenderScene(vt);
+    skybox = new MR::RenderSkyboxScene();
+//    sky = m.m_diffuse.origin();
+    
+    sky = (MTL::Texture *)loadTexture("sky", MR::Renderer::shared().textureLoader());
+
+//    sky->retain();
+    
+//    sphereSkybox(100, &MR::Renderer::shared().device());
    
 }
 static float v = 0;
@@ -76,6 +91,7 @@ static void rederCall(CA::MetalDrawable *current) {
 
     MR::Queue::shared().beginBuffer([current,mb, so](auto buffer){
         m_render_pass->beginRender(buffer, current, [&so](auto encoder){
+            skybox->render(sky, encoder);
             m.load(encoder);
             so.load(encoder);
             state->render(mesh, encoder);

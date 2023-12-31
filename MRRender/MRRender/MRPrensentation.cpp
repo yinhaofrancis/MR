@@ -6,6 +6,8 @@
 //
 
 #include "MRPrensentation.hpp"
+#include "MRAsset.h"
+
 using namespace MR;
 RenderScreen::RenderScreen(Renderer& render ,Program& program){
     auto desc = MTL::RenderPipelineDescriptor::alloc()->init();
@@ -78,6 +80,9 @@ RenderScene::~RenderScene(){
     if(m_state != nullptr && ref_count() == 1){
         m_state->release();
     }
+    if(m_bone_state != nullptr && ref_count() == 1){
+        m_bone_state->release();
+    }
     if(m_depth != nullptr && ref_count() == 1){
         m_depth->release();
     }
@@ -92,6 +97,60 @@ void RenderScene::render(MR::Mesh& mesh,MTL::RenderCommandEncoder * encoder) con
     
     mesh.draw(encoder);
 }
+
+RenderSkyboxScene::RenderSkyboxScene(Renderer& render,Program& program){
+    sphereSkybox(20,(void *)&mesh,&render);
+    loadState("vertexSkyboxSceneRender","fragmentSkyboxSceneRender",&m_state,program, render,mesh.vertexDescriptor());
+    MTL::DepthStencilDescriptor* dep = MTL::DepthStencilDescriptor::alloc()->init();
+    dep->setDepthWriteEnabled(true);
+    dep->setDepthCompareFunction(MTL::CompareFunctionLess);
+    m_depth = render.device().newDepthStencilState(dep);
+    
+}
+RenderSkyboxScene::~RenderSkyboxScene(){
+    if(m_state != nullptr && ref_count() == 1){
+        m_state->release();
+    }
+    if(m_depth != nullptr && ref_count() == 1){
+        m_depth->release();
+    }
+}
+void RenderSkyboxScene::render(MTL::Texture *texture,MTL::RenderCommandEncoder * encoder) const{
+    
+    encoder->setRenderPipelineState(m_state);
+    encoder->setDepthStencilState(m_depth);
+    encoder->setFragmentTexture(texture, skybox_diffuse_index);
+    mesh.draw(encoder);
+}
+void RenderSkyboxScene::loadState(std::string vertex,
+                                  std::string fragment,
+                                  MTL::RenderPipelineState ** state,
+                                  Program &program,
+                                  Renderer &render,
+                                  MTL::VertexDescriptor *vertexDescriptor){
+    auto desc = MTL::RenderPipelineDescriptor::alloc()->init();
+    desc->colorAttachments()->object(0)->setPixelFormat(MR::colorTexturePixel);
+    desc->setDepthAttachmentPixelFormat(MR::depthStencialTexturePixel);
+    desc->setStencilAttachmentPixelFormat(MR::depthStencialTexturePixel);
+    desc->setVertexDescriptor(vertexDescriptor);
+    desc->colorAttachments()->object(0)->setBlendingEnabled(true);
+    desc->colorAttachments()->object(0)->setSourceAlphaBlendFactor(MTL::BlendFactorSourceAlpha);
+    desc->colorAttachments()->object(0)->setDestinationAlphaBlendFactor(MTL::BlendFactorOneMinusBlendAlpha);
+    auto f = program.shader(fragment.c_str());
+    auto v = program.shader(vertex.c_str());
+    desc->setFragmentFunction(f);
+    desc->setVertexFunction(v);
+    
+    NS::Error * e;
+    *state = render.device().newRenderPipelineState(desc, &e);
+    if(e != nullptr){
+        throw (MR::Error) {e->domain()->utf8String(),1};
+    }
+    desc->release();
+    v->release();
+    f->release();
+}
+
 
 
 void MR::lookAt(Camera& camera,glm::vec3 eye,glm::vec3 center,glm::vec3 up){

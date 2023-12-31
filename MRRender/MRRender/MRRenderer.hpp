@@ -17,9 +17,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#define NS_PRIVATE_IMPLEMENTATION
-#define CA_PRIVATE_IMPLEMENTATION
-#define MTL_PRIVATE_IMPLEMENTATION
+
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -50,8 +48,11 @@ public:
     friend class Queue;
     friend class Program;
     MTL::Device& device();
+    MTL::Device* devicePtr();
+    const void * textureLoader();
 private:
     MTL::Device* m_device = MTL::CreateSystemDefaultDevice();
+    void *m_textureloader = nullptr;
     static Renderer *s_shared;
     static std::mutex m_lock_shared;
 };
@@ -61,8 +62,10 @@ public:
     Buffer(Renderer& render = Renderer::shared());
     ~Buffer();
     void assign(const void * data,size_t offset,size_t size) const;
+    void store(MTL::Buffer *m_buffer);
     void store(size_t size,const void * data);
     MTL::Buffer * origin() const;
+    
 private:
     MTL::Buffer *m_buffer = nullptr;
     Renderer m_render;
@@ -83,6 +86,7 @@ public:
             Renderer& render = Renderer::shared());
     
     Texture(simd_float4 color);
+    Texture(std::string name,Renderer& render = Renderer::shared());
     ~Texture();
     static MTL::TextureDescriptor* createDecription();
     MTL::Texture* origin() const;
@@ -186,7 +190,6 @@ public:
         Normal,
         Tangent,
         Bitangent,
-        Weight,
         BoneMap,
         Bone,
         Color,
@@ -194,15 +197,16 @@ public:
     };
     
     Mesh(Renderer& render = Renderer::shared());
+    
     ~Mesh();
     
     int& uvComponentCount();
     
     size_t& vertexCount();
     
-    bool hasBuffer(VertexComponent vertexComponent);
+    bool hasBuffer(VertexComponent vertexComponent) const;
     
-    Buffer& operator[](VertexComponent vertexComponent);
+    const Buffer& operator[](VertexComponent vertexComponent) const;
     
     MTL::PrimitiveType& primitiveMode();
     
@@ -210,8 +214,17 @@ public:
     
     void buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexComponent);
     
-    MTL::VertexDescriptor* vertexDescriptor();
-    void draw(MTL::RenderCommandEncoder *encoder);
+    void buffer(MR::Buffer buffer,Mesh::VertexComponent vertexComponent);
+    
+    MTL::VertexDescriptor* vertexDescriptor() const;
+    
+    void buildVertexDescriptor();
+    
+    void draw(MTL::RenderCommandEncoder *encoder) const;
+    
+//    static Mesh sphere(float size){
+//        
+//    }
     
 private:
     void layoutVertexDescriptor(Mesh::VertexComponent vertexComponent);
@@ -223,7 +236,6 @@ private:
     Buffer m_bitangents;
     Buffer m_textureCoords;
     Buffer m_color;
-    Buffer m_weight;
     Buffer m_bone_map;
     Buffer m_bone;
     Buffer m_index;

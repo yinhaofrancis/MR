@@ -42,6 +42,28 @@ private:
     MTL::DepthStencilState *m_depth = nullptr;
 };
 
+class RenderSkyboxScene:virtual Object{
+public:
+
+    RenderSkyboxScene(Renderer& render = Renderer::shared(),Program& program = Program::shared());
+    
+    ~RenderSkyboxScene();
+    
+    void render(MTL::Texture *texture,MTL::RenderCommandEncoder * encoder) const;
+    
+private:
+    void loadState(std::string vertex,
+                   std::string fragment,
+                   MTL::RenderPipelineState ** state,
+                   Program &program,
+                   Renderer &render,MTL::VertexDescriptor *vertexDescriptor);
+private:
+    MR::Mesh mesh;
+    MTL::RenderPipelineState *m_state = nullptr;
+    MTL::DepthStencilState *m_depth = nullptr;
+};
+
+
 void lookAt(Camera& camera,glm::vec3 eye,glm::vec3 center,glm::vec3 up);
 
 void perspective(Camera& camera,float fovy,float aspect,float near,float far);

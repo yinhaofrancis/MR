@@ -36,7 +36,6 @@ struct VertexBoneInScene{
     float3 normal           [[attribute(2)]];
     float3 tangent          [[attribute(3)]];
     float3 bitangent        [[attribute(4)]];
-    float weight            [[attribute(5)]];
 };
 
 struct VertexOutSkybox{
@@ -60,6 +59,7 @@ struct Scene{
 
 struct BoneAnimation {
     device const BoneBuffer* bone [[buffer(bone_object_buffer_index)]];
+    device const VertexBoneBuffer* boneMap [[buffer(bone_map_object_buffer_index)]];
 };
 
 
@@ -277,3 +277,22 @@ vertex VertexOutScene vertexBoneSceneRender(VertexInScene inData[[stage_in]],
     };
 }
 
+
+vertex VertexOutSkybox vertexSkyboxSceneRender(VertexInSkybox inData[[stage_in]],
+                                               Scene config){
+    float4x4 model(1);
+    model.columns[3] = float4(config.camera->mPosition,1);
+    return VertexOutSkybox{
+        
+        .position = config.camera->projectionMatrix * config.camera->viewMatrix * model * float4(inData.position,1.0),
+        .textureCoords = inData.position
+    };
+}
+
+
+fragment half4 fragmentSkyboxSceneRender(VertexOutSkybox vertexData[[stage_in]],
+                                         sampler samp[[sampler(sampler_default)]],
+                                         texturecube<half> diffuse [[texture(skybox_diffuse_index)]]){
+    
+    return diffuse.sample(samp, vertexData.textureCoords);
+}

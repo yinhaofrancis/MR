@@ -125,6 +125,12 @@ MR::Mesh Scene::mesh(int index){
         auto bonebuf = bone(index);
         m.buffer((boneCount + 1) * sizeof(BoneBuffer) , bonebuf, Mesh::Bone);
         delete [] bonebuf;
+        for (int i = 0; i < boneCount; i++) {
+            auto b = m_scene->mMeshes[index]->mBones[i];
+            for (int j = 0; j < b->mNumWeights; j++) {
+                std::cout << i << "|" << j << "|" <<  b->mWeights[j].mVertexId << "|" << b->mWeights[j].mWeight <<std::endl;
+            }
+        }
     }
     if (amesh->HasFaces()){
         
@@ -197,24 +203,24 @@ Materal Scene::phone(int index,int textureIdex){
 
 
 void  Scene::readVertexBone(Mesh& mesh,aiBone **bone,aiNode* node,int count,int boneCout){
-    std::vector<float> vector;
+    std::vector<std::vector<float>> vector;
     std::vector<std::vector<int32_t>> map;
-    vector.resize(count, 0);
+    vector.resize(count);
     map.resize(count);
     for (int i = 0; i < boneCout; i ++) {
         for (int j = 0; j < bone[i]->mNumWeights; j++) {
             auto idex = bone[i]->mWeights[j].mVertexId;
-            vector[idex] = bone[i]->mWeights[j].mWeight;
+            vector[idex].push_back(bone[i]->mWeights[j].mWeight);
             map[idex].push_back(i);
         }
     }
     VertexBoneBuffer* m = new VertexBoneBuffer[count + 1];
     m->count = count;
     for (int i = 1; i <= count; i++) {
-        memcpy(m[i].content.boundID, map[i - 1].data(), sizeof(int32_t) * fmin(map[i - 1].size(),vertex_boneId_buffer_size));
+        memcpy(m[i].content.boneId, map[i - 1].data(), sizeof(int32_t) * fmin(map[i - 1].size(),vertex_boneId_buffer_size));
+        
+        memcpy(m[i].content.weight, map[i - 1].data(), sizeof(float) * fmin(map[i - 1].size(),vertex_boneId_buffer_size));
     }
-    
-    mesh.buffer(sizeof(float) * count, vector.data(), Mesh::Weight);
     mesh.buffer(sizeof(VertexBoneBuffer) * (count + 1), m, Mesh::BoneMap);
     delete [] m;
 }

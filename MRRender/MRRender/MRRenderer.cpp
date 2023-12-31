@@ -5,25 +5,41 @@
 //  Created by wenyang on 2023/12/17.
 //
 
+#define NS_PRIVATE_IMPLEMENTATION
+#define CA_PRIVATE_IMPLEMENTATION
+#define MTL_PRIVATE_IMPLEMENTATION
+
 #include "MRRenderer.hpp"
 
 #include <simd/simd.h>
+#include "MRAsset.h"
 
 using namespace MR;
 
 static const int max_vertex_attribute = 8;
 
-Renderer::Renderer(){}
+Renderer::Renderer(){
+    m_textureloader = createTextureLoader(m_device);
+}
 
 Renderer::~Renderer(){
     if(this->ref_count() == 1 && m_device != nullptr){
         m_device->release();
     }
+    if(this->ref_count() == 1 && m_textureloader != nullptr){
+        freeObject(m_textureloader);
+    }
+}
+const void * Renderer::textureLoader(){
+    return m_textureloader;
 }
 
 Renderer* Renderer::s_shared = new Renderer();
 MTL::Device& Renderer::device(){
     return *m_device;
+}
+MTL::Device* Renderer::devicePtr(){
+    return m_device;
 }
 Renderer& Renderer::shared(){
     return *s_shared;
@@ -42,6 +58,12 @@ void Buffer::assign(const void * data,size_t offset,size_t size) const{
     uint8_t * start = reinterpret_cast<uint8_t *>(m_buffer->contents());
     memcpy(start + offset, data, size);
 }
+void Buffer::store(MTL::Buffer *m_buffer){
+    if (m_buffer != nullptr){
+        m_buffer->release();
+    }
+    this->m_buffer = m_buffer;
+}
 void Buffer::store(size_t size,const void * data){
     if (m_buffer != nullptr){
         m_buffer->release();
@@ -53,7 +75,9 @@ MTL::Buffer * Buffer::origin() const{
     return m_buffer;
 }
 
-
+Texture::Texture(std::string name,Renderer& render){
+    m_texture = (MTL::Texture *)loadTexture(name.c_str(), render.textureLoader());
+}
 Texture::Texture(MTL::TextureDescriptor* desciptor, Renderer& render){
     m_texture = render.m_device->newTexture(desciptor);
 }
@@ -172,10 +196,13 @@ Queue::~Queue(){
     }
 }
 void Queue::beginBuffer(BufferCallBack callback){
+    auto au = NS::AutoreleasePool::alloc()->init();
     auto buff = m_queue->commandBuffer();
     callback(buff);
     buff->commit();
     buff->waitUntilCompleted();
+    au->release();
+    
 }
 void Queue::beginCompute(ComputeCallBack callback){
     beginBuffer([callback](MTL::CommandBuffer* buffer){
@@ -228,8 +255,10 @@ void RenderPass::beginRender(MTL::CommandBuffer* buffer,MTL::Texture* texture,Re
     m_render_pass_descriptor->stencilAttachment()->setLoadAction(MTL::LoadActionClear);
     m_render_pass_descriptor->stencilAttachment()->setStoreAction(MTL::StoreActionStore);
     auto encoder = buffer->renderCommandEncoder(this->m_render_pass_descriptor);
+    encoder->retain();
     call(encoder);
     encoder->endEncoding();
+    encoder->release();
 }
 void RenderPass::beginNoDepthRender(MTL::CommandBuffer* buffer,MTL::Texture* texture,RenderCallback call){
     checkInnerTexture(texture);
@@ -240,8 +269,10 @@ void RenderPass::beginNoDepthRender(MTL::CommandBuffer* buffer,MTL::Texture* tex
     m_render_pass_descriptor->depthAttachment()->setTexture(nullptr);
     m_render_pass_descriptor->stencilAttachment()->setTexture(nullptr);
     auto encoder = buffer->renderCommandEncoder(this->m_render_pass_descriptor);
+    encoder->retain();
     call(encoder);
     encoder->endEncoding();
+    encoder->release();
 }
 
 void RenderPass::beginNoDepthRender(MTL::CommandBuffer* buffer,CA::MetalDrawable * drawable,RenderCallback call){
@@ -263,8 +294,10 @@ void RenderPass::beginDepth(MTL::CommandBuffer* buffer,MTL::Texture* texture,Ren
     m_render_pass_descriptor->depthAttachment()->setStoreAction(MTL::StoreActionStore);
     m_render_pass_descriptor->stencilAttachment()->setTexture(nullptr);
     auto encoder = buffer->renderCommandEncoder(this->m_render_pass_descriptor);
+    encoder->retain();
     call(encoder);
     encoder->endEncoding();
+    encoder->release();
 }
 RenderPass::RenderPass(){
     m_render_pass_descriptor = MTL::RenderPassDescriptor::alloc()->init();
@@ -341,7 +374,7 @@ size_t& Mesh::vertexCount(){
 MTL::IndexType& Mesh::indexType(){
     return m_indexType;
 }
-bool Mesh::hasBuffer(VertexComponent vertexComponent){
+bool Mesh::hasBuffer(VertexComponent vertexComponent) const{
     switch (vertexComponent) {
             
         case Position:
@@ -356,8 +389,6 @@ bool Mesh::hasBuffer(VertexComponent vertexComponent){
             return m_bitangents.origin()->length() > 0;
         case Color:
             return m_color.origin()->length() > 0;
-        case Weight:
-            return m_weight.origin()->length() > 0;
         case Index:
             return m_index.origin()->length() > 0;
         case BoneMap:
@@ -366,7 +397,7 @@ bool Mesh::hasBuffer(VertexComponent vertexComponent){
             return m_bone.origin()->length() > 0;
     }
 }
-Buffer& Mesh::operator[](VertexComponent vertexComponent){
+const Buffer& Mesh::operator[](VertexComponent vertexComponent) const{
     switch (vertexComponent) {
             
         case Position:
@@ -381,8 +412,6 @@ Buffer& Mesh::operator[](VertexComponent vertexComponent){
             return m_bitangents;
         case Color:
             return m_color;
-        case Weight:
-            return m_weight;
         case Index:
             return m_index;
         case BoneMap:
@@ -394,7 +423,38 @@ Buffer& Mesh::operator[](VertexComponent vertexComponent){
 MTL::PrimitiveType& Mesh::primitiveMode(){
     return m_pm;
 }
-
+void Mesh::buffer(MR::Buffer buffer,Mesh::VertexComponent vertexComponent){
+    switch (vertexComponent) {
+        
+        case Position:
+            m_postion = buffer;
+            break;
+        case TextureCoords:
+            m_textureCoords = buffer;
+            break;
+        case Normal:
+            m_normal = buffer;;
+            break;
+        case Tangent:
+            m_tangents = buffer;
+            break;
+        case Bitangent:
+            m_bitangents = buffer;
+            break;
+        case Color:
+            m_color = buffer;
+            break;
+        case Index:
+            m_index = buffer;
+            break;
+        case BoneMap:
+            m_bone_map = buffer;
+            break;
+        case Bone:
+            m_bone = buffer;
+            break;
+    }
+}
 void Mesh::buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexComponent){
     switch (vertexComponent) {
         
@@ -416,9 +476,6 @@ void Mesh::buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexCom
         case Color:
             m_color.store(size, buffer);
             break;
-        case Weight:
-            m_weight.store(size, buffer);
-            break;
         case Index:
             m_index.store(size, buffer);
             break;
@@ -430,13 +487,15 @@ void Mesh::buffer(size_t size,const void *buffer,Mesh::VertexComponent vertexCom
             break;
     }
 }
-MTL::VertexDescriptor* Mesh::vertexDescriptor(){
+void Mesh::buildVertexDescriptor(){
     for (int i = 0; i < max_vertex_attribute; i++) {
         layoutVertexDescriptor((Mesh::VertexComponent)i);
     }
+}
+MTL::VertexDescriptor* Mesh::vertexDescriptor() const{
     return m_vertexDescriptor;
 }
-void Mesh::draw(MTL::RenderCommandEncoder* encoder){
+void Mesh::draw(MTL::RenderCommandEncoder* encoder) const{
 
     for (int i = 0; i < max_vertex_attribute; i++) {
         Mesh::VertexComponent idex = (Mesh::VertexComponent)i;
@@ -502,14 +561,6 @@ void Mesh::layoutVertexDescriptor(Mesh::VertexComponent vertexComponent){
             m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
             m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
             m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float) * 3);
-            m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
-            m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
-            break;
-        case Weight:
-            m_vertexDescriptor->attributes()->object(vertexComponent)->setFormat(MTL::VertexFormat::VertexFormatFloat);
-            m_vertexDescriptor->attributes()->object(vertexComponent)->setOffset(0);
-            m_vertexDescriptor->attributes()->object(vertexComponent)->setBufferIndex(index);
-            m_vertexDescriptor->layouts()->object(index)->setStride(sizeof(float));
             m_vertexDescriptor->layouts()->object(index)->setStepRate(1);
             m_vertexDescriptor->layouts()->object(index)->setStepFunction(MTL::VertexStepFunctionPerVertex);
             break;

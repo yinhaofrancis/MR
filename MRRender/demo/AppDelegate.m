@@ -6,6 +6,7 @@
 //
 
 #import "AppDelegate.h"
+#import <objc/runtime.h>
 
 @interface AppDelegate ()
 
@@ -16,7 +17,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+
+    NSAssert( class_respondsToSelector(objc_getClass("CaptureMTLTexture"), @selector(touch)), @"okokok");
     return YES;
+   
 }
 
 

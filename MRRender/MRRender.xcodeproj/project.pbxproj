@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A92C62A52B409E6400EBE447 /* MRAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = A92C62A32B409E6400EBE447 /* MRAsset.h */; };
+		A92C62A62B409E6400EBE447 /* MRAsset.mm in Sources */ = {isa = PBXBuildFile; fileRef = A92C62A42B409E6400EBE447 /* MRAsset.mm */; };
+		A92C62A82B40A9E100EBE447 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92C62A72B40A9E000EBE447 /* MetalKit.framework */; };
+		A92C62AA2B40A9E800EBE447 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92C62A92B40A9E800EBE447 /* ModelIO.framework */; };
 		A94CA9A32B2EFC430059571E /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A12B2EFC430059571E /* MetalKit.framework */; };
 		A94CA9A42B2EFC430059571E /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A22B2EFC430059571E /* Metal.framework */; };
 		A94CA9A62B2EFC5B0059571E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A94CA9A52B2EFC5B0059571E /* CoreGraphics.framework */; };
@@ -106,6 +110,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A92C62A32B409E6400EBE447 /* MRAsset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRAsset.h; sourceTree = "<group>"; };
+		A92C62A42B409E6400EBE447 /* MRAsset.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MRAsset.mm; sourceTree = "<group>"; };
+		A92C62A72B40A9E000EBE447 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		A92C62A92B40A9E800EBE447 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
 		A94CA9A12B2EFC430059571E /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/iOSSupport/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
 		A94CA9A22B2EFC430059571E /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		A94CA9A52B2EFC5B0059571E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -183,6 +191,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A92C62AA2B40A9E800EBE447 /* ModelIO.framework in Frameworks */,
+				A92C62A82B40A9E100EBE447 /* MetalKit.framework in Frameworks */,
 				A94CA9C92B35F0D80059571E /* libz.tbd in Frameworks */,
 				A94CA9ED2B373E9D0059571E /* MRRender.framework in Frameworks */,
 				A94CA9FD2B373EBA0059571E /* MR.framework in Frameworks */,
@@ -199,6 +209,8 @@
 		A94CA99F2B2EF5EE0059571E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A92C62A92B40A9E800EBE447 /* ModelIO.framework */,
+				A92C62A72B40A9E000EBE447 /* MetalKit.framework */,
 				A94CA9C82B35F0D80059571E /* libz.tbd */,
 				A94CA9C42B35F09F0059571E /* libassimp.a */,
 				A94CA9C52B35F09F0059571E /* libstb_image.a */,
@@ -261,6 +273,8 @@
 				A95988F22B3C21E000DB261C /* MRThread.mm */,
 				A9966B472B3C23E00075BEA1 /* MRThread.h */,
 				A9966B482B3C27590075BEA1 /* MRVsync.h */,
+				A92C62A32B409E6400EBE447 /* MRAsset.h */,
+				A92C62A42B409E6400EBE447 /* MRAsset.mm */,
 			);
 			path = MRRender;
 			sourceTree = "<group>";
@@ -320,6 +334,7 @@
 				A94CA9B22B2F50E60059571E /* Export.h in Headers */,
 				A977C75E2B2EF1ED000C2238 /* MRObject.hpp in Headers */,
 				A977C75F2B2EF1ED000C2238 /* Util.h in Headers */,
+				A92C62A52B409E6400EBE447 /* MRAsset.h in Headers */,
 				A977C7602B2EF1ED000C2238 /* MRRenderer.hpp in Headers */,
 				A94CA9BC2B2F6B950059571E /* MRPrensentation.hpp in Headers */,
 				A94CA9C12B2FB71A0059571E /* MRModel.hpp in Headers */,
@@ -481,6 +496,7 @@
 			files = (
 				A977C75D2B2EF1ED000C2238 /* MRRenderer.cpp in Sources */,
 				A94CA9C02B2FB71A0059571E /* MRModel.cpp in Sources */,
+				A92C62A62B409E6400EBE447 /* MRAsset.mm in Sources */,
 				A94CA9B32B2F50E60059571E /* Export.cpp in Sources */,
 				A977C75C2B2EF1ED000C2238 /* MRObject.cpp in Sources */,
 				A95988F32B3C21E000DB261C /* MRThread.mm in Sources */,
@@ -612,6 +628,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC_EXCEPTIONS = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -677,6 +694,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC_EXCEPTIONS = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -738,7 +756,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_MetalCaptureEnabled = YES;
+				INFOPLIST_KEY_MetalCaptureEnabled = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -772,7 +790,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_MetalCaptureEnabled = YES;
+				INFOPLIST_KEY_MetalCaptureEnabled = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -803,7 +821,7 @@
 				DEVELOPMENT_TEAM = 27ZYBRBPV8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = demo/Info.plist;
-				INFOPLIST_KEY_MetalCaptureEnabled = YES;
+				INFOPLIST_KEY_MetalCaptureEnabled = NO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -836,7 +854,7 @@
 				DEVELOPMENT_TEAM = 27ZYBRBPV8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = demo/Info.plist;
-				INFOPLIST_KEY_MetalCaptureEnabled = YES;
+				INFOPLIST_KEY_MetalCaptureEnabled = NO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
