@@ -125,12 +125,12 @@ MR::Mesh Scene::mesh(int index){
         auto bonebuf = bone(index);
         m.buffer((boneCount + 1) * sizeof(BoneBuffer) , bonebuf, Mesh::Bone);
         delete [] bonebuf;
-        for (int i = 0; i < boneCount; i++) {
-            auto b = m_scene->mMeshes[index]->mBones[i];
-            for (int j = 0; j < b->mNumWeights; j++) {
-                std::cout << i << "|" << j << "|" <<  b->mWeights[j].mVertexId << "|" << b->mWeights[j].mWeight <<std::endl;
-            }
-        }
+//        for (int i = 0; i < boneCount; i++) {
+//            auto b = m_scene->mMeshes[index]->mBones[i];
+//            for (int j = 0; j < b->mNumWeights; j++) {
+//                std::cout << i << "|" << j << "|" <<  b->mWeights[j].mVertexId << "|" << b->mWeights[j].mWeight <<std::endl;
+//            }
+//        }
     }
     if (amesh->HasFaces()){
         

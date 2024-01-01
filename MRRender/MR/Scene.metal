@@ -72,6 +72,8 @@ struct Material{
     
     texture2d<half> emssion  [[texture(phong_emssion_index)]];
     
+    texture2d<half> shadow  [[texture(shadow_map_index)]];
+    
     sampler sample [[sampler(sampler_default)]];
     
     half4 diffuseColor(float2 textureCoords){
@@ -235,6 +237,35 @@ half4 fragmentSceneSpecular(VertexOutScene inData,
     return specularColor * specularLightColor;
 }
 
+float calcShadow(VertexOutScene vertexData,Material material,simd_float4x4 lightProjection,float3 lightDir,float3 normal,float maxbias){
+    float4 lightSpace = lightProjection * float4(vertexData.frag_postion,1);
+    float3 lightpos = (lightSpace.xyz / lightSpace.w);
+    float2 uv = (lightpos.xy * float2(1,-1) * 0.5 + 0.5);
+    
+    if (uv.x > 1 || uv.y > 1 || uv.x < 0 || uv.y < 0){
+        return 0;
+    }
+    float currentdepth = lightpos.z;
+    if(currentdepth > 1){
+        return 0;
+    }
+    float2 texturesize = 1 / float2(material.shadow.get_width(),material.shadow.get_height());
+    float delta = 0;
+    for(int x = -2;x <= 2;x++){
+        for(int y = -2;y <= 2;y++){
+            float2 offsetUV = uv + float2(x,y) * texturesize;
+            if (offsetUV.x > 1 || offsetUV.y > 1 || offsetUV.x < 0 || offsetUV.y < 0){
+                return 0;
+            }
+            float mapdepth = material.shadow.sample(material.sample, offsetUV).r;
+            
+            float bias = max(maxbias * (1.0 - dot(normal, lightDir)), 0.0);
+            delta += currentdepth - bias - mapdepth > 0 ? 1.0 : 0;
+        }
+    }
+    return delta / 25;
+}
+
 fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]],Scene scene,Material material){
     simd_float3x3 tbn = createTbn(inData);
     half4 ambient = fragmentSceneAmbient(scene);
@@ -266,6 +297,7 @@ vertex VertexOutScene vertexBoneSceneRender(VertexInScene inData[[stage_in]],
                                             unsigned int vertexId [[vertex_id]],
                                             BoneAnimation boneAnimation,
                                             Scene scene){
+
     return VertexOutScene{
         .position = scene.camera->projectionMatrix * scene.camera->viewMatrix * scene.model->modelMatrix * float4(inData.position,1),
         .frag_postion =  (scene.model->modelMatrix * float4(inData.position,1)).xyz,

@@ -59,7 +59,7 @@ private:
                    Renderer &render,MTL::VertexDescriptor *vertexDescriptor);
 private:
     MR::Mesh mesh;
-    MR::Sampler m_sampler = MR::Sampler::nearest();
+    MR::Sampler m_sampler = MR::Sampler::linear();
     MTL::RenderPipelineState *m_state = nullptr;
 };
 
