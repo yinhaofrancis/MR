@@ -141,8 +141,10 @@ typedef ContentBuffer<Light> LightBuffer;
 
 
 struct Bone{
-    simd_float4x4 offsetMatrix;
     simd_float4x4 matrix;
+    simd_float4x4 normalMatrix;
+    int boneId;
+    int parentId;
 };
 
 struct VertexBone{

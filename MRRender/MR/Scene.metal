@@ -297,14 +297,24 @@ vertex VertexOutScene vertexBoneSceneRender(VertexInScene inData[[stage_in]],
                                             unsigned int vertexId [[vertex_id]],
                                             BoneAnimation boneAnimation,
                                             Scene scene){
-
+    float4 posi = float4(inData.position,1);
+    simd_float4x4 local(0),normal(0);
+    for (int i = 0; i < vertex_boneId_buffer_size; i++){
+        int bid = boneAnimation.boneMap[vertexId + 1].content.boneId[i];
+        float weight = boneAnimation.boneMap[vertexId + 1].content.weight[i];
+        
+        if(bid > 0){
+            local += boneAnimation.bone[bid].content.matrix * weight;
+            normal += boneAnimation.bone[bid].content.normalMatrix * weight;
+        }
+    }
     return VertexOutScene{
-        .position = scene.camera->projectionMatrix * scene.camera->viewMatrix * scene.model->modelMatrix * float4(inData.position,1),
-        .frag_postion =  (scene.model->modelMatrix * float4(inData.position,1)).xyz,
+        .position = scene.camera->projectionMatrix * scene.camera->viewMatrix * scene.model->modelMatrix * local * posi,
+        .frag_postion =  (scene.model->modelMatrix * local * float4(inData.position,1)).xyz,
         .textureCoords = inData.textureCoords,
-        .normal = normalize((scene.model->normalMatrix * float4(inData.normal,1)).xyz),
-        .tangent = normalize((scene.model->normalMatrix * float4(inData.tangent,1)).xyz),
-        .bitangent = normalize((scene.model->normalMatrix * float4(inData.bitangent,1)).xyz),
+        .normal = normalize((scene.model->normalMatrix * normal * float4(inData.normal,1)).xyz),
+        .tangent = normalize((scene.model->normalMatrix * normal * float4(inData.tangent,1)).xyz),
+        .bitangent = normalize((scene.model->normalMatrix * normal * float4(inData.bitangent,1)).xyz),
         .color = float4(1,1,0,1)
     };
 }

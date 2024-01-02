@@ -273,7 +273,9 @@ private:
     std::vector<LightBuffer> lights;
 };
 
-
+void glmTosimd(glm::mat4& mat,simd_float4x4& simd);
+void glmTosimd(glm::vec4& mat,simd_float4& simd);
+void glmTosimd(glm::vec3& mat,simd_float3& simd);
 };
 
 

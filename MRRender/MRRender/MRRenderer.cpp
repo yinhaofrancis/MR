@@ -612,3 +612,18 @@ void SceneObject::load(MTL::RenderCommandEncoder *encoder) const{
     delete [] buffer;
     
 }
+
+
+void MR::glmTosimd(glm::mat4& mat,simd_float4x4& simd){
+    memcpy(&simd, glm::value_ptr(mat), sizeof(simd));
+
+}
+void MR::glmTosimd(glm::vec4& mat,simd_float4& simd){
+    memcpy(&simd, glm::value_ptr(mat), sizeof(simd));
+
+}
+
+void MR::glmTosimd(glm::vec3& mat,simd_float3& simd){
+    memcpy(&simd, glm::value_ptr(mat), sizeof(simd));
+
+}

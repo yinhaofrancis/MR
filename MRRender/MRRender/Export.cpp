@@ -41,18 +41,17 @@ void beginMesh(const char * url){
     MR::Scene sc(s);
     m = sc.phone(0, 0);
     mesh = sc.mesh(0);
+    auto bone = sc.bone(0);
     mesh.buildVertexDescriptor();
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     
     state = new MR::RenderScene(vt);
     skybox = new MR::RenderSkyboxScene();
-//    sky = m.m_diffuse.origin();
+    auto a = sc.animator(0);
+    a.transform(0, bone);
+    mesh.buffer(sizeof(BoneBuffer) * (bone->count + 1), bone, MR::Mesh::Bone);
     
-
-//    sky->retain();
     
-//    sphereSkybox(100, &MR::Renderer::shared().device());
-   
 }
 static float v = 0;
 
