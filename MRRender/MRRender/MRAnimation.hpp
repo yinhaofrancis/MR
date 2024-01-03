@@ -56,6 +56,7 @@ private:
     std::map<std::string,Bone*> map_bone;
     Bone* rootBone = nullptr;
     std::map<int,AnimationGroup> animationGroups;
+    double duration = 0;
 };
 
 

@@ -45,6 +45,14 @@ MR::Bone * readMap(aiBone ** bone,int count,aiNode * root,MR::Bone * parent,std:
     
 }
 
+aiQuaternion simdTosimd(simd_float4 f){
+    aiQuaternion m;
+    m.x = f.x;
+    m.y = f.y;
+    m.z = f.z;
+    m.w = f.w;
+    return m;
+}
 
 simd_float4x4 MR::AnimationGroup::transform(double time){
     double last = 0;
@@ -52,12 +60,10 @@ simd_float4x4 MR::AnimationGroup::transform(double time){
     simd_float4x4 m = (simd_float4x4) {(simd_float4){1,0,0,0}, {0,1,0,0}, {0,0,1,0} , {0,0,0,1}};
     for(auto i = keyRotateAnimations.begin(); i < keyRotateAnimations.end();i++){
         if(i->time > time){
-            simd_float4 t = lastIter->transform + time / (i->time - last) * (i->transform - lastIter->transform);
+            aiQuaternion start = simdTosimd(lastIter->transform) ,end = simdTosimd(i->transform);
+            float factor = (time - last) / (i->time - last);
             aiQuaternion qua;
-            qua.x = t.x;
-            qua.y = t.y;
-            qua.z = t.z;
-            qua.w = t.w;
+            aiQuaternion::Interpolate(qua, start, end, factor);
             simd_float4x4 temp;
             aiMatrix4x4 tm(qua.GetMatrix().Transpose());
             memcpy(&temp, &tm, sizeof(temp));
@@ -83,7 +89,7 @@ simd_float4x4 MR::AnimationGroup::transform(double time){
     lastIter = keyScaleAnimations.begin();
     for(auto i = keyScaleAnimations.begin(); i < keyScaleAnimations.end();i++){
         if(i->time > time){
-            simd_float4 t = lastIter->transform + time / (i->time - last) * (i->transform - lastIter->transform);
+            simd_float4 t = lastIter->transform + (time - last) / (i->time - last) * (i->transform - lastIter->transform);
             auto mat = glm::scale(glm::mat4(1),glm::vec3(t.x,t.y,t.z));
             simd_float4x4 temp;
             MR::glmTosimd(mat, temp);
@@ -104,7 +110,7 @@ simd_float4x4 MR::AnimationGroup::transform(double time){
     lastIter = keyPositionAnimations.begin();
     for(auto i = keyPositionAnimations.begin(); i < keyPositionAnimations.end();i++){
         if(i->time > time){
-            simd_float4 t = lastIter->transform + time / (i->time - last) * (i->transform - lastIter->transform);
+            simd_float4 t = lastIter->transform + (time  - last) / (i->time - last) * (i->transform - lastIter->transform);
             auto mat = glm::translate(glm::mat4(1),glm::vec3(t.x,t.y,t.z));
             simd_float4x4 temp;
             MR::glmTosimd(mat, temp);
@@ -174,6 +180,7 @@ MR::Animator::Animator(aiBone ** bone,int count,aiNode * root){
 }
 void MR::Animator::loadAnimation(aiAnimation * animation){
     animationGroups.clear();
+    duration = animation->mDuration;
     std::map<std::string,AnimationGroup> map_group;
     MR::AnimationGroup::read(animation,map_group);
     for (auto a = idex_map_bone.begin(); a != idex_map_bone.end(); a++) {
@@ -196,7 +203,7 @@ void readAnimation(MR::Bone *bone,
     }
     auto matrx = in[bone->boneId];
     simd_float4x4 current = simd_mul(parent, matrx);
-    out[bone->boneId] =  simd_mul(globel_inverse,simd_mul(current,bone->m_offset));
+    out[bone->boneId] =  simd_mul(current,bone->m_offset);
     for (auto a = bone->children.begin(); a != bone->children.end(); a++) {
         readAnimation(*a, current,globel_inverse, in,out);
     }
@@ -205,6 +212,7 @@ void readAnimation(MR::Bone *bone,
 void MR::Animator::update(double time,BoneBuffer* bone){
     std::map<int,simd_float4x4> out;
     std::map<int,simd_float4x4> in;
+    time = fmod(time, duration);
     for (auto i = animationGroups.begin(); i != animationGroups.end(); i++) {
         in[i->first] = i->second.transform(time);
     }

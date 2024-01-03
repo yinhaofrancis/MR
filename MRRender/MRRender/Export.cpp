@@ -39,13 +39,15 @@ static MR::Scene *sc;
 
 static MR::Animator *a;
 
+static BoneBuffer* bone;
+
 void beginMesh(const char * url){
 
     std::string s = url;
     sc = new MR::Scene(s);
     m = sc->phone(0, 0);
     mesh = sc->mesh(0);
-    auto bone = sc->bone(0);
+    bone = sc->bone(0);
     mesh.buildVertexDescriptor();
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     
@@ -70,11 +72,11 @@ static void rederCall(CA::MetalDrawable *current) {
     if(current->texture()->height() > 0 && current->texture()->width() > 0){
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
-    auto bone = sc->bone(0);
-    a->update(0, bone);
+    a->update(v*1000, bone);
+
     mesh.buffer(sizeof(BoneBuffer) * (bone->count + 1), bone, MR::Mesh::Bone);
-    float x = 300 * sin(v);
-    float z = 300 * cos(v);
+    float x = 300;
+    float z = 300;
     MR::lookAt(cam, glm::vec3(x,150,z), glm::vec3(0,100,0), glm::vec3(0,1,0));
 //    MR::lookAt(cam, glm::vec3(5,4,5), glm::vec3(0,3,0), glm::vec3(0,1,0));
     MR::perspective(cam, 45.0f, asp, 1.0f, 1500.f);
