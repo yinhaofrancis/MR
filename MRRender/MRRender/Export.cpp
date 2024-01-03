@@ -35,20 +35,29 @@ static MR::Program pro = MR::Program::shared();
 
 static MR::Texture sky = MR::Materal::defaultSkyboxMateral();
 
+static MR::Scene *sc;
+
+static MR::Animator *a;
+
 void beginMesh(const char * url){
 
     std::string s = url;
-    MR::Scene sc(s);
-    m = sc.phone(0, 0);
-    mesh = sc.mesh(0);
-    auto bone = sc.bone(0);
+    sc = new MR::Scene(s);
+    m = sc->phone(0, 0);
+    mesh = sc->mesh(0);
+    auto bone = sc->bone(0);
     mesh.buildVertexDescriptor();
     MTL::VertexDescriptor* vt = mesh.vertexDescriptor();
     
     state = new MR::RenderScene(vt);
     skybox = new MR::RenderSkyboxScene();
-    auto a = sc.animator(0);
-    a.transform(0, bone);
+    a = new MR::Animator(sc->animator(0));
+    auto an = sc->animation(0);
+    a->loadAnimation(an);
+
+    a->update(0, bone);
+    
+//    a.transform(0, bone);
     mesh.buffer(sizeof(BoneBuffer) * (bone->count + 1), bone, MR::Mesh::Bone);
     
     
@@ -61,6 +70,9 @@ static void rederCall(CA::MetalDrawable *current) {
     if(current->texture()->height() > 0 && current->texture()->width() > 0){
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
+    auto bone = sc->bone(0);
+    a->update(0, bone);
+    mesh.buffer(sizeof(BoneBuffer) * (bone->count + 1), bone, MR::Mesh::Bone);
     float x = 300 * sin(v);
     float z = 300 * cos(v);
     MR::lookAt(cam, glm::vec3(x,150,z), glm::vec3(0,100,0), glm::vec3(0,1,0));

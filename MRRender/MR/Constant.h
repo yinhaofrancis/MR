@@ -140,20 +140,20 @@ typedef ContentBuffer<Light> LightBuffer;
 
 
 
-struct Bone{
+struct BoneInfo{
     simd_float4x4 matrix;
     simd_float4x4 normalMatrix;
-    int boneId;
-    int parentId;
+//    int boneId;
+//    int parentId;
 };
 
-struct VertexBone{
+struct VertexBoneInfo{
     int boneId[vertex_boneId_buffer_size];
     float weight[vertex_boneId_buffer_size];
 };
 
-typedef ContentBuffer<VertexBone> VertexBoneBuffer;
+typedef ContentBuffer<VertexBoneInfo> VertexBoneBuffer;
 
-typedef ContentBuffer<Bone> BoneBuffer;
+typedef ContentBuffer<BoneInfo> BoneBuffer;
 
 #endif /* Constant_h */

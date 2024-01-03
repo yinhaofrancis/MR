@@ -47,6 +47,8 @@
 		A977C7802B2EF253000C2238 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A977C77F2B2EF253000C2238 /* Assets.xcassets */; };
 		A977C7832B2EF253000C2238 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A977C7812B2EF253000C2238 /* LaunchScreen.storyboard */; };
 		A977C7862B2EF253000C2238 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A977C7852B2EF253000C2238 /* main.m */; };
+		A990BC3E2B445745000A901B /* MRAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A990BC3C2B445745000A901B /* MRAnimation.cpp */; };
+		A990BC3F2B445745000A901B /* MRAnimation.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A990BC3D2B445745000A901B /* MRAnimation.hpp */; };
 		A99E82FC2B3DD477001962DA /* cyborg.obj in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F22B3DD477001962DA /* cyborg.obj */; };
 		A99E82FD2B3DD477001962DA /* Vampire_emission.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F32B3DD477001962DA /* Vampire_emission.png */; };
 		A99E82FE2B3DD477001962DA /* Vampire_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82F42B3DD477001962DA /* Vampire_diffuse.png */; };
@@ -152,6 +154,8 @@
 		A977C7822B2EF253000C2238 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A977C7842B2EF253000C2238 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A977C7852B2EF253000C2238 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A990BC3C2B445745000A901B /* MRAnimation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MRAnimation.cpp; sourceTree = "<group>"; };
+		A990BC3D2B445745000A901B /* MRAnimation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MRAnimation.hpp; sourceTree = "<group>"; };
 		A9966B472B3C23E00075BEA1 /* MRThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRThread.h; sourceTree = "<group>"; };
 		A9966B482B3C27590075BEA1 /* MRVsync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MRVsync.h; sourceTree = "<group>"; };
 		A99E82F22B3DD477001962DA /* cyborg.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.obj; sourceTree = "<group>"; };
@@ -270,6 +274,8 @@
 				A94CA9BA2B2F6B950059571E /* MRPrensentation.hpp */,
 				A94CA9BE2B2FB71A0059571E /* MRModel.cpp */,
 				A94CA9BF2B2FB71A0059571E /* MRModel.hpp */,
+				A990BC3C2B445745000A901B /* MRAnimation.cpp */,
+				A990BC3D2B445745000A901B /* MRAnimation.hpp */,
 				A95988F22B3C21E000DB261C /* MRThread.mm */,
 				A9966B472B3C23E00075BEA1 /* MRThread.h */,
 				A9966B482B3C27590075BEA1 /* MRVsync.h */,
@@ -335,6 +341,7 @@
 				A977C75E2B2EF1ED000C2238 /* MRObject.hpp in Headers */,
 				A977C75F2B2EF1ED000C2238 /* Util.h in Headers */,
 				A92C62A52B409E6400EBE447 /* MRAsset.h in Headers */,
+				A990BC3F2B445745000A901B /* MRAnimation.hpp in Headers */,
 				A977C7602B2EF1ED000C2238 /* MRRenderer.hpp in Headers */,
 				A94CA9BC2B2F6B950059571E /* MRPrensentation.hpp in Headers */,
 				A94CA9C12B2FB71A0059571E /* MRModel.hpp in Headers */,
@@ -501,6 +508,7 @@
 				A977C75C2B2EF1ED000C2238 /* MRObject.cpp in Sources */,
 				A95988F32B3C21E000DB261C /* MRThread.mm in Sources */,
 				A94CA9BB2B2F6B950059571E /* MRPrensentation.cpp in Sources */,
+				A990BC3E2B445745000A901B /* MRAnimation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
