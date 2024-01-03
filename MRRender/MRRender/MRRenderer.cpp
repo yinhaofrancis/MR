@@ -19,7 +19,7 @@ using namespace MR;
 static const int max_vertex_attribute = 8;
 
 Renderer::Renderer(){
-    m_textureloader = createTextureLoader(m_device);
+//    m_textureloader = createTextureLoader(m_device);
 }
 
 Renderer::~Renderer(){

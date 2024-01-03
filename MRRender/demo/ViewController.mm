@@ -20,7 +20,7 @@
     self.mView.mtLayer.contentsScale = 3;
     _displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(run)];
     [_displaylink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    beginMesh([NSBundle.mainBundle URLForResource:@"dancing_vampire" withExtension:@"dae"].path.UTF8String);
+    beginMesh([NSBundle.mainBundle URLForResource:@"Mutant Right Turn 45" withExtension:@"dae"].path.UTF8String);
     
     
 //

@@ -189,6 +189,9 @@ Materal Scene::phone(int index,int textureIdex){
     if(hasTexture(aiTextureType_NORMALS,p_material, textureIdex)){
         m.m_normal = loadTexture(aiTextureType_NORMALS, p_material, textureIdex);
     }
+    if(hasTexture(aiTextureType_EMISSIVE,p_material, textureIdex)){
+        m.m_emission = loadTexture(aiTextureType_EMISSIVE, p_material, textureIdex);
+    }
     if(hasTexture(aiTextureType_HEIGHT, p_material, textureIdex)){
         m.m_normal = loadTexture(aiTextureType_HEIGHT, p_material, textureIdex);
     }

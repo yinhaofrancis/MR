@@ -60,6 +60,11 @@
 		A99E83042B3DD477001962DA /* cyborg_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = A99E82FA2B3DD477001962DA /* cyborg_specular.png */; };
 		A99E83052B3DD477001962DA /* cyborg.mtl in Resources */ = {isa = PBXBuildFile; fileRef = A99E82FB2B3DD477001962DA /* cyborg.mtl */; };
 		A9B36CD22B38A53600B922A2 /* Scene.metal in Sources */ = {isa = PBXBuildFile; fileRef = A9B36CD12B38A53600B922A2 /* Scene.metal */; };
+		A9D2FE792B45A2530099BB24 /* Zombie_Walk.dae in Resources */ = {isa = PBXBuildFile; fileRef = A9D2FE782B45A2530099BB24 /* Zombie_Walk.dae */; settings = {ATTRIBUTES = ("--decompress", ); }; };
+		A9D2FE7B2B45A38D0099BB24 /* Thriller Part 3.dae in Resources */ = {isa = PBXBuildFile; fileRef = A9D2FE7A2B45A38D0099BB24 /* Thriller Part 3.dae */; settings = {ATTRIBUTES = ("--decompress", ); }; };
+		A9D2FE7F2B45C35F0099BB24 /* Mutant_diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = A9D2FE7C2B45C35F0099BB24 /* Mutant_diffuse.png */; };
+		A9D2FE802B45C35F0099BB24 /* Mutant_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = A9D2FE7D2B45C35F0099BB24 /* Mutant_normal.png */; };
+		A9D2FE812B45C35F0099BB24 /* Mutant Right Turn 45.dae in Resources */ = {isa = PBXBuildFile; fileRef = A9D2FE7E2B45C35F0099BB24 /* Mutant Right Turn 45.dae */; settings = {ATTRIBUTES = ("--decompress", ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,6 +174,11 @@
 		A99E82FA2B3DD477001962DA /* cyborg_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyborg_specular.png; sourceTree = "<group>"; };
 		A99E82FB2B3DD477001962DA /* cyborg.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cyborg.mtl; sourceTree = "<group>"; };
 		A9B36CD12B38A53600B922A2 /* Scene.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Scene.metal; sourceTree = "<group>"; };
+		A9D2FE782B45A2530099BB24 /* Zombie_Walk.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Zombie_Walk.dae; sourceTree = "<group>"; };
+		A9D2FE7A2B45A38D0099BB24 /* Thriller Part 3.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = "Thriller Part 3.dae"; sourceTree = "<group>"; };
+		A9D2FE7C2B45C35F0099BB24 /* Mutant_diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mutant_diffuse.png; sourceTree = "<group>"; };
+		A9D2FE7D2B45C35F0099BB24 /* Mutant_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mutant_normal.png; sourceTree = "<group>"; };
+		A9D2FE7E2B45C35F0099BB24 /* Mutant Right Turn 45.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = "Mutant Right Turn 45.dae"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +317,11 @@
 		A99E82F12B3DD477001962DA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A9D2FE7E2B45C35F0099BB24 /* Mutant Right Turn 45.dae */,
+				A9D2FE7C2B45C35F0099BB24 /* Mutant_diffuse.png */,
+				A9D2FE7D2B45C35F0099BB24 /* Mutant_normal.png */,
+				A9D2FE7A2B45A38D0099BB24 /* Thriller Part 3.dae */,
+				A9D2FE782B45A2530099BB24 /* Zombie_Walk.dae */,
 				A99E82F22B3DD477001962DA /* cyborg.obj */,
 				A99E82F32B3DD477001962DA /* Vampire_emission.png */,
 				A99E82F42B3DD477001962DA /* Vampire_diffuse.png */,
@@ -472,6 +487,7 @@
 				A977C7832B2EF253000C2238 /* LaunchScreen.storyboard in Resources */,
 				A99E83052B3DD477001962DA /* cyborg.mtl in Resources */,
 				A99E82FC2B3DD477001962DA /* cyborg.obj in Resources */,
+				A9D2FE7F2B45C35F0099BB24 /* Mutant_diffuse.png in Resources */,
 				A99E83042B3DD477001962DA /* cyborg_specular.png in Resources */,
 				A99E83002B3DD477001962DA /* cyborg_normal.png in Resources */,
 				A977C7802B2EF253000C2238 /* Assets.xcassets in Resources */,
@@ -479,9 +495,13 @@
 				A99E83022B3DD477001962DA /* Vampire_specular.png in Resources */,
 				A99E83032B3DD477001962DA /* dancing_vampire.dae in Resources */,
 				A99E82FE2B3DD477001962DA /* Vampire_diffuse.png in Resources */,
+				A9D2FE7B2B45A38D0099BB24 /* Thriller Part 3.dae in Resources */,
+				A9D2FE792B45A2530099BB24 /* Zombie_Walk.dae in Resources */,
 				A99E83012B3DD477001962DA /* cyborg_diffuse.png in Resources */,
 				A99E82FD2B3DD477001962DA /* Vampire_emission.png in Resources */,
+				A9D2FE812B45C35F0099BB24 /* Mutant Right Turn 45.dae in Resources */,
 				A977C77E2B2EF251000C2238 /* Main.storyboard in Resources */,
+				A9D2FE802B45C35F0099BB24 /* Mutant_normal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

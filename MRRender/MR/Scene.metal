@@ -274,6 +274,7 @@ fragment half4 fragmentSceneRender(VertexOutScene inData[[stage_in]],Scene scene
     half4 diffuseFactor = fragmentSceneDiffuse(inData,  normal, scene, diffuse);
     half4 specular = material.specularColor(inData.textureCoords);
     half4 specularFactor = fragmentSceneSpecular(inData, normal, scene,specular);
+
     half4 emissive = material.emssionColor(inData.textureCoords);
     return diffuse * ambient + diffuse * diffuseFactor + specular * specularFactor + emissive;
 }

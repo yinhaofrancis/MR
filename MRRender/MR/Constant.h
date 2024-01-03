@@ -43,7 +43,7 @@
 
 #define bone_object_buffer_index                    vertex_buffer_start + bone_object_buffer_start + 1
 #define bone_map_object_buffer_index                vertex_buffer_start + bone_object_buffer_start
-#define vertex_boneId_buffer_size                   4
+#define vertex_boneId_buffer_size                   5
 
 template <typename T>
 union ContentBuffer {

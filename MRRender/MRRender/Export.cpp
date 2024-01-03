@@ -59,7 +59,7 @@ void beginMesh(const char * url){
 
     a->update(0, bone);
     
-//    a.transform(0, bone);
+
     mesh.buffer(sizeof(BoneBuffer) * (bone->count + 1), bone, MR::Mesh::Bone);
     
     
@@ -72,12 +72,12 @@ static void rederCall(CA::MetalDrawable *current) {
     if(current->texture()->height() > 0 && current->texture()->width() > 0){
         asp = (float)current->texture()->width() / (float)current->texture()->height();
     }
-    a->update(v*1000, bone);
+    a->update(v*1500, bone);
 
     mesh.buffer(sizeof(BoneBuffer) * (bone->count + 1), bone, MR::Mesh::Bone);
-    float x = 300;
-    float z = 300;
-    MR::lookAt(cam, glm::vec3(x,150,z), glm::vec3(0,100,0), glm::vec3(0,1,0));
+    float x = 0;
+    float z = 800;
+    MR::lookAt(cam, glm::vec3(x,200,z), glm::vec3(0,200,0), glm::vec3(0,1,0));
 //    MR::lookAt(cam, glm::vec3(5,4,5), glm::vec3(0,3,0), glm::vec3(0,1,0));
     MR::perspective(cam, 45.0f, asp, 1.0f, 1500.f);
     
